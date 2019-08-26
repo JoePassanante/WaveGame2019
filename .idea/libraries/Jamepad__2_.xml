@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Jamepad (2)">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Libraries/Jamepad.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

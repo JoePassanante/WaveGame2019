@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eclipse-userlibraries>
+  <library name="AppleJavaExtensions" />
+  <library name="AppleJavaExtensions (2)">
+    <archive path="/home/jgermain/IdeaProjects/Wave_Game2/AppleJavaExtensions.jar" />
+  </library>
+  <library name="Jamepad">
+    <archive path="/home/jgermain/IdeaProjects/Wave_Game2/Jamepad.jar" />
+  </library>
+  <library name="scala-sdk-2.12.7">
+    <archive path="/home/jgermain/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.12.7.jar" />
+    <archive path="/home/jgermain/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.7.jar" />
+    <archive path="/home/jgermain/.ivy2/cache/org.scala-lang/scala-reflect/srcs/scala-reflect-2.12.7-sources.jar" />
+    <archive path="/home/jgermain/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.12.7-sources.jar" />
+  </library>
+</eclipse-userlibraries>
+
