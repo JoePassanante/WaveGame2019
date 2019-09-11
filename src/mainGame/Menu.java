@@ -3,16 +3,13 @@ package mainGame;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
+import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
-import mainGame.Game.STATE;
 
 /**
  * The main menu
@@ -25,7 +22,7 @@ import mainGame.Game.STATE;
  * 
  */
 
-public class Menu {
+public class Menu extends GameState {
 
 	private Game game;
 	private Handler handler;
@@ -42,6 +39,13 @@ public class Menu {
 	private Random r;
 	private ArrayList<Color> colorPick = new ArrayList<Color>();
 	private int colorIndex;
+	private boolean help;
+	public void setHelp(boolean h) {
+	    help = h;
+    }
+    public boolean getHelp() {
+	    return help;
+    }
 	//private static boolean rockMusic = true; //the music that is supposed to play
 
 	public Menu(Game game, Handler handler, HUD hud) {
@@ -90,7 +94,7 @@ public class Menu {
             img = getImage("/images/Water.jpg");
         }
 
-		if (game.gameState == STATE.Menu) {
+		if (!help) {
 			//display the background  
 			g.drawImage(img, 0, 0, (int)handler.getGameDimension().getWidth(), (int)handler.getGameDimension().getHeight(), null);
 			//using the handler, render the graphics
@@ -139,7 +143,7 @@ public class Menu {
 			g.setFont(font2);
 			g.drawString("Credits: Irrelephant Games '18-'19", 0, 1000);
 			//Now if the user clicked the Help button
-		} else if (game.gameState == STATE.Help) {// if the user clicks on "help"
+		} else {// if the user clicks on "help"
 			Font font = new Font("impact", Font.PLAIN, 50); //make a new font
 			Font font2 = new Font("impact", Font.PLAIN, 30); //also make a new font
 			Font font3 = new Font("impact", Font.PLAIN, 30); //also make a new font
@@ -185,18 +189,59 @@ public class Menu {
 			g.drawString("Back", 955, 340); //make it the back button
 		}
 	}
-//Background image source path
-public Image getImage(String path) {
-	Image image = null;
-	try {
-		URL imageURL = Game.class.getResource(path);
-		image = Toolkit.getDefaultToolkit().getImage(imageURL);
-	} catch (Exception e) {
-		System.out.println(e.getMessage());
-	}
-	return image;
-}
 
+    @Override
+    public void mousePressed(MouseEvent e) {
+	    if (!getHelp()) {
+            System.out.println("Menu");
+            // Waves Button
+            if (mouseOver(e.getX(), e.getY(), 700, 300, 470, 250)) {
+                handler.object.clear();
+                game.setGameState(game.getGameManager());
+                handler.addObject(game.getPlayer());
+            }
+            // Help Button
+            else if (mouseOver(e.getX(), e.getY(), 230, 360, 260, 200)) {
+                game.getMenu().setHelp(true);
+                game.setGameState(game.getMenu());  //go to the help menu
+            }
+            // Quit Button
+            else if (mouseOver(e.getX(), e.getY(), 1390, 360, 260, 200)) {
+                System.exit(1);
+            }
+            // Space Theme Button
+            else if (mouseOver(e.getX(), e.getY(), 400, 730, 350, 120)) {
+                game.toggleMenuMusic();
+                handler.setTheme(Themes.Space);
+            }
+            // Underwater Theme Button
+            else if (mouseOver(e.getX(), e.getY(), 850, 730, 650, 120)) {
+                game.toggleMenuMusic();
+                handler.setTheme(Themes.Underwater);
+            }
+        }
+        // Back Button for Help screen
+        else {
+            System.out.println("Help");
+
+            if (mouseOver(e.getX(), e.getY(), 850, 300, 200, 64)) {
+                game.getMenu().setHelp(false);
+                game.setGameState(game.getMenu());
+            }
+        }
+    }
+
+    //Background image source path
+    public Image getImage(String path) {
+        Image image = null;
+        try {
+            URL imageURL = Game.class.getResource(path);
+            image = Toolkit.getDefaultToolkit().getImage(imageURL);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return image;
+    }
 }
 
 

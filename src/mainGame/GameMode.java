@@ -8,10 +8,8 @@ import java.awt.Point;
  * This interface can be implemented in other classes
  * and these functions can be overridden
  */
-public interface GameMode {
-	void tick();
-	void render(Graphics g);
-	void resetMode();
-	GameObject getEnemyFromID(ID x, Point spawnLoc);
-	void resetMode(boolean hardReset);
+public abstract class GameMode extends GameState {
+	abstract void resetMode();
+	abstract GameObject getEnemyFromID(ID x, Point spawnLoc);
+	abstract void resetMode(boolean hardReset);
 }

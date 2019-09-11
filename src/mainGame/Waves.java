@@ -3,18 +3,15 @@ package mainGame;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
-import mainGame.Game.STATE;
-
 import javax.imageio.ImageIO;
 
-public class Waves implements GameMode {
+public class Waves extends GameMode {
 	private Player player;
 	private int currentLevelNum = 0;
 	protected int maxTick = 2000,currentTick = 0;
@@ -146,9 +143,10 @@ public class Waves implements GameMode {
 				bossLimit.add(1);
 				System.out.println("New Boss Level");
 				currentLevel = new Level(handler, this, this.game, this.player,0,randomBoss(), bossLimit, -1 , false, false,null);
-			}else{
-				if ((currentLevelNum%5)-1 == 0 && currentLevelNum > 1) {game.gameState = STATE.Upgrade;
-				game.paused = true;}
+			} else{
+				if ((currentLevelNum%5)-1 == 0 && currentLevelNum > 1) {game.setGameState(game.getUpgradeScreen());
+				    game.setPaused(true);
+				}
 				System.out.println("New Normal Level");
 				this.createNewEnemyLists();
 				System.out.println(this.currentEnemy.size());
@@ -217,7 +215,12 @@ public class Waves implements GameMode {
 	public void render(Graphics g) {
 		g.drawImage(img, 0, 0, (int)handler.getGameDimension().getWidth(), (int)handler.getGameDimension().getHeight(), null);
 	}
-	/**
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    /**
 	 * @param hardReset - if false only enemies are wiped. If true gamemode is completely reset. 
 	 */
 	@Override

@@ -27,7 +27,7 @@ import java.awt.GraphicsEnvironment;
 
 public class Game extends JFrame {
     //---------------------------------------------------------------------------------
-    protected boolean devMode = true;//true - display game information | false - do not
+    public static boolean devMode = true;//true - display game information | false - do not
     //---------------------------------------------------------------------------------
 
     private static final long serialVersionUID = 1L;
@@ -37,28 +37,59 @@ public class Game extends JFrame {
 	private boolean running = false;
 	private HUD hud;
 	private Menu menu;
+	public Menu getMenu() {
+	    return menu;
+    }
 	private GameOver gameOver;
+	public GameState getGameOver() {
+	    return gameOver;
+    }
 	private UpgradeScreen upgradeScreen;
+	public GameState getUpgradeScreen() {
+	    return upgradeScreen;
+    }
 	private MouseListener mouseListener;
 	private Upgrades upgrades;
+	public Upgrades getUpgrades() {
+	    return upgrades;
+    }
 	private int FPS = 0;
 
-	protected Handler handler;
-	protected Player player;
-	protected GameManager gm;
+	private Handler handler;
+	public Handler getHandler() {
+	    return handler;
+    }
+	private Player player;
+	public Player getPlayer() {
+	    return player;
+    }
+	private GameManager gm;
+	public GameManager getGameManager() {
+	    return gm;
+    }
 
-	public STATE gameState = STATE.Menu;
+	private GameState gameState;
+	public void setGameState(GameState gs) {
+	    gameState = gs;
+    }
+    public GameState getGameState() {
+	    return gameState;
+    }
 	public GAME_AUDIO gameCurrentClip = GAME_AUDIO.Menu;
-	public boolean paused = false;
 
-	public boolean africa = false;
+	private boolean paused = false;
+	public void setPaused(boolean p) {
+	    paused = p;
+    }
+
+	private boolean africa = false;
+	public void setAfrica(boolean a) {
+	    africa = a;
+    }
 
 	/**
 	 * Used to switch between each of the screens shown to the user
 	 */
-	public enum STATE {
-		Menu, Help, Game, GameOver, Upgrade
-	};
 	
 	public enum GAME_AUDIO {
 		Menu, Game, None
@@ -74,12 +105,14 @@ public class Game extends JFrame {
 		handler.updateSprites();
 		hud = new HUD(handler);
 		menu = new Menu(this, this.handler, this.hud);
+
+		gameState = menu;
 		
 		player = new Player(screenSize.getWidth() / 2 - 32, screenSize.getHeight() / 2 - 32, ID.Player, handler, this.hud, this);
 		upgradeScreen = new UpgradeScreen(this, handler, hud);
 		upgrades = new Upgrades(this, this.handler, this.hud, this.upgradeScreen, this.player);
 		gameOver = new GameOver(this, this.handler, this.hud);
-		mouseListener = new MouseListener(this, this.handler, this.hud, this.upgradeScreen, this.player, this.upgrades);
+		mouseListener = new MouseListener(this);
 		gm = new GameManager(this, hud);
 		addKeyListener(new KeyInput(this.handler, this, this.hud, this.player, this.upgrades));
 		addMouseListener(mouseListener);
@@ -162,28 +195,31 @@ public class Game extends JFrame {
 		if (this.paused) {return;}
 		
 		handler.tick();// handler must always be ticked in order to draw all entities.
-		if (gameState == STATE.Menu || gameState == STATE.Help) {// user is on menu, update the menu items
+        gameState.tick();
+		if (gameState == menu) {// user is on menu, update the menu items
 			if (this.gameCurrentClip != GAME_AUDIO.Menu) {
 				this.gameCurrentClip = GAME_AUDIO.Menu;
 				AudioUtil.closeGameClip();
 				AudioUtil.playMenuClip(true, false);
 			}
-			menu.tick();
+			//menu.tick();
 		} 
-		if (gameState == STATE.Game) {// game is running
+		if (gameState == gm) {// game is running
 			if (this.gameCurrentClip != GAME_AUDIO.Game) {
 				this.gameCurrentClip = GAME_AUDIO.Game;
 				AudioUtil.closeMenuClip();
 				AudioUtil.playGameClip(true);
 			}
 			hud.tick();
-			gm.tick();
-		} 
-		else if (gameState == STATE.Upgrade) {// user is on upgrade screen, update the upgrade screen
-			upgradeScreen.tick();
-		} else if (gameState == STATE.GameOver) {// game is over, update the game over screen
-			gameOver.tick();
+			//gm.tick();
 		}
+		/*
+		else if (gameState == upgradeScreen) {// user is on upgrade screen, update the upgrade screen
+			//upgradeScreen.tick();
+		} else if (gameState == gameOver) {// game is over, update the game over screen
+			//gameOver.tick();
+		}
+		*/
 
 	}
 
@@ -220,16 +256,10 @@ public class Game extends JFrame {
 		
 		g.setColor(Color.black);
 		g.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
-		if (gameState == STATE.Game) {
-			gm.render(g); 
-			hud.render(g);
-		} else if (gameState == STATE.Menu || gameState == STATE.Help) {
-			menu.render(g);
-		} else if (gameState == STATE.Upgrade) {
-			upgradeScreen.render(g);
-		} else if (gameState == STATE.GameOver) {
-			gameOver.render(g);
-		}
+		gameState.render(g);
+		if(gameState == gm) {
+		    hud.render(g);
+        }
 		if(devMode){
 			//debug menu
 			Font font2 = new Font("Amoebic", 1, 25);

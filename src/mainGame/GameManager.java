@@ -1,6 +1,7 @@
 package mainGame;
 
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 
 /**
  * 
@@ -9,7 +10,7 @@ import java.awt.Graphics;
  * Gamemanger manages all the game modes implemented in the game, and passes ticks/render calls to the corresponding modes. 
  * Current Modes Implemented: Waves.
  */
-public class GameManager {
+public class GameManager extends GameState {
 	private Game _game;
 	private HUD _hud;
 	public CURRENTGAME _currentGame;
@@ -34,30 +35,35 @@ public class GameManager {
 		_game = game;
 		_hud = hud;
 		_currentGame = CURRENTGAME.Waves;
-		_waves = new Waves(_game.player, _game.handler,_hud,_game);
+		_waves = new Waves(_game.getPlayer(), _game.getHandler(),_hud,_game);
 	}
 	/**
 	 * Checks what the current gamemode is and ticks that mode. 
 	 */
 	public void tick(){
-		if(_game.gameState == Game.STATE.Game){ //check to make sure game is running
+//		if(_game.gameState == Game.STATE.Game){ //check to make sure game is running
 			if(_currentGame == CURRENTGAME.Waves){
 				_waves.tick();
 			}
-		}
+//		}
 	}
 	/**
 	 * 
 	 * @param g - Graphics pass from game.java when called in game.java's handler method. 
 	 */
 	public void render(Graphics g){
-		if(_game.gameState == Game.STATE.Game){ //check to make sure game is running
+//		if(_game.gameState == Game.STATE.Game){ //check to make sure game is running
 			if(_currentGame == CURRENTGAME.Waves){
 				_waves.render(g);
 			}
-		}
+//		}
 	}
-	/**
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    /**
 	 * Resets gamemodes to original states.
 	 */
 	public void resetGames(){

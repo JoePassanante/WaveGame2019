@@ -14,8 +14,6 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import mainGame.Game.STATE;
-
 /**
  * Player object class w/ collision
  * 
@@ -84,7 +82,7 @@ public class Player extends GameObject {
 	public void checkIfDead() {
 		if (hud.health <= 0) {// player is dead, game over!
 			if (hud.getExtraLives() == 0) {
-				game.gm.resetGames();
+				game.getGameManager().resetGames();
 				AudioUtil.closeGameClip();
 				AudioUtil.stopCurrentClip(); //Clears audio for game over sound
 				AudioUtil.playClip("../gameSound/gameover.wav", false);
@@ -99,7 +97,7 @@ public class Player extends GameObject {
 						System.out.println(e);
 						System.exit(1);
 					}
-				game.gameState = STATE.GameOver;
+				game.setGameState(game.getGameOver());
 				
 				handler.clearPlayer();
 			}

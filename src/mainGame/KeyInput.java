@@ -1,6 +1,5 @@
 package mainGame;
 
-import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
@@ -9,8 +8,6 @@ import java.util.Set;
 
 import com.studiohartman.jamepad.ControllerManager;
 import com.studiohartman.jamepad.ControllerState;
-
-import mainGame.Game.STATE;
 
 /**
  * Handles key input from the user
@@ -99,18 +96,17 @@ public class KeyInput extends KeyAdapter {
 				// key events for player 1
 				// if the p key is pressed, the game would paused, if the key is pressed again, it would unpaused
 				if(key == KeyEvent.VK_P && game.devMode == true){
-					game.paused = !game.paused;
+					game.setPaused(false);
 					AudioUtil.playClip("../gameSound/pause.wav", false);
 					AudioUtil.pauseGameClip();
 				}
 				if(key == KeyEvent.VK_U){
-					game.gameState = STATE.Upgrade;
+					game.setGameState(game.getUpgradeScreen());
 				}
 				if (key == KeyEvent.VK_ESCAPE) {
-				game.gm.resetGames();
-				game.gameState = STATE.Menu;
-				handler.clearPlayer();
-				
+                    game.getGameManager().resetGames();
+                    game.setGameState(game.getMenu());
+                    handler.clearPlayer();
 				}
 				// if the w key is pressed, the player would move up
 				if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
@@ -135,7 +131,7 @@ public class KeyInput extends KeyAdapter {
 				changeDir();
 				// if the spacebar key is pressed, the current level the player is currently in would skip to the next level
 				if (key == KeyEvent.VK_SPACE) {
-					game.gm.skip();
+					game.getGameManager().skip();
 				}
 				// if the enter key is pressed while having an ability, the ability would be used 
 				if (key == KeyEvent.VK_ENTER || key == KeyEvent.VK_E) {

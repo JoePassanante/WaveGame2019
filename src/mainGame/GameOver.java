@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.io.BufferedReader;
@@ -20,7 +22,7 @@ import java.net.URL;
  *
  */
 
-public class GameOver {
+public class GameOver extends GameState {
 
 	private Game game;
 	private Handler handler;
@@ -85,7 +87,19 @@ public class GameOver {
 		text = "Click anywhere to play again";
 		g.drawString(text, (int)handler.getGameDimension().getWidth() / 2 - getTextWidth(font2, text) / 2, (int)handler.getGameDimension().getHeight() / 2 + 150);
 	}
-	//This really isn't "flashing" so much as it's changing the color of the text to black then white
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        super.mousePressed(e);
+        handler.object.clear();
+        hud.health = 100;
+        hud.setScore(0);
+        hud.setLevel(1);
+        game.setGameState(game.getMenu());
+    }
+
+
+    //This really isn't "flashing" so much as it's changing the color of the text to black then white
 	public void flash() {
 		timer--;
 		if (timer == 45) {
