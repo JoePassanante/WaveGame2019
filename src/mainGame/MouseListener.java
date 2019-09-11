@@ -1,7 +1,11 @@
 package mainGame;
 
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 
 import mainGame.Game.STATE;
 
@@ -28,6 +32,10 @@ public class MouseListener extends MouseAdapter {
 	private Upgrades upgrades;
 	private Player player;
 	private String upgradeText;
+	private AffineTransform space;
+	public void setSpace(AffineTransform s) {
+	    space = s;
+    }
 	//Constructors for the class (blue prints for what composes the class)
 	public MouseListener(Game game, Handler handler, HUD hud, UpgradeScreen upgradeScreen, Player player,
 	Upgrades upgrades) {
@@ -39,14 +47,19 @@ public class MouseListener extends MouseAdapter {
 		this.upgrades = upgrades;
 	}
 	/** MOUSE PRESSED
-	 * @param A mouse click!
+	 * @param e A mouse click!
 	 * @return Nothing returned
 	 * This function uses the click from a mouse and 
 	 */
 	public void mousePressed(MouseEvent e) {
-		double scaleFactor = Game.windowSize.getWidth()/Game.canvasSize.getWidth(); 
-		int mx = (int)(((double)e.getX())/scaleFactor);
-		int my = (int)(((double)e.getY())/scaleFactor);
+	    Point2D p = new Point();
+	    try {
+            space.inverseTransform(e.getPoint(), p);
+        } catch(NoninvertibleTransformException nite) {
+
+        }
+		double mx = p.getX();
+		double my = p.getY();
 		if (game.gameState == STATE.GameOver) {
 			handler.object.clear();
 			hud.health = 100;
@@ -134,7 +147,7 @@ public class MouseListener extends MouseAdapter {
 	 * 	button height
 	 * @return boolean, true if the mouse is contained within the button
 	 */
-	private boolean mouseOver(int mx, int my, int x, int y, int width, int height) {
+	private boolean mouseOver(double mx, double my, int x, int y, int width, int height) {
 		if (mx > x && mx < x + width) {
 			if (my > y && my < y + height) {
 				return true;

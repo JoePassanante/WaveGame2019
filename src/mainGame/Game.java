@@ -1,5 +1,6 @@
 package mainGame;
 
+import javax.swing.*;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -7,6 +8,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,8 +24,7 @@ import java.awt.GraphicsEnvironment;
  * @author Joe Passanante 11/28/17
  */
 
-public class Game extends Canvas{
-
+public class Game extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -77,27 +78,44 @@ public class Game extends Canvas{
 	 * Initialize the core mechanics of the game
 	 */
 	public Game() {
-		handler = new Handler();
+        super("Wave Game");
+
+        handler = new Handler();
 		handler.updateSprites();
 		hud = new HUD();
 		menu = new Menu(this, this.handler, this.hud);
 		
 		player = new Player(canvasSize.getWidth() / 2 - 32, canvasSize.getHeight() / 2 - 32, ID.Player, handler, this.hud, this);
-		this.upgradeScreen = new UpgradeScreen(this, handler, hud);
+		upgradeScreen = new UpgradeScreen(this, handler, hud);
 		upgrades = new Upgrades(this, this.handler, this.hud, this.upgradeScreen, this.player);
 		gameOver = new GameOver(this, this.handler, this.hud);
-		mouseListener = new MouseListener(this, this.handler, this.hud, this.upgradeScreen,
-				this.player, this.upgrades);
+		mouseListener = new MouseListener(this, this.handler, this.hud, this.upgradeScreen, this.player, this.upgrades);
 		gm = new GameManager(this, hud);
-		this.addKeyListener(new KeyInput(this.handler, this, this.hud, this.player, this.upgrades));
-		this.addMouseListener(mouseListener);
+		addKeyListener(new KeyInput(this.handler, this, this.hud, this.player, this.upgrades));
+		addMouseListener(mouseListener);
 		AudioUtil.closeGameClip();
 		AudioUtil.playMenuClip(true, false);
 
-		@SuppressWarnings("unused")
-		Window window = new Window((int) windowSize.getWidth(), (int)windowSize.getHeight(), "Wave Game", this);
-		window.setIconImage(this.getImage("/images/Rocket_Boss.png"));
-		window.repaint();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(true);
+
+        // Set fullscreen
+        if (System.getProperty("os.name").toLowerCase().contains("mac")) { //If user is on macOS
+            try {
+                com.apple.eawt.FullScreenUtilities.setWindowCanFullScreen(this, true);
+                com.apple.eawt.Application.getApplication().requestToggleFullScreen(this);
+            } catch (Exception e) {
+                System.err.println("Failed to load apple extensions package");
+            }
+        } else {
+            setUndecorated(false);
+        }
+        setVisible(true);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setPreferredSize(windowSize);
+        pack();
+        start();
+        setLocationRelativeTo(null);
 	}
 	
 	/**
@@ -116,8 +134,8 @@ public class Game extends Canvas{
 					System.out.print("success");
 			}
 			catch (FileNotFoundException e) {
-				e.printStackTrace();
-				System.out.print("OOPS");
+				//e.printStackTrace();
+				//System.out.print("OOPS");
 			}
 			return HS;
 			
@@ -219,9 +237,18 @@ public class Game extends Canvas{
 			return;
 		}
 		Graphics2D g = (Graphics2D) bs.getDrawGraphics();
+        AffineTransform old = g.getTransform();
 
-		double scaleFactor = windowSize.getWidth()/canvasSize.getWidth(); 
-		g.scale(scaleFactor, scaleFactor);
+        double scaleFactor = Math.min(
+                Double.valueOf(getWidth())/WindowWidth,
+                Double.valueOf(getHeight())/WindowHeight
+        );
+
+        g.translate(getWidth()/2,getHeight()/2);
+        g.scale(scaleFactor, scaleFactor);
+        g.translate(-WindowWidth/2,-WindowHeight/2);
+
+        mouseListener.setSpace(g.getTransform());
 		
 		g.setColor(Color.black);
 		g.fillRect(0, 0, (int)Game.canvasSize.getWidth(), (int)Game.canvasSize.getHeight());
@@ -248,7 +275,7 @@ public class Game extends Canvas{
 		handler.render(g);
 
 		g.dispose();
-		g.scale(1/scaleFactor, 1/scaleFactor);
+		g.setTransform(old);
 		bs.show();
 	}
 

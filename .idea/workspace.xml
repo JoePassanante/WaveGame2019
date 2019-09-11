@@ -10,94 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bae7947-e298-4a12-af85-27600bc51a10" name="Default Changelist" comment="start implementing themes">
-      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" afterPath="$PROJECT_DIR$/.project" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wave Game.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Wave Game.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/AudioUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/AudioUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/BossEye.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/BossEye.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/Enemy.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/Enemy.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemyBasic.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemyBasic.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemyBoss.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemyBoss.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemyBossBomb.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemyBossBomb.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemyBossBombBullet.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemyBossBombBullet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemyBossBullet.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemyBossBullet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemyBurst.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemyBurst.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemyBurstWarning.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemyBurstWarning.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemyFast.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemyFast.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemyRocketBoss.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemyRocketBoss.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemyRocketBossMissile.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemyRocketBossMissile.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemyShooter.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemyShooter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemyShooterBullet.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemyShooterBullet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemyShooterMover.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemyShooterMover.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemyShooterSharp.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemyShooterSharp.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemySmart.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemySmart.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/EnemySweep.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/EnemySweep.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/Game$GAME_AUDIO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/Game$GAME_AUDIO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/Game$STATE.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/Game$STATE.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/Game.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/GameManager$CURRENTGAME.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/GameManager$CURRENTGAME.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/GameManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/GameManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/GameMode.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/GameMode.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/GameObject.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/GameObject.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/GameOver.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/GameOver.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/HUD.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/HUD.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/Handler.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/Handler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/ID.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/ID.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/KeyInput$InputAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/KeyInput$InputAction.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/KeyInput.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/KeyInput.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/Level.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/Level.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/LevelText.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/LevelText.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/Menu.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/Menu.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/MenuFireworks.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/MenuFireworks.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/MouseListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/MouseListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/Pickup.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/Pickup.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/PickupFreeze.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/PickupFreeze.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/PickupHealth.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/PickupHealth.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/PickupLife.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/PickupLife.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/PickupScore.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/PickupScore.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/PickupSize.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/PickupSize.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/Player.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/Trail.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/Trail.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/UpgradeScreen.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/UpgradeScreen.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/Upgrades.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/Upgrades.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/Waves.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/Waves.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/mainGame/Window.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/mainGame/Window.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/artifacts/Wave_Game_jar/WaveGame.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/EnemyBoss.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/EnemyBoss.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/PickupCoin.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/PickupHealth.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/PickupSpeed.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/Rocket_Boss.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/ShrinkAbility0.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/Water.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/avgJoe.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/background.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/bosseye.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/clearscreenability.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/decreaseplayersize.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/dodgeball.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/dr.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/extralife.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/freezeAbilitySnowflake.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/freezetimeability.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/gs.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/healthincrease.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/healthregeneration.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/improveddamageresistance.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/levelskipability.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/shield1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/shield2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/shield3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/shield4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/shield5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/slowmotionability.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/speedboost.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/whiteGoodman.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/patches.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mainGame/spaceship1Blue.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/MouseListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/MouseListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/Window.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -111,6 +28,26 @@
       <FILTER>mainGame.*</FILTER>
     </SUITE>
   </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="2002759112">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.open.time.9" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="java" value="471" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="JAVA" value="471" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
   <component name="FavoritesManager">
     <favorites_list name="Wave Game" />
   </component>
@@ -119,8 +56,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mainGame/MouseListener.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3016">
-              <caret line="107" column="39" selection-start-line="107" selection-start-column="39" selection-end-line="107" selection-end-column="39" />
+            <state relative-caret-position="187">
+              <caret line="56" selection-start-line="56" selection-end-line="56" />
+              <folding>
+                <element signature="e#734#735#0" expanded="true" />
+                <element signature="e#758#759#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -128,7 +69,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBasic.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2436">
+            <state relative-caret-position="1428">
               <caret line="93" selection-start-line="93" selection-end-line="93" />
               <folding>
                 <element signature="e#1222#1223#0" expanded="true" />
@@ -141,7 +82,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mainGame/Handler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="222">
+            <state relative-caret-position="2040">
               <caret line="133" column="8" selection-start-line="133" selection-start-column="8" selection-end-line="133" selection-end-column="8" />
             </state>
           </provider>
@@ -150,26 +91,30 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBurstWarning.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="319">
+            <state relative-caret-position="187">
               <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/mainGame/Game.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8526">
-              <caret line="308" column="31" selection-start-line="308" selection-start-column="31" selection-end-line="308" selection-end-column="31" />
+            <state relative-caret-position="140">
+              <caret line="97" lean-forward="true" selection-start-line="97" selection-end-line="97" />
+              <folding>
+                <element signature="e#4043#4044#0" expanded="true" />
+                <element signature="e#4066#4067#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mainGame/KeyInput.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="377">
-              <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+            <state relative-caret-position="221">
+              <caret line="13" selection-start-line="13" selection-end-line="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -180,7 +125,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mainGame/MenuFireworks.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="348">
+            <state relative-caret-position="204">
               <caret line="15" column="7" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
             </state>
           </provider>
@@ -189,8 +134,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mainGame/Window.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="812">
-              <caret line="31" column="12" selection-start-line="31" selection-start-column="12" selection-end-line="31" selection-end-column="12" />
+            <state relative-caret-position="102">
+              <caret line="18" selection-start-line="18" selection-end-line="39" selection-end-column="36" />
             </state>
           </provider>
         </entry>
@@ -198,7 +143,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mainGame/Waves.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6003">
+            <state relative-caret-position="3519">
               <caret line="221" selection-start-line="221" selection-end-line="221" />
             </state>
           </provider>
@@ -215,8 +160,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>health</find>
-      <find>remove</find>
       <find>do noth</find>
       <find>object</find>
       <find>player</find>
@@ -240,11 +183,13 @@
       <find>imgodd</find>
       <find>waves</find>
       <find>water</find>
-      <find>render</find>
       <find>img</find>
       <find>space</find>
       <find>skip</find>
       <find>resetM</find>
+      <find>render</find>
+      <find>scale</find>
+      <find>render(</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/src/mainGame</dir>
@@ -288,11 +233,11 @@
         <option value="$PROJECT_DIR$/src/mainGame/Waves.java" />
         <option value="$PROJECT_DIR$/src/mainGame/EnemyBurst.java" />
         <option value="$PROJECT_DIR$/src/mainGame/EnemyBasic.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/Window.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/MouseListener.java" />
         <option value="$PROJECT_DIR$/src/mainGame/KeyInput.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/Game.java" />
         <option value="$USER_HOME$/dunc/Program-3/src/PathCounter.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/MouseListener.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/Window.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/Game.java" />
       </list>
     </option>
   </component>
@@ -307,40 +252,43 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="Wave Game" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Wave_Game2" type="462c0819:PsiDirectoryNode" />
+              <item name="WaveGame2019" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Wave Game" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Wave_Game2" type="462c0819:PsiDirectoryNode" />
-              <item name="Libraries" type="462c0819:PsiDirectoryNode" />
+              <item name="WaveGame2019" type="462c0819:PsiDirectoryNode" />
+              <item name="bin" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Wave Game" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Wave_Game2" type="462c0819:PsiDirectoryNode" />
+              <item name="WaveGame2019" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Wave Game" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="WaveGame2019" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="mainGame" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1568225493926" />
     <property name="last_opened_file_path" value="$USER_HOME$/dunc/Program-3/src/PathCounter.java" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
@@ -687,25 +635,32 @@
     <option name="totallyTimeSpent" value="91063000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-2" y="0" width="3204" height="1734" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1050" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49949443" visible="true" weight="0.25417203" />
+      <window_info id="Image Layers" />
+      <window_info id="Capture Tool" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49949443" visible="true" weight="0.25692964" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="UI Designer" order="3" />
       <window_info id="Favorites" order="4" sideWeight="0.50050557" side_tool="true" weight="0.24163449" />
+      <window_info anchor="bottom" id="Run with VisualVM" />
+      <window_info anchor="bottom" id="Debug with VisualVM" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49646983" weight="0.2889318" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4826701" weight="0.33555704" />
+      <window_info active="true" anchor="bottom" id="Find" order="1" sideWeight="0.49573562" visible="true" weight="0.28820962" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4824094" weight="0.33515283" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.48908857" weight="0.490994" />
       <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.51732993" side_tool="true" visible="true" weight="0.33555704" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5042644" side_tool="true" visible="true" weight="0.28820962" />
       <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.49582797" weight="0.3275517" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
+      <window_info anchor="right" id="Capture Analysis" />
+      <window_info anchor="right" id="Theme Preview" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -753,6 +708,9 @@
         <option value="1" />
       </list>
     </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
@@ -1035,26 +993,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/dunc/Program-3/src/PathCounter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="17" column="40" selection-start-line="17" selection-start-column="40" selection-end-line="17" selection-end-column="40" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/MouseListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3016">
-          <caret line="107" column="39" selection-start-line="107" selection-start-column="39" selection-end-line="107" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/dunc/Program-3/src/PathCounter.java" />
     <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBasic.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2436">
+        <state relative-caret-position="1428">
           <caret line="93" selection-start-line="93" selection-end-line="93" />
           <folding>
             <element signature="e#1222#1223#0" expanded="true" />
@@ -1063,54 +1005,69 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBurstWarning.java">
+    <entry file="file://$PROJECT_DIR$/src/mainGame/Handler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
+        <state relative-caret-position="2040">
+          <caret line="133" column="8" selection-start-line="133" selection-start-column="8" selection-end-line="133" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/Game.java">
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBurstWarning.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8526">
-          <caret line="308" column="31" selection-start-line="308" selection-start-column="31" selection-end-line="308" selection-end-column="31" />
+        <state relative-caret-position="187">
+          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/mainGame/MenuFireworks.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
+        <state relative-caret-position="204">
           <caret line="15" column="7" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/Window.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="812">
-          <caret line="31" column="12" selection-start-line="31" selection-start-column="12" selection-end-line="31" selection-end-column="12" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/mainGame/Waves.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6003">
+        <state relative-caret-position="3519">
           <caret line="221" selection-start-line="221" selection-end-line="221" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/Handler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="133" column="8" selection-start-line="133" selection-start-column="8" selection-end-line="133" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/mainGame/KeyInput.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="377">
-          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+        <state relative-caret-position="221">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/MouseListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="56" selection-start-line="56" selection-end-line="56" />
+          <folding>
+            <element signature="e#734#735#0" expanded="true" />
+            <element signature="e#758#759#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/Window.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="18" selection-start-line="18" selection-end-line="39" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/Game.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="97" lean-forward="true" selection-start-line="97" selection-end-line="97" />
+          <folding>
+            <element signature="e#4043#4044#0" expanded="true" />
+            <element signature="e#4066#4067#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1158,7 +1115,7 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>11</last-edited>
+          <last-edited>1.8</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
