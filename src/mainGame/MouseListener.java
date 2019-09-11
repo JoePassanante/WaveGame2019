@@ -80,14 +80,14 @@ public class MouseListener extends MouseAdapter {
 				upgradeScreen.resetIndexes();
 				game.gameState = STATE.Game;
 				game.paused = false;
-			} else if (mouseOver(mx, my, 100, 300 + (60 + Game.HEIGHT / 6), 1721, 174)) {
+			} else if (mouseOver(mx, my, 100, 300 + (60 + (int)handler.getGameDimension().getHeight() / 6), 1721, 174)) {
 				upgradeText = upgradeScreen.getPath(2);
 				upgrades.activateUpgrade(upgradeText);
 				//upgradeScreen.removeUpgradeOption(2);//remove that upgrade option since it was chosen
 				upgradeScreen.resetIndexes();
 				game.gameState = STATE.Game;
 				game.paused = false;
-			} else if (mouseOver(mx, my, 100, 300 + 2 * (60 + Game.HEIGHT / 6), 1721, 174)) {
+			} else if (mouseOver(mx, my, 100, 300 + 2 * (60 + (int)handler.getGameDimension().getHeight() / 6), 1721, 174)) {
 				upgradeText = upgradeScreen.getPath(3);
 				upgrades.activateUpgrade(upgradeText);
 				//upgradeScreen.removeUpgradeOption(3);//remove that upgrade option since it was chosen

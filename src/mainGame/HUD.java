@@ -18,7 +18,6 @@ public class HUD {
 
 	public double health = 100;
 	private double healthMax = 100;
-    private static int highscore = Game.highScore();
 	private double greenValue = 255;
 
 	private int score = 0;
@@ -47,6 +46,11 @@ public class HUD {
 	private Image HUDshield4;
 	private Image HUDshield5;
 
+	private Handler handler;
+	public HUD(Handler h) {
+	    handler = h;
+    }
+
 	//game uses tick method to check amount of health player has and update health bar display. Also updates score using this method
 	public void tick() {
 		health = Game.clamp(health, 0, health);
@@ -71,7 +75,7 @@ public class HUD {
 	public void render(Graphics g) {
 		Font font = new Font("Amoebic", 1, 30);
 		
-		g.drawImage(img, 0, 0, Game.WIDTH, Game.HEIGHT, null);
+		g.drawImage(img, 0, 0, (int)handler.getGameDimension().getWidth(), (int)handler.getGameDimension().getHeight(), null);
 		HUDshield1 = getImage("/images/shield1.png");
 		HUDshield2 = getImage("/images/shield2.png");
 		HUDshield3 = getImage("/images/shield3.png");
@@ -97,7 +101,7 @@ public class HUD {
 		g.drawString("Health: " + (int)health + "/" + (int)healthMax, 15, 1050);
 		g.drawString("Player Size: " + player.getPlayerHeight(), 15, 225);
 		g.drawString("Regeneration: " + regenString, 15, 275);
-		g.drawString("High Score: " + highscore, 1500, 25);
+		g.drawString("High Score: " + handler.getHighScore(), 1500, 25);
 		
 		//this switch statement updates the damage resistance sprite on the HUD
 		Image shieldImg; 
@@ -115,18 +119,18 @@ public class HUD {
 		
 		
 		//this is a tough one, can't figure out what it does
-		if(highscore < score){
-			highscore = score;
+		if(handler.getHighScore() < score){
+			handler.setHighScore(score);
 		}
 		
 
 		//if the player has an ability, display that to the screen
 		if (ability.equals("freezeTime")) {//comment
-			g.drawString("Time Freezes: " + abilityUses, Game.WIDTH - 300, 64);
+			g.drawString("Time Freezes: " + abilityUses, (int)handler.getGameDimension().getWidth() - 300, 64);
 		} else if (ability.equals("clearScreen")) {
-			g.drawString("Screen Clears: " + abilityUses, Game.WIDTH - 300, 64);
+			g.drawString("Screen Clears: " + abilityUses, (int)handler.getGameDimension().getWidth() - 300, 64);
 		} else if (ability.equals("levelSkip")) {
-			g.drawString("Level Skips: " + abilityUses, Game.WIDTH - 300, 64);
+			g.drawString("Level Skips: " + abilityUses, (int)handler.getGameDimension().getWidth() - 300, 64);
 		}
 	}
 	
@@ -204,8 +208,8 @@ public class HUD {
 		this.health = healthMax;
 	}
 	
-		public static int thisHighScore() {
-		return highscore;
+		public int thisHighScore() {
+		return handler.getHighScore();
 	}
 
 		public boolean getRegen() {

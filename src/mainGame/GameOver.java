@@ -45,7 +45,7 @@ public class GameOver {
 
 	public void render(Graphics g) {
 		//render the background image
-		g.drawImage(img, 0, 0, Game.WIDTH, Game.HEIGHT, null);
+		g.drawImage(img, 0, 0, (int)handler.getGameDimension().getWidth(), (int)handler.getGameDimension().getHeight(), null);
 		//Set up the font
 		Font font = new Font("Amoebic", 1, 100);
 		Font font2 = new Font("Amoebic", 1, 60);
@@ -53,7 +53,7 @@ public class GameOver {
 		g.setFont(font);
 		g.setColor(Color.white);
 		text = "Game Over";
-		g.drawString(text, Game.WIDTH / 2 - getTextWidth(font, text) / 2, Game.HEIGHT / 2 - 150);
+		g.drawString(text, (int)handler.getGameDimension().getWidth() / 2 - getTextWidth(font, text) / 2, (int)handler.getGameDimension().getHeight() / 2 - 150);
 		//The level the player died on
 		g.setFont(font2);
 		g.setColor(Color.white);
@@ -63,7 +63,7 @@ public class GameOver {
 		g.setFont(font2);
 		g.setColor(Color.white);
 		text = "Your Score: " + hud.getScore();
-		g.drawString(text, Game.WIDTH / 2 - getTextWidth(font2, text) / 2, 500);
+		g.drawString(text, (int)handler.getGameDimension().getWidth() / 2 - getTextWidth(font2, text) / 2, 500);
 		//This is the high score from the text file
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader("src/HighScores.txt"));
@@ -83,7 +83,7 @@ public class GameOver {
 		g.setColor(this.retryColor);
 		g.setFont(font2);
 		text = "Click anywhere to play again";
-		g.drawString(text, Game.WIDTH / 2 - getTextWidth(font2, text) / 2, Game.HEIGHT / 2 + 150);
+		g.drawString(text, (int)handler.getGameDimension().getWidth() / 2 - getTextWidth(font2, text) / 2, (int)handler.getGameDimension().getHeight() / 2 + 150);
 	}
 	//This really isn't "flashing" so much as it's changing the color of the text to black then white
 	public void flash() {

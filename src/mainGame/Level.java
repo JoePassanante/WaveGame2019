@@ -87,12 +87,12 @@ public class Level {
 		
 	}
 	private Point getSpawnLoc(){
-		int x = (int)((Math.random()*(Game.canvasSize.getWidth()*1.2))-Game.canvasSize.getWidth()*0.1); //20% increase for a 10% margin.
-		int y = (int)((Math.random()*(Game.canvasSize.getHeight()*1.2))-Game.canvasSize.getHeight()*0.1);
+		int x = (int)((Math.random()*(handler.getGameDimension().getWidth()*1.2))-handler.getGameDimension().getWidth()*0.1); //20% increase for a 10% margin.
+		int y = (int)((Math.random()*(handler.getGameDimension().getHeight()*1.2))-handler.getGameDimension().getHeight()*0.1);
 		if(Math.sqrt(Math.pow((player.getX()-x), 2) + Math.pow((player.getY()-y), 2))<=player.playerWidth*5){ //don't spawn within 5X of player size
 			return getSpawnLoc(); //try another point
 		}
-		if(x>=Game.WIDTH-50 || y>=Game.HEIGHT-50 || y < 50 || x < 50){
+		if(x>=handler.getGameDimension().getWidth()-50 || y>=handler.getGameDimension().getHeight()-50 || y < 50 || x < 50){
 			return getSpawnLoc(); //try another point
 		}
 		return new Point(x,y);

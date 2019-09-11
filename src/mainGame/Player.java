@@ -61,8 +61,8 @@ public class Player extends GameObject {
 	public void tick() {//Heartbeat of the Player class
 		this.x += velX;
 		this.y += velY;
-		x = Game.clamp(x, 0, Game.canvasSize.getWidth()  - playerWidth);
-		y = Game.clamp(y, 0, Game.canvasSize.getHeight() - playerHeight);
+		x = Game.clamp(x, 0, handler.getGameDimension().getWidth()  - playerWidth);
+		y = Game.clamp(y, 0, handler.getGameDimension().getHeight() - playerHeight);
 		handler.addObject(new Trail(x, y, ID.Trail, playerColor, playerWidth, playerHeight, 0.05, this.handler));
 		playerColor = Color.white; //player trail code
 		collision();
@@ -92,7 +92,7 @@ public class Player extends GameObject {
 				try{//Saves Highscore
 						File set = new File("src/HighScores.txt");
 						BufferedWriter out = new BufferedWriter(new FileWriter(set));
-						out.write(Integer.toString(HUD.thisHighScore()));
+						out.write(Integer.toString(handler.getHighScore()));
 						out.close();				
 					}
 					catch (IOException e) {

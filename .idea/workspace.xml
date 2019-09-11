@@ -9,12 +9,34 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4bae7947-e298-4a12-af85-27600bc51a10" name="Default Changelist" comment="start implementing themes">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="4bae7947-e298-4a12-af85-27600bc51a10" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/EnemyBasic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/EnemyBasic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/EnemyBoss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/EnemyBoss.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/EnemyBossBomb.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/EnemyBossBomb.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/EnemyBossBombBullet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/EnemyBossBombBullet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/EnemyBossBullet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/EnemyBossBullet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/EnemyBurst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/EnemyBurst.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/EnemyFast.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/EnemyFast.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/EnemyRocketBoss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/EnemyRocketBoss.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/EnemyRocketBossMissile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/EnemyRocketBossMissile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/EnemyShooter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/EnemyShooter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/EnemyShooterBullet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/EnemyShooterBullet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/EnemyShooterMover.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/EnemyShooterMover.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/EnemyShooterSharp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/EnemyShooterSharp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/EnemySweep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/EnemySweep.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mainGame/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/GameMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/GameMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/GameOver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/GameOver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/HUD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/HUD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/Handler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/Handler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/Level.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/Level.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/LevelText.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/LevelText.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/Menu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mainGame/MouseListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/MouseListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mainGame/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/Window.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/UpgradeScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/UpgradeScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mainGame/Waves.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mainGame/Waves.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -38,12 +60,29 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="471" />
+          <entry key="java" value="2190" />
+          <entry key="txt" value="79" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="471" />
+          <entry key="JAVA" value="2190" />
+          <entry key="PLAIN_TEXT" value="79" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.vcs.git.usages">
+        <counts>
+          <entry key="git.branch.create.new" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="java" value="27" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="JAVA" value="27" />
         </counts>
       </usages-collector>
     </session>
@@ -56,25 +95,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mainGame/MouseListener.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="56" selection-start-line="56" selection-end-line="56" />
-              <folding>
-                <element signature="e#734#735#0" expanded="true" />
-                <element signature="e#758#759#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="308">
+              <caret line="89" column="67" selection-start-line="89" selection-start-column="67" selection-end-line="89" selection-end-column="67" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBasic.java">
+        <entry file="file://$PROJECT_DIR$/src/mainGame/Player.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1428">
-              <caret line="93" selection-start-line="93" selection-end-line="93" />
-              <folding>
-                <element signature="e#1222#1223#0" expanded="true" />
-                <element signature="e#1299#1300#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="262">
+              <caret line="111" lean-forward="true" selection-start-line="111" selection-end-line="111" />
             </state>
           </provider>
         </entry>
@@ -82,17 +113,23 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mainGame/Handler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2040">
-              <caret line="133" column="8" selection-start-line="133" selection-start-column="8" selection-end-line="133" selection-end-column="8" />
+            <state relative-caret-position="170">
+              <caret line="14" column="32" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
+              <folding>
+                <element signature="e#501#502#0" expanded="true" />
+                <element signature="e#533#534#0" expanded="true" />
+                <element signature="e#572#573#0" expanded="true" />
+                <element signature="e#601#602#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBurstWarning.java">
+        <entry file="file://$PROJECT_DIR$/src/mainGame/UpgradeScreen.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
+            <state relative-caret-position="-1557">
+              <caret line="66" column="80" selection-start-line="66" selection-start-column="80" selection-end-line="66" selection-end-column="80" />
             </state>
           </provider>
         </entry>
@@ -100,42 +137,39 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/mainGame/Game.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="97" lean-forward="true" selection-start-line="97" selection-end-line="97" />
-              <folding>
-                <element signature="e#4043#4044#0" expanded="true" />
-                <element signature="e#4066#4067#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="275">
+              <caret line="276" lean-forward="true" selection-start-line="276" selection-end-line="276" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/mainGame/KeyInput.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="13" selection-start-line="13" selection-end-line="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/mainGame/MenuFireworks.java">
+        <entry file="file://$PROJECT_DIR$/src/mainGame/GameMode.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="204">
-              <caret line="15" column="7" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
+              <caret line="14" column="4" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="4" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/mainGame/Window.java">
+        <entry file="file://$PROJECT_DIR$/src/mainGame/HUD.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="18" selection-start-line="18" selection-end-line="39" selection-end-column="36" />
+            <state relative-caret-position="179">
+              <caret line="87" column="30" selection-start-line="87" selection-start-column="30" selection-end-line="87" selection-end-column="30" />
+              <folding>
+                <element signature="e#1083#1084#0" expanded="true" />
+                <element signature="e#1108#1109#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/mainGame/LevelText.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="24">
+              <caret line="54" column="37" selection-start-line="54" selection-start-column="37" selection-end-line="54" selection-end-column="37" />
             </state>
           </provider>
         </entry>
@@ -143,8 +177,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mainGame/Waves.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3519">
-              <caret line="221" selection-start-line="221" selection-end-line="221" />
+            <state relative-caret-position="189">
+              <caret line="217" column="80" selection-start-line="217" selection-start-column="80" selection-end-line="217" selection-end-column="80" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/mainGame/Menu.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="93" column="38" lean-forward="true" selection-start-line="93" selection-start-column="38" selection-end-line="93" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -160,12 +203,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>do noth</find>
-      <find>object</find>
-      <find>player</find>
-      <find>help</find>
-      <find>println</find>
-      <find>Game.</find>
       <find>move</find>
       <find>key</find>
       <find>clamp</find>
@@ -190,6 +227,12 @@
       <find>render</find>
       <find>scale</find>
       <find>render(</find>
+      <find>WIDTH =</find>
+      <find>static</find>
+      <find>new Hud</find>
+      <find>HS</find>
+      <find>high</find>
+      <find>hi</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/src/mainGame</dir>
@@ -204,39 +247,48 @@
     </option>
     <option name="UPDATE_TYPE" value="REBASE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/mainGame/Player.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/Level.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/HUD.java" />
         <option value="$PROJECT_DIR$/src/mainGame/AudioUtil.java" />
         <option value="$PROJECT_DIR$/src/mainGame/Themes.java" />
         <option value="$PROJECT_DIR$/src/mainGame/GameObject.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/EnemyShooterBullet.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/EnemyShooterMover.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/EnemyShooterSharp.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/EnemySmart.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/Enemy.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/KeyInput.java" />
+        <option value="$USER_HOME$/dunc/Program-3/src/PathCounter.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/Window.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/EnemyBasic.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/EnemyFast.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/EnemyBoss.java" />
         <option value="$PROJECT_DIR$/src/mainGame/EnemyBossBomb.java" />
         <option value="$PROJECT_DIR$/src/mainGame/EnemyBossBombBullet.java" />
         <option value="$PROJECT_DIR$/src/mainGame/EnemyBossBullet.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/EnemyFast.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/EnemyBurst.java" />
         <option value="$PROJECT_DIR$/src/mainGame/EnemyRocketBoss.java" />
         <option value="$PROJECT_DIR$/src/mainGame/EnemyRocketBossMissile.java" />
         <option value="$PROJECT_DIR$/src/mainGame/EnemyShooter.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/EnemySmart.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/EnemyShooterBullet.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/EnemyShooterMover.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/EnemyShooterSharp.java" />
         <option value="$PROJECT_DIR$/src/mainGame/EnemySweep.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/GameOver.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/Level.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/LevelText.java" />
         <option value="$PROJECT_DIR$/src/mainGame/Menu.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/Handler.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/Enemy.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/EnemyBoss.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/Waves.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/EnemyBurst.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/EnemyBasic.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/KeyInput.java" />
-        <option value="$USER_HOME$/dunc/Program-3/src/PathCounter.java" />
         <option value="$PROJECT_DIR$/src/mainGame/MouseListener.java" />
-        <option value="$PROJECT_DIR$/src/mainGame/Window.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/UpgradeScreen.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/Waves.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/GameMode.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/HUD.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/Player.java" />
+        <option value="$PROJECT_DIR$/src/mainGame/Handler.java" />
         <option value="$PROJECT_DIR$/src/mainGame/Game.java" />
       </list>
     </option>
@@ -285,7 +337,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1568225493926" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1568228485906" />
     <property name="last_opened_file_path" value="$USER_HOME$/dunc/Program-3/src/PathCounter.java" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Project" />
@@ -628,7 +680,14 @@
       <option name="project" value="LOCAL" />
       <updated>1543594671960</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="remove canvas and fix/implement actual screen scaling">
+      <created>1568225639526</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1568225639526</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -648,16 +707,16 @@
       <window_info anchor="bottom" id="Run with VisualVM" />
       <window_info anchor="bottom" id="Debug with VisualVM" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info active="true" anchor="bottom" id="Find" order="1" sideWeight="0.49573562" visible="true" weight="0.28820962" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4824094" weight="0.33515283" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49573562" weight="0.28820962" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.48081023" visible="true" weight="0.33515283" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49946696" weight="0.3995633" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.48908857" weight="0.490994" />
       <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5042644" side_tool="true" visible="true" weight="0.28820962" />
-      <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.49582797" weight="0.3275517" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5191898" side_tool="true" visible="true" weight="0.33515283" />
+      <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.49253732" weight="0.32751092" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="right" id="Capture Analysis" />
       <window_info anchor="right" id="Theme Preview" />
@@ -714,7 +773,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="remove reference to unused method" />
     <MESSAGE value="unbold text and use standard style convention for font face" />
     <MESSAGE value="fix problems with mac fix breaking project on other operating systems" />
     <MESSAGE value="make canvas size dependent on screen aspect ratio&#10;&#10;this stops game from looking cut off on 16:10 screens" />
@@ -739,16 +797,10 @@
     <MESSAGE value="add comment to explain bug" />
     <MESSAGE value="make menu theme song change with theme (and not on key press)" />
     <MESSAGE value="refactor and comment menu music toggle method" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor and comment menu music toggle method" />
+    <MESSAGE value="remove canvas and fix/implement actual screen scaling" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove canvas and fix/implement actual screen scaling" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/mainGame/PickupScore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/images/levelskipability.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -756,13 +808,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="348">
           <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/LevelText.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -800,27 +845,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/GameMode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyShooterBullet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="62" lean-forward="true" selection-start-line="62" selection-end-line="62" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyRocketBossMissile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2581">
-          <caret line="102" column="5" selection-start-line="102" selection-start-column="5" selection-end-line="102" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/images/Water.jpg">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -840,53 +864,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/HUD.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="24" column="26" selection-start-line="24" selection-start-column="26" selection-end-line="24" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/images/EnemyBossRed.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/images/spaceship2.png">
       <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyFast.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="641">
-          <caret line="74" column="5" selection-start-line="74" selection-start-column="5" selection-end-line="74" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/Level.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="103" column="22" selection-start-line="103" selection-start-column="16" selection-end-line="103" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/GameOver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="785">
-          <caret line="122" column="35" lean-forward="true" selection-start-line="122" selection-start-column="35" selection-end-line="122" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/Menu.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="624">
-          <caret line="194" column="43" lean-forward="true" selection-start-line="194" selection-start-column="43" selection-end-line="194" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/Player.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1046">
-          <caret line="65" column="43" selection-start-line="65" selection-start-column="43" selection-end-line="65" selection-end-column="43" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/mainGame/PickupFreeze.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -916,62 +898,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBossBomb.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="849">
-          <caret line="50" selection-start-line="50" selection-end-line="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBossBombBullet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1400">
-          <caret line="61" selection-start-line="61" selection-end-line="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyRocketBoss.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="669">
-          <caret line="211" column="5" selection-start-line="211" selection-start-column="5" selection-end-line="211" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyShooter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="917">
-          <caret line="125" column="5" selection-start-line="125" selection-start-column="5" selection-end-line="125" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyShooterMover.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="639">
-          <caret line="132" column="26" selection-start-line="132" selection-start-column="26" selection-end-line="132" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyShooterSharp.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="743">
-          <caret line="155" column="5" selection-start-line="155" selection-start-column="5" selection-end-line="155" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemySweep.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="743">
-          <caret line="64" selection-start-line="64" selection-end-line="64" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBurst.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1363">
-          <caret line="55" column="65" selection-start-line="55" selection-start-column="65" selection-end-line="55" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/mainGame/Enemy.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="406">
@@ -979,39 +905,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBossBullet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1624">
-          <caret line="61" selection-start-line="61" selection-end-line="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBoss.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4437">
-          <caret line="165" selection-start-line="165" selection-end-line="165" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/dunc/Program-3/src/PathCounter.java" />
-    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBasic.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1428">
-          <caret line="93" selection-start-line="93" selection-end-line="93" />
-          <folding>
-            <element signature="e#1222#1223#0" expanded="true" />
-            <element signature="e#1299#1300#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/Handler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2040">
-          <caret line="133" column="8" selection-start-line="133" selection-start-column="8" selection-end-line="133" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBurstWarning.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -1026,30 +920,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/Waves.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3519">
-          <caret line="221" selection-start-line="221" selection-end-line="221" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/mainGame/KeyInput.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="13" selection-start-line="13" selection-end-line="13" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mainGame/MouseListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="56" selection-start-line="56" selection-end-line="56" />
-          <folding>
-            <element signature="e#734#735#0" expanded="true" />
-            <element signature="e#758#759#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1061,14 +937,199 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBasic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="748">
+          <caret line="51" column="59" selection-start-line="51" selection-start-column="59" selection-end-line="51" selection-end-column="59" />
+          <folding>
+            <element signature="e#1222#1223#0" expanded="true" />
+            <element signature="e#1299#1300#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBoss.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-146">
+          <caret line="127" column="104" selection-start-line="127" selection-start-column="78" selection-end-line="127" selection-end-column="104" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBossBomb.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-228">
+          <caret line="10" column="83" selection-start-line="10" selection-start-column="83" selection-end-line="10" selection-end-column="83" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBossBombBullet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="41" column="125" selection-start-line="41" selection-start-column="125" selection-end-line="41" selection-end-column="125" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBossBullet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="41" column="60" selection-start-line="41" selection-start-column="60" selection-end-line="41" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyBurst.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-262">
+          <caret line="96" column="5" lean-forward="true" selection-start-line="96" selection-start-column="5" selection-end-line="96" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyRocketBoss.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-976">
+          <caret line="127" column="39" lean-forward="true" selection-start-line="127" selection-start-column="39" selection-end-line="127" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyRocketBossMissile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-517">
+          <caret line="45" column="70" lean-forward="true" selection-start-line="45" selection-start-column="70" selection-end-line="45" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyShooter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="223">
+          <caret line="53" column="74" selection-start-line="53" selection-start-column="74" selection-end-line="53" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyShooterBullet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="17" column="4" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyShooterMover.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="223">
+          <caret line="62" column="74" selection-start-line="62" selection-start-column="74" selection-end-line="62" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyShooterSharp.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1217">
+          <caret line="58" column="74" selection-start-line="58" selection-start-column="74" selection-end-line="58" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemySweep.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="46" column="74" selection-start-line="46" selection-start-column="74" selection-end-line="46" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/GameOver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-316">
+          <caret line="81" column="23" lean-forward="true" selection-start-line="81" selection-start-column="23" selection-end-line="81" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/EnemyFast.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="38" column="74" selection-start-line="38" selection-start-column="74" selection-end-line="38" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/Level.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="58">
+          <caret line="93" column="9" lean-forward="true" selection-start-line="93" selection-start-column="9" selection-end-line="93" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/LevelText.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="24">
+          <caret line="54" column="37" selection-start-line="54" selection-start-column="37" selection-end-line="54" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/Menu.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="93" column="38" lean-forward="true" selection-start-line="93" selection-start-column="38" selection-end-line="93" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/MouseListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="89" column="67" selection-start-line="89" selection-start-column="67" selection-end-line="89" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/UpgradeScreen.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1557">
+          <caret line="66" column="80" selection-start-line="66" selection-start-column="80" selection-end-line="66" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/Waves.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="217" column="80" selection-start-line="217" selection-start-column="80" selection-end-line="217" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/GameMode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="14" column="4" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/HUD.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="87" column="30" selection-start-line="87" selection-start-column="30" selection-end-line="87" selection-end-column="30" />
+          <folding>
+            <element signature="e#1083#1084#0" expanded="true" />
+            <element signature="e#1108#1109#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/Player.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="111" lean-forward="true" selection-start-line="111" selection-end-line="111" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mainGame/Handler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="14" column="32" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
+          <folding>
+            <element signature="e#501#502#0" expanded="true" />
+            <element signature="e#533#534#0" expanded="true" />
+            <element signature="e#572#573#0" expanded="true" />
+            <element signature="e#601#602#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/mainGame/Game.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="97" lean-forward="true" selection-start-line="97" selection-end-line="97" />
-          <folding>
-            <element signature="e#4043#4044#0" expanded="true" />
-            <element signature="e#4066#4067#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="275">
+          <caret line="276" lean-forward="true" selection-start-line="276" selection-end-line="276" />
         </state>
       </provider>
     </entry>

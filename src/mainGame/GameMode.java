@@ -9,9 +9,9 @@ import java.awt.Point;
  * and these functions can be overridden
  */
 public interface GameMode {
-	public abstract void tick();
-	public abstract void render(Graphics g);
-	public abstract void resetMode();
-	public abstract GameObject getEnemyFromID(ID x, Point spawnLoc);
+	void tick();
+	void render(Graphics g);
+	void resetMode();
+	GameObject getEnemyFromID(ID x, Point spawnLoc);
 	void resetMode(boolean hardReset);
 }

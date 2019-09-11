@@ -54,7 +54,7 @@ public class Menu {
 
 		img = getImage("/images/Background.png");
 
-		handler.addObject(new MenuFireworks((r.nextInt(Game.WIDTH) - 25), 500, 50, 50, 0, -2,
+		handler.addObject(new MenuFireworks((r.nextInt((int)handler.getGameDimension().getWidth()) - 25), 500, 50, 50, 0, -2,
 				colorPick.get(r.nextInt(6)), ID.Firework, this.handler));
 	}
 
@@ -75,7 +75,7 @@ public class Menu {
 		if (timer <= 0) {
 			handler.object.clear();
 			colorIndex = r.nextInt(6);
-			handler.addObject(new MenuFireworks((r.nextInt(Game.WIDTH) - 25), 1080, 100, 100, 0, -4,
+			handler.addObject(new MenuFireworks((r.nextInt((int)handler.getGameDimension().getWidth()) - 25), 1080, 100, 100, 0, -4,
 					colorPick.get(colorIndex), ID.Firework, this.handler));
 			timer = 300;
 		}
@@ -92,7 +92,7 @@ public class Menu {
 
 		if (game.gameState == STATE.Menu) {
 			//display the background  
-			g.drawImage(img, 0, 0, Game.WIDTH, Game.HEIGHT, null);
+			g.drawImage(img, 0, 0, (int)handler.getGameDimension().getWidth(), (int)handler.getGameDimension().getHeight(), null);
 			//using the handler, render the graphics
 			handler.render(g);
 			//create the font objects

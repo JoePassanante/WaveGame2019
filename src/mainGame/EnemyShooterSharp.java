@@ -54,9 +54,9 @@ public class EnemyShooterSharp extends Enemy {
 		this.x += velX;
 		this.y += velY;
 
-		if (this.y <= 0 || this.y >= Game.HEIGHT - 40)
+		if (this.y <= 0 || this.y >= handler.getGameDimension().getHeight() - 40)
 			velY *= -1;
-		if (this.x <= 0 || this.x >= Game.WIDTH - 16)
+		if (this.x <= 0 || this.x >= handler.getGameDimension().getWidth() - 16)
 			velX *= -1;
 
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.yellow, this.sizeX, this.sizeY, 0.025, this.handler));

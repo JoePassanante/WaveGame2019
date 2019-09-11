@@ -18,7 +18,7 @@ public class Waves implements GameMode {
 	private Player player;
 	private int currentLevelNum = 0;
 	protected int maxTick = 2000,currentTick = 0;
-	private Handler handler = null;
+	private Handler handler;
 	private Random r = new Random();
 	private ArrayList<ID> currentEnemy;
 	private String[] side = { "left", "right", "top", "bottom" };
@@ -123,11 +123,17 @@ public class Waves implements GameMode {
 			hud.setLevel(this.currentLevelNum);
 			handler.clearEnemies();
 			this.levelPopTimer = 0;
-			t = new LevelText(Game .WIDTH / 2 - 675, Game.HEIGHT / 2 - 200, "Level " + this.currentLevelNum + (this.currentLevelNum%5 == 0 ? ": Boss Level!!!":""), ID.Levels1to10Text);
+			t = new LevelText(
+                handler.getGameDimension().getWidth() / 2 - 675,
+                handler.getGameDimension().getHeight() / 2 - 200,
+                "Level " + this.currentLevelNum + (this.currentLevelNum%5 == 0 ? ": Boss Level!!!":""),
+                ID.Levels1to10Text,
+                handler
+            );
 			handler.addObject(t);
 			
-			double tempx = (Math.random()*(Game.WIDTH-300))+150; 			
-			double tempy = (Math.random()*(Game.HEIGHT-300))+150;
+			double tempx = (Math.random()*(handler.getGameDimension().getWidth()-300))+150;
+			double tempy = (Math.random()*(handler.getGameDimension().getHeight()-300))+150;
 			switch ((int)(Math.random()*5)){
 			case 0: handler.addObject(new PickupSize(tempx,tempy));break;
 			case 1: handler.addObject(new PickupHealth(tempx,tempy));break;
@@ -209,7 +215,7 @@ public class Waves implements GameMode {
 	 */
 	@Override
 	public void render(Graphics g) {
-		g.drawImage(img, 0, 0, Game.WIDTH, Game.HEIGHT, null);
+		g.drawImage(img, 0, 0, (int)handler.getGameDimension().getWidth(), (int)handler.getGameDimension().getHeight(), null);
 	}
 	/**
 	 * @param hardReset - if false only enemies are wiped. If true gamemode is completely reset. 

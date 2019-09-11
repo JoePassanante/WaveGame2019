@@ -36,7 +36,7 @@ public class EnemyBoss extends Enemy {
 	// constructor
 	// used to initialize the state of the object
 	public EnemyBoss(ID id, Handler handler, int diff, HUD h) {
-		super(Game.WIDTH / 2 - 48, -120, id);
+		super(handler.getGameDimension().getWidth() / 2 - 48, -120, id);
 		this.handler = handler;
 		hud = h;
 		velX = 0;
@@ -85,7 +85,7 @@ public class EnemyBoss extends Enemy {
 		
 		
 		// if (this.y <= 0 || this.y >= Game.HEIGHT - 40) velY *= -1;
-		if (this.x <= 0 || this.x >= Game.WIDTH - 96) {
+		if (this.x <= 0 || this.x >= handler.getGameDimension().getWidth() - 96) {
 			velX *= -1;
 			handler.addObject(new EnemyBossBullet((int) this.x, (int) this.y + 80, ID.EnemyBossBullet, handler));
 			handler.addObject(new EnemyBossBullet((int) this.x + 96, (int) this.y + 80, ID.EnemyBossBullet, handler));
@@ -120,16 +120,16 @@ public class EnemyBoss extends Enemy {
 	public void render(Graphics x) {
 		Graphics2D g = (Graphics2D) x;
 		g.setColor(Color.LIGHT_GRAY);
-		g.drawLine(0, 138, Game.WIDTH, 138);
+		g.drawLine(0, 138, (int)handler.getGameDimension().getWidth(), 138);
 		g.drawImage(img, (int) this.x, (int) this.y, 96, 96, null);
 		
 		// HEALTH BAR
 		g.setColor(Color.GRAY);
-		g.fillRect(Game.WIDTH / 2 - 500, Game.HEIGHT - 150, 1000, 50);
+		g.fillRect((int)handler.getGameDimension().getWidth() / 2 - 500, (int)handler.getGameDimension().getHeight() - 150, 1000, 50);
 		g.setColor(Color.RED);
-		g.fillRect(Game.WIDTH / 2 - 500, Game.HEIGHT - 150, this.health, 50);
+		g.fillRect((int)handler.getGameDimension().getWidth() / 2 - 500, (int)handler.getGameDimension().getHeight() - 150, this.health, 50);
 		g.setColor(Color.WHITE);
-		g.drawRect(Game.WIDTH / 2 - 500, Game.HEIGHT - 150, 1000, 50);
+		g.drawRect((int)handler.getGameDimension().getWidth() / 2 - 500, (int)handler.getGameDimension().getHeight() - 150, 1000, 50);
 
 	}
 

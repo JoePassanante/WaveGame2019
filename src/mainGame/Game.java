@@ -22,18 +22,17 @@ import java.awt.GraphicsEnvironment;
  * 
  * @author Brandon Loehle 5/30/16
  * @author Joe Passanante 11/28/17
+ * @author Aaron Paterson 9/9/19
  */
 
 public class Game extends JFrame {
-	private static final long serialVersionUID = 1L;
+    //---------------------------------------------------------------------------------
+    protected boolean devMode = true;//true - display game information | false - do not
+    //---------------------------------------------------------------------------------
 
-	private static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	private static final double aspectRatio = screenSize.getWidth()/screenSize.getHeight();
-	private static int WindowWidth = (int) (1 * screenSize.getWidth());
-	private static int WindowHeight = (int) (1 *screenSize.getHeight());
+    private static final long serialVersionUID = 1L;
 
-	public static final Dimension canvasSize = canvasSize();
-	public static final Dimension windowSize = new Dimension(WindowWidth,WindowHeight);
+	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 	private boolean running = false;
 	private HUD hud;
@@ -43,19 +42,10 @@ public class Game extends JFrame {
 	private MouseListener mouseListener;
 	private Upgrades upgrades;
 	private int FPS = 0;
-	private static int HS;
-	
+
 	protected Handler handler;
 	protected Player player;
 	protected GameManager gm;
-	
-	//---------------------------------------------------------------------------------
-	protected boolean devMode = true;//true - display game information | false - do not
-	//---------------------------------------------------------------------------------
-	
-	public static int TEMP_COUNTER;
-	public static final int WIDTH  = (int)canvasSize.getWidth();
-	public static final int HEIGHT = (int)canvasSize.getHeight();
 
 	public STATE gameState = STATE.Menu;
 	public GAME_AUDIO gameCurrentClip = GAME_AUDIO.Menu;
@@ -80,12 +70,12 @@ public class Game extends JFrame {
 	public Game() {
         super("Wave Game");
 
-        handler = new Handler();
+        handler = new Handler(screenSize);
 		handler.updateSprites();
-		hud = new HUD();
+		hud = new HUD(handler);
 		menu = new Menu(this, this.handler, this.hud);
 		
-		player = new Player(canvasSize.getWidth() / 2 - 32, canvasSize.getHeight() / 2 - 32, ID.Player, handler, this.hud, this);
+		player = new Player(screenSize.getWidth() / 2 - 32, screenSize.getHeight() / 2 - 32, ID.Player, handler, this.hud, this);
 		upgradeScreen = new UpgradeScreen(this, handler, hud);
 		upgrades = new Upgrades(this, this.handler, this.hud, this.upgradeScreen, this.player);
 		gameOver = new GameOver(this, this.handler, this.hud);
@@ -112,34 +102,12 @@ public class Game extends JFrame {
         }
         setVisible(true);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setPreferredSize(windowSize);
+        setPreferredSize(screenSize);
         pack();
         start();
         setLocationRelativeTo(null);
 	}
-	
-	/**
-	 * 
-	 * @return int value of highscore saved in local Highscores.txt
-	 */
-	public static int highScore(){
-		Scanner fileInput;
-		File inFile = new File("src/HighScores.txt");
-		
-			try {
-				fileInput = new Scanner(inFile);
-					HS = Integer.parseInt(fileInput.next());
-					inFile.canWrite();
-					fileInput.close();
-					System.out.print("success");
-			}
-			catch (FileNotFoundException e) {
-				//e.printStackTrace();
-				//System.out.print("OOPS");
-			}
-			return HS;
-			
-	}
+
 	/**
 	 * Starts the game loop.
 	 */
@@ -240,18 +208,18 @@ public class Game extends JFrame {
         AffineTransform old = g.getTransform();
 
         double scaleFactor = Math.min(
-                Double.valueOf(getWidth())/WindowWidth,
-                Double.valueOf(getHeight())/WindowHeight
+                Double.valueOf(getWidth())/screenSize.getWidth(),
+                Double.valueOf(getHeight())/screenSize.getHeight()
         );
 
         g.translate(getWidth()/2,getHeight()/2);
         g.scale(scaleFactor, scaleFactor);
-        g.translate(-WindowWidth/2,-WindowHeight/2);
+        g.translate(-screenSize.getWidth()/2,-screenSize.getHeight()/2);
 
         mouseListener.setSpace(g.getTransform());
 		
 		g.setColor(Color.black);
-		g.fillRect(0, 0, (int)Game.canvasSize.getWidth(), (int)Game.canvasSize.getHeight());
+		g.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
 		if (gameState == STATE.Game) {
 			gm.render(g); 
 			hud.render(g);
@@ -267,10 +235,10 @@ public class Game extends JFrame {
 			Font font2 = new Font("Amoebic", 1, 25);
 			g.setColor(Color.white);
 			g.setFont(font2);
-			g.drawString("Objects: " + handler.getNumObjects(), Game.WIDTH-300, Game.HEIGHT-200);
-			g.drawString("Pickups: " + handler.getNumPickUps(), Game.WIDTH-300, Game.HEIGHT-150);
-			g.drawString("FPS(?): " + this.FPS, Game.WIDTH-300, Game.HEIGHT-100);
-			g.drawString("Trails: " + handler.getTrails() + " / " + handler.getNumObjects(), Game.WIDTH-300, Game.HEIGHT-50);
+			g.drawString("Objects: " + handler.getNumObjects(), WIDTH-300, HEIGHT-200);
+			g.drawString("Pickups: " + handler.getNumPickUps(), WIDTH-300, HEIGHT-150);
+			g.drawString("FPS(?): " + this.FPS, WIDTH-300, HEIGHT-100);
+			g.drawString("Trails: " + handler.getTrails() + " / " + handler.getNumObjects(), WIDTH-300, HEIGHT-50);
 		}
 		handler.render(g);
 
@@ -305,32 +273,6 @@ public class Game extends JFrame {
 	public static void main(String[] args) {
 			AudioUtil.playGameClip(true);
 			new Game();	
-	}
-	public Image getImage(String path) {
-		Image image = null;
-		try {
-			URL imageURL = Game.class.getResource(path);
-			image = Toolkit.getDefaultToolkit().getImage(imageURL);
-		} catch (Exception e) {
-			System.err.println("AHHHH");
-			System.out.println(e.getMessage());
-		}
-
-		return image;
-	}
-
-	private static Dimension canvasSize() {
-		// Choose canvas size that conforms to screen aspect ratio
-		if (aspectRatio > 1.7) {
-			// Screen aspect ratio is 16:9 or wider
-			return new Dimension(1920,1080);
-		} else if (aspectRatio < 1.4) {
-			// Screen aspect ratio is 4:3 or taller
-			return new Dimension(1920,1440);
-		} else {
-			// Screen aspect ratio is somewhere in between, probably 16:10
-			return new Dimension(1920,1200);
-		}
 	}
 
 	public void toggleMenuMusic() {

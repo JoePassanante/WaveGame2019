@@ -41,10 +41,10 @@ public class EnemySweep extends Enemy {
 		this.y += velY;
 
 		// if (this.y <= 0 || this.y >= Game.HEIGHT - 43) velY *= -1;
-		if (this.x <= 0 || this.x >= Game.WIDTH - 16)
+		if (this.x <= 0 || this.x >= handler.getGameDimension().getWidth() - 16)
 			velX *= -1;
 		//check for removal once bottom of screen is hit. 
-		if (this.y <= 0 || this.y >= Game.HEIGHT - 43){
+		if (this.y <= 0 || this.y >= handler.getGameDimension().getWidth() - 43){
 			handler.removeObject(this);
 			return;
 		}
