@@ -6,11 +6,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -175,7 +173,7 @@ public class EnemyRocketBoss extends Enemy {
 	public Image getImage(String path) {
 		Image image = null;
 		try {
-			URL imageURL = Game.class.getResource(path);
+			URL imageURL = Client.class.getResource(path);
 			image = Toolkit.getDefaultToolkit().getImage(imageURL);
 		} catch (Exception e) {
 			System.err.println("AHHHH");

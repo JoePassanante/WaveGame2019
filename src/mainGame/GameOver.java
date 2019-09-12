@@ -28,8 +28,9 @@ public class GameOver extends GameState {
 	private Color retryColor;
 	private String text;
 	private Image img;
-	public GameOver(Game game) {
-	    super(game);
+	private Waves game;
+	public GameOver(Waves waves) {
+	    game = waves;
 		timer = 90;
 		this.retryColor = Color.white;
 		//the background image is the same as the menu background S
@@ -90,7 +91,7 @@ public class GameOver extends GameState {
         game.getHUD().health = 100;
         game.getHUD().setScore(0);
         game.getHUD().setLevel(1);
-        game.setGameState(game.getMenu());
+        game.setState(game.getMenu());
     }
 
 
@@ -126,7 +127,7 @@ public class GameOver extends GameState {
 	public Image getImage(String path) {
 		Image image = null;
 		try {
-			URL imageURL = Game.class.getResource(path);
+			URL imageURL = Client.class.getResource(path);
 			image = Toolkit.getDefaultToolkit().getImage(imageURL);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

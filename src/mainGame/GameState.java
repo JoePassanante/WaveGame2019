@@ -3,11 +3,6 @@ package mainGame;
 import java.awt.event.MouseAdapter;
 
 public abstract class GameState extends MouseAdapter implements Animatable {
-    protected Game game;
-    public GameState(Game g) {
-        this.game = g;
-    }
-
     /** MOUSE OVER
      * Helper method to detect is the mouse is over a "button" drawn via Graphics
      * @param mx

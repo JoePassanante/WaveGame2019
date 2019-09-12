@@ -105,7 +105,7 @@ public class EnemyBoss extends Enemy {
 	public Image getImage(String path) {
 		Image image = null;
 		try {
-			URL imageURL = Game.class.getResource(path);
+			URL imageURL = Client.class.getResource(path);
 			image = Toolkit.getDefaultToolkit().getImage(imageURL);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

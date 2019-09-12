@@ -21,16 +21,16 @@ import java.awt.geom.Point2D;
  *
  */
 
-public class MouseListener extends MouseAdapter {
+public class MouseInput extends MouseAdapter {
 	//Initialization, what is needed in here
-	private Game game;
+	private Waves game;
 	private AffineTransform space;
 	public void setSpace(AffineTransform s) {
 	    space = s;
     }
 	//Constructors for the class (blue prints for what composes the class)
-	public MouseListener(Game game) {
-		this.game = game;
+	public MouseInput(Waves waves) {
+		this.game = waves;
 	}
 	/** MOUSE PRESSED
 	 * @param e A mouse click!
@@ -41,7 +41,7 @@ public class MouseListener extends MouseAdapter {
 	    try {
             Point2D p = new Point();
             space.inverseTransform(e.getPoint(), p);
-            game.getGameState().mousePressed(new MouseEvent(
+            game.getState().mousePressed(new MouseEvent(
                     e.getComponent(),
                     e.getID(),
                     e.getWhen(),

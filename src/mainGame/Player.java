@@ -22,16 +22,16 @@ import javax.imageio.ImageIO;
 public class Player extends GameObject {
 
 	Random r = new Random();
-	private Game game;
+	private Waves game;
 	private double damage;
 	protected int playerWidth, playerHeight;
 	public static int playerSpeed = 10;
 	public static Image img;
 	public static Color playerColor = Color.WHITE;
 
-	public Player(double x, double y, ID id, Game game) {
+	public Player(double x, double y, ID id, Waves waves) {
 		super(x, y, id);
-		this.game = game;
+		game = waves;
 		this.damage = 2;
 		//Player Width and Height change the size of the image, use the same number for both for scaling
 		playerWidth = 32;
@@ -52,8 +52,8 @@ public class Player extends GameObject {
 	public void tick() {//Heartbeat of the Player class
 		this.x += velX;
 		this.y += velY;
-		x = Game.clamp(x, 0, game.getHandler().getGameDimension().getWidth()  - playerWidth);
-		y = Game.clamp(y, 0, game.getHandler().getGameDimension().getHeight() - playerHeight);
+		x = Client.clamp(x, 0, game.getHandler().getGameDimension().getWidth()  - playerWidth);
+		y = Client.clamp(y, 0, game.getHandler().getGameDimension().getHeight() - playerHeight);
         game.getHandler().addObject(new Trail(x, y, ID.Trail, playerColor, playerWidth, playerHeight, 0.05, game.getHandler()));
 		playerColor = Color.white; //player trail code
 		collision();
@@ -64,7 +64,7 @@ public class Player extends GameObject {
 	public void checkIfDead() {
 		if (game.getHUD().health <= 0) {// player is dead, game over!
 			if (game.getHUD().getExtraLives() == 0) {
-				game.getCurrentGame().resetMode();
+				game.resetMode();
 				AudioUtil.closeGameClip();
 				AudioUtil.stopCurrentClip(); //Clears audio for game over sound
 				AudioUtil.playClip("../gameSound/gameover.wav", false);
@@ -79,7 +79,7 @@ public class Player extends GameObject {
 						System.out.println(e);
 						System.exit(1);
 					}
-				game.setGameState(game.getGameOver());
+				game.setState(game.getGameOver());
 
                 game.getHandler().clearPlayer();
 			}

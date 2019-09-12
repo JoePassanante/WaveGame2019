@@ -1,9 +1,8 @@
 package mainGame;
 
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.event.MouseEvent;
+import java.awt.*;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,15 +17,78 @@ public class Waves extends GameMode {
 	private ArrayList<ID> currentEnemy;
 	private String[] side = { "left", "right", "top", "bottom" };
 	private Level currentLevel = null;
+	public Level getCurrentLevel() {
+	    return currentLevel;
+    }
 	private ArrayList<Integer> currentEnemySpawns;
 	private static Image img;
-	private int levelPopTimer = 0;
-	private LevelText t;
 	private ID lastEnemy = null;
 	private ID lastBoss = (Math.random()*1 == 0 ? ID.EnemyBoss:ID.EnemyRocketBoss);
 
-    public Waves(Game g) {
-        super(g);
+    private boolean paused = false;
+    public void setPaused(boolean p) {
+        paused = p;
+    }
+
+    private Handler handler;
+    public Handler getHandler() {
+        return handler;
+    }
+
+    private HUD hud;
+    public HUD getHUD() {
+        return hud;
+    }
+
+    private Player player;
+    public Player getPlayer() {
+        return player;
+    }
+
+    private GameState upgradeScreen;
+    public GameState getUpgradeScreen() {
+        return upgradeScreen;
+    }
+
+    private GameState menu;
+    public GameState getMenu() {
+        return menu;
+    }
+
+    private GameState gameOver;
+    public GameState getGameOver() {
+        return gameOver;
+    }
+
+    private Upgrades upgrades;
+    public Upgrades getUpgrades() {
+        return upgrades;
+    }
+
+    private boolean africa = false;
+    public void toggleMenuMusic() {
+        // Toggle menu theme between Space Jam and Africa
+        africa = !africa;
+        // Restart menu music
+        AudioUtil.closeMenuClip();
+        AudioUtil.playMenuClip(true, africa);
+    }
+
+    public Waves(Dimension screenSize) {
+        handler = new Handler(screenSize);
+        handler.updateSprites();
+        hud = new HUD(this);
+        menu = new Menu(this);
+
+        setState(menu);
+
+        player = new Player(screenSize.getWidth() / 2 - 32, screenSize.getHeight() / 2 - 32, ID.Player, this);
+        upgradeScreen = new UpgradeScreen(this);
+        upgrades = new Upgrades(this);
+        gameOver = new GameOver(this);
+
+        mouseInput = new MouseInput(this);
+        keyInput = new KeyInput(this);
     }
 
     //Links the ID of an enemy to actual creation.
@@ -34,20 +96,20 @@ public class Waves extends GameMode {
 	@Override
 	public GameObject getEnemyFromID(ID enemy,Point spawnLoc){
 		switch(enemy){
-		case EnemyBasic:  return new EnemyBasic(spawnLoc.getX(), spawnLoc.getY(), 9, 9, ID.EnemyBasic, game.getHandler());
-		case EnemySmart: return new EnemySmart(spawnLoc.getX(), spawnLoc.getY(), -5, ID.EnemySmart, game.getHandler());
-		case EnemySweep: return new EnemySweep(spawnLoc.getX(), spawnLoc.getY(), 9, 2, ID.EnemySweep, game.getHandler());
-		case EnemyShooter: return new EnemyShooter(spawnLoc.getX(),spawnLoc.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooter, game.getHandler());
-		case EnemyBurst: return new EnemyBurst(-200, 200, 15, 15, 200, side[r.nextInt(4)], ID.EnemyBurst, game.getHandler());
+		case EnemyBasic:  return new EnemyBasic(spawnLoc.getX(), spawnLoc.getY(), 9, 9, ID.EnemyBasic, getHandler());
+		case EnemySmart: return new EnemySmart(spawnLoc.getX(), spawnLoc.getY(), -5, ID.EnemySmart, getHandler());
+		case EnemySweep: return new EnemySweep(spawnLoc.getX(), spawnLoc.getY(), 9, 2, ID.EnemySweep, getHandler());
+		case EnemyShooter: return new EnemyShooter(spawnLoc.getX(),spawnLoc.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooter, getHandler());
+		case EnemyBurst: return new EnemyBurst(-200, 200, 15, 15, 200, side[r.nextInt(4)], ID.EnemyBurst, getHandler());
 		//case BossEye: return new EnemyBoss(ID.EnemyBoss, handler);
-		case EnemyBoss: return new EnemyBoss(ID.EnemyBoss, game.getHandler(),currentLevelNum/10,game.getHUD());
-		case EnemyRocketBoss: return new EnemyRocketBoss(100,100,ID.EnemyRocketBoss,game.getPlayer(), game.getHandler(),game.getHUD(), this,currentLevelNum/10);
-		case EnemyFast: return new EnemyFast(spawnLoc.getX(), spawnLoc.getY(), ID.EnemySmart, game.getHandler());
-		case EnemyShooterMover: return new EnemyShooterMover(spawnLoc.getX(),spawnLoc.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooterMover, game.getHandler());
-		case EnemyShooterSharp: return new EnemyShooterSharp(spawnLoc.getX(),spawnLoc.getY(), 200, 200, -20 + (int)(Math.random()*5), ID.EnemyShooter, game.getHandler());
+		case EnemyBoss: return new EnemyBoss(ID.EnemyBoss, getHandler(),currentLevelNum/10,getHUD());
+		case EnemyRocketBoss: return new EnemyRocketBoss(100,100,ID.EnemyRocketBoss,getPlayer(), getHandler(), getHUD(), this,currentLevelNum/10);
+		case EnemyFast: return new EnemyFast(spawnLoc.getX(), spawnLoc.getY(), ID.EnemySmart, getHandler());
+		case EnemyShooterMover: return new EnemyShooterMover(spawnLoc.getX(),spawnLoc.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooterMover, getHandler());
+		case EnemyShooterSharp: return new EnemyShooterSharp(spawnLoc.getX(),spawnLoc.getY(), 200, 200, -20 + (int)(Math.random()*5), ID.EnemyShooter, getHandler());
 		default: 
 			System.err.println("Enemy not found");
-			return new EnemyBasic(spawnLoc.getX(),spawnLoc.getY(), 9, 9, ID.EnemyBasic, game.getHandler());
+			return new EnemyBasic(spawnLoc.getX(),spawnLoc.getY(), 9, 9, ID.EnemyBasic, getHandler());
 		}
 	}
 	
@@ -96,61 +158,75 @@ public class Waves extends GameMode {
 		this.lastEnemy = returnID;
 		return returnID;
 	}
+
+
+    /**
+     * Used to switch between each of the screens shown to the user
+     */
+
+    public enum GAME_AUDIO {
+        Menu, Game, None
+    }
+
 	/**
 	 * Ticks Level classes generated.
 	 * Generates levels when they are completed. 
 	 */
-	@Override
+    public GAME_AUDIO gameCurrentClip = GAME_AUDIO.Menu;
+
+    @Override
 	public void tick() {
-		currentTick++;
-		this.levelPopTimer++;
-		//after 3 seconds, the handler would remove the level text object "t".
-		if(this.levelPopTimer>=100){
-            game.getHandler().removeObject(t);
-		}
+        if (this.paused) {return;}
+
 		if(currentLevel==null || currentLevel.running()==false){
 			this.currentLevelNum = this.currentLevelNum + 1;
-			game.getHUD().setLevel(this.currentLevelNum);
-            game.getHandler().clearEnemies();
-			this.levelPopTimer = 0;
-			t = new LevelText(
-                    game.getHandler().getGameDimension().getWidth() / 2 - 675,
-                    game.getHandler().getGameDimension().getHeight() / 2 - 200,
-                "Level " + this.currentLevelNum + (this.currentLevelNum%5 == 0 ? ": Boss Level!!!":""),
-                ID.Levels1to10Text,
-                game.getHandler()
-            );
-            game.getHandler().addObject(t);
-			
-			double tempx = (Math.random()*(game.getHandler().getGameDimension().getWidth()-300))+150;
-			double tempy = (Math.random()*(game.getHandler().getGameDimension().getHeight()-300))+150;
+			getHUD().setLevel(this.currentLevelNum);
+            getHandler().clearEnemies();
+
+			double tempx = (Math.random()*(getHandler().getGameDimension().getWidth()-300))+150;
+			double tempy = (Math.random()*(getHandler().getGameDimension().getHeight()-300))+150;
 			switch ((int)(Math.random()*5)){
-			case 0: game.getHandler().addObject(new PickupSize(tempx,tempy));break;
-			case 1: game.getHandler().addObject(new PickupHealth(tempx,tempy));break;
-			case 2: game.getHandler().addObject(new PickupLife(tempx,tempy));break;
-			case 3: game.getHandler().addObject(new PickupScore(tempx,tempy));break;
-			case 4: game.getHandler().addObject(new PickupFreeze(tempx,tempy));break;
+			case 0: getHandler().addObject(new PickupSize(tempx,tempy));break;
+			case 1: getHandler().addObject(new PickupHealth(tempx,tempy));break;
+			case 2: getHandler().addObject(new PickupLife(tempx,tempy));break;
+			case 3: getHandler().addObject(new PickupScore(tempx,tempy));break;
+			case 4: getHandler().addObject(new PickupFreeze(tempx,tempy));break;
 			}
 			if(this.currentLevelNum%5 == 0){
 				ArrayList<Integer>bossLimit = new ArrayList<Integer>();
 				bossLimit.add(1);
 				System.out.println("New Boss Level");
-				currentLevel = new Level(this.game, 0,randomBoss(), bossLimit, -1 , false, false);
+				currentLevel = new Level(this, 0,randomBoss(), bossLimit, -1 , false, false, currentLevelNum);
 			} else{
-				if ((currentLevelNum%5)-1 == 0 && currentLevelNum > 1) {game.setGameState(game.getUpgradeScreen());
-				    game.setPaused(true);
+				if ((currentLevelNum%5)-1 == 0 && currentLevelNum > 1) {setState(getUpgradeScreen());
+				    setPaused(true);
 				}
 				System.out.println("New Normal Level");
 				this.createNewEnemyLists();
 				System.out.println(this.currentEnemy.size());
 				System.out.println(this.currentEnemySpawns.size());
-				currentLevel = new Level( this.game,0, this.currentEnemy,this.currentEnemySpawns,60*(20),false,false);
+				currentLevel = new Level( this,0, this.currentEnemy,this.currentEnemySpawns,60*(20),false,false, currentLevelNum);
 			}
-			
 		}
-		currentLevel.tick();
-		
-	}
+		//currentLevel.tick();
+
+		getState().tick();
+        if (getState() == menu) {// user is on menu, update the menu items
+            if (this.gameCurrentClip != GAME_AUDIO.Menu) {
+                this.gameCurrentClip = GAME_AUDIO.Menu;
+                AudioUtil.closeGameClip();
+                AudioUtil.playMenuClip(true, false);
+            }
+        }
+        if (getState() == currentLevel) {// game is running
+            if (this.gameCurrentClip != GAME_AUDIO.Game) {
+                this.gameCurrentClip = GAME_AUDIO.Game;
+                AudioUtil.closeMenuClip();
+                AudioUtil.playGameClip(true);
+            }
+            hud.tick();
+        }
+    }
 	/**
 	 * Creates a new list of enemies for the next level to spawn.
 	 * Sets the new list as a global variable for the game to access later. 
@@ -205,13 +281,29 @@ public class Waves extends GameMode {
 	 * IE Background. 
 	 */
 	@Override
-	public void render(Graphics g) {
-		g.drawImage(img, 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
-	}
+	public void render(Graphics gfx) {
+        Graphics2D g = (Graphics2D) gfx;
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
+        mouseInput.setSpace(g.getTransform());
+
+        g.drawImage(img, 0, 0, (int)getHandler().getGameDimension().getWidth(), (int)getHandler().getGameDimension().getHeight(), null);
+
+        getState().render(g);
+        if(getState() == currentLevel) {
+            hud.render(g);
+        }
+        if(Client.devMode){
+            //debug menu
+            Font font2 = new Font("Amoebic", 1, 25);
+            g.setColor(Color.white);
+            g.setFont(font2);
+//            g.drawString("Objects: " + handler.getNumObjects(), WIDTH-300, HEIGHT-200);
+//            g.drawString("Pickups: " + handler.getNumPickUps(), WIDTH-300, HEIGHT-150);
+//            g.drawString("FPS(?): " + this.FPS, WIDTH-300, HEIGHT-100);
+//            g.drawString("Trails: " + handler.getTrails() + " / " + handler.getNumObjects(), WIDTH-300, HEIGHT-50);
+        }
+        handler.render(g);
+	}
 
     /**
 	 * @param hardReset - if false only enemies are wiped. If true gamemode is completely reset. 
@@ -221,16 +313,29 @@ public class Waves extends GameMode {
 		this.currentTick = 0;
 		this.currentEnemy = null;
 		this.currentLevel =  null;
-        game.getHandler().clearEnemies();
+        getHandler().clearEnemies();
 		if(hardReset) {
 			this.currentLevelNum = 0;
-			game.getPlayer().playerWidth = 32;
-			game.getPlayer().playerHeight = 32;
-			game.getHUD().setExtraLives(0);
-			game.getHUD().resetHealth();
+			getPlayer().playerWidth = 32;
+			getPlayer().playerHeight = 32;
+			getHUD().setExtraLives(0);
+			getHUD().resetHealth();
 		}
 	}
-	@Override
+
+	private MouseInput mouseInput;
+    @Override
+    MouseListener getMouseInput() {
+        return mouseInput;
+    }
+
+    private KeyInput keyInput;
+    @Override
+    KeyListener getKeyInput() {
+	    return keyInput;
+    }
+
+    @Override
 	public void resetMode() {
 		resetMode(true);
 	}
@@ -250,5 +355,4 @@ public class Waves extends GameMode {
             System.err.println("Error reading sprite file for Waves (game background)");
         }
     }
-
 }

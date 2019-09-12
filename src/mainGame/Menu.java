@@ -39,9 +39,10 @@ public class Menu extends GameState {
 	    return help;
     }
 	//private static boolean rockMusic = true; //the music that is supposed to play
+    private Waves game;
 
-	public Menu(Game game) {
-        super(game);
+	public Menu(Waves waves) {
+	    game = waves;
 		timer = 10;
 		r = new Random();
 		addColors();
@@ -85,7 +86,7 @@ public class Menu extends GameState {
         }
 
 		if (!help) {
-			//display the background  
+			//display the background
 			g.drawImage(img, 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
 			//using the handler, render the graphics
             game.getHandler().render(g);
@@ -186,7 +187,7 @@ public class Menu extends GameState {
             // Waves Button
             if (mouseOver(e.getX(), e.getY(), 700, 300, 470, 250)) {
                 game.getHandler().object.clear();
-                game.setGameState(game.getCurrentGame());
+                game.setState(game.getCurrentLevel());
                 game.getHandler().addObject(game.getPlayer());
             }
             // Help Button
@@ -218,7 +219,7 @@ public class Menu extends GameState {
     public Image getImage(String path) {
         Image image = null;
         try {
-            URL imageURL = Game.class.getResource(path);
+            URL imageURL = Client.class.getResource(path);
             image = Toolkit.getDefaultToolkit().getImage(imageURL);
         } catch (Exception e) {
             System.out.println(e.getMessage());

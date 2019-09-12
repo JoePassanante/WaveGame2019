@@ -18,6 +18,9 @@ public class Level extends GameState {
 	private boolean bossDead = false;
 	int dif = 0;
 	int x;
+    private LevelText t;
+    private int levelPopTimer = 0;
+    Waves game;
 	/**
 	 * 
 	 * @param g - The game class that the gamemode is apart of.
@@ -28,8 +31,8 @@ public class Level extends GameState {
 	 * @param spawnPowerUp - True/False for spawning PowerUps(Not Implemented)
 	 * @param upgrades - True/False if when the level is completed the player can choose a upgrade (Not Implemented)
 	 */
-	public Level(Game g,int dif, ArrayList<ID> enemyList, ArrayList<Integer>maxSpawn,int maxTick,boolean spawnPowerUp, boolean upgrades){
-	    super(g);
+	public Level(Waves g,int dif, ArrayList<ID> enemyList, ArrayList<Integer>maxSpawn,int maxTick,boolean spawnPowerUp, boolean upgrades, int currentLevelNum){
+	    game = g;
 		this.enemyList = enemyList;
 		this.spawnLimits = maxSpawn;
 		this.maxTick = maxTick;
@@ -37,7 +40,18 @@ public class Level extends GameState {
 		for(int i = 0; i<enemyList.size();i++){
 			spawnTicks.add(0);
 		}
-	}
+
+        t = new LevelText(
+                game.getHandler().getGameDimension().getWidth() / 2 - 675,
+                game.getHandler().getGameDimension().getHeight() / 2 - 200,
+                "Level " + currentLevelNum + (currentLevelNum%5 == 0 ? ": Boss Level!!!":""),
+                ID.Levels1to10Text,
+                game.getHandler()
+        );
+		if(currentLevelNum > 1) {
+            game.getHandler().addObject(t);
+        }
+    }
 	/**
 	 * Tick spawns new enemies depending on their spawn limit and current tick.
 	 * Takes the max level tick, and for every enemy divides it by the # of enemies.
@@ -45,10 +59,23 @@ public class Level extends GameState {
 	 * This ensures that the enemies are evenly spawned throughout the level. 
 	 */
 	public void tick(){
-		if (game.getHUD() != null) {
-		game.getHUD().levelProgress = (int) (((double)currentTick/(double)maxTick)*100);}
+        game.getHandler().tick();// handler must always be ticked in order to draw all entities.
+
+        currentTick++;
+        this.levelPopTimer++;
+        //after 3 seconds, the handler would remove the level text object "t".
+        if(this.levelPopTimer>=100){
+            game.getHandler().removeObject(t);
+        }
+
+		if (game.getHUD() != null && maxTick >= 0) {
+		    game.getHUD().levelProgress = (int) (((double)currentTick/(double)maxTick)*100);
+		}
 		if(currentTick>=maxTick && maxTick>=0) this.levelRunning = false;
-		if(running()==false) return;
+		if(running()==false) {
+		    game.setState(game.getCurrentLevel());
+		    return;
+        }
 		this.currentTick++;
 	
 		for(int i = 0; i<enemyList.size();i++){ //run through all the enemies we can spawn
@@ -57,7 +84,7 @@ public class Level extends GameState {
 				//check if its the right tick we should be checking?
 				if(this.spawnLimits.get(i)>0){
 					//if good time, spawn 1 enemy, subtract from max spawn and reset tick counter.
-					game.getHandler().addObject(game.getCurrentGame().getEnemyFromID(this.enemyList.get(i), getSpawnLoc()));
+					game.getHandler().addObject(game.getEnemyFromID(this.enemyList.get(i), getSpawnLoc()));
 					this.spawnLimits.set(i, this.spawnLimits.get(i)-1);
 					this.spawnTicks.set(i,(this.maxTick-this.currentTick)/(this.spawnLimits.get(i)+1));
 				}

@@ -8,7 +8,7 @@ public class EnemyBossBomb extends Enemy {
 
 	// instances
 	private Handler handler;
-	int explodeHeight = (int) (Math.random()*handler.getGameDimension().getHeight());
+	int explodeHeight;
 	private double sizeX, sizeY;
 	private int shots;
 	// constructor
@@ -16,6 +16,7 @@ public class EnemyBossBomb extends Enemy {
 	public EnemyBossBomb(double x, double y, ID id, Handler handler,int shots) {
 		super(x, y, id);
 		this.handler = handler;
+		this.explodeHeight = (int) (Math.random()*handler.getGameDimension().getHeight());
 		velY = 5;
 		sizeX = 32;
 		sizeY = 32;

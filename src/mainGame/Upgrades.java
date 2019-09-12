@@ -15,11 +15,11 @@ package mainGame;
  * respective function 
  */
 public class Upgrades {
-	private Game game;
+	private Waves game;
 	private String ability = "none";
 	//constructor
-	public Upgrades(Game game) {
-		this.game = game;
+	public Upgrades(Waves waves) {
+		this.game = waves;
 	}
 	//Remove all enemies on the screen
 	public void clearScreenAbility() {

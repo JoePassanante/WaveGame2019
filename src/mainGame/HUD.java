@@ -45,19 +45,20 @@ public class HUD extends GameState {
 	private Image HUDshield4;
 	private Image HUDshield5;
 
-	public HUD(Game game) {
-        super(game);
+	Waves game;
+	public HUD(Waves waves) {
+	    game = waves;
     }
 
 	//game uses tick method to check amount of health player has and update health bar display. Also updates score using this method
 	public void tick() {
-		health = Game.clamp(health, 0, health);
+		health = Client.clamp(health, 0, health);
 
-		greenValue = Game.clamp(greenValue, 0, 255);
+		greenValue = Client.clamp(greenValue, 0, 255);
 
 		greenValue = health * healthBarModifier;
 		
-		greenValue = Game.clamp(greenValue, 0, 255);
+		greenValue = Client.clamp(greenValue, 0, 255);
 
 		score++;
 
@@ -217,7 +218,7 @@ public class HUD extends GameState {
 		public Image getImage(String path) {
 			Image image = null;
 			try {
-				URL imageURL = Game.class.getResource(path);
+				URL imageURL = Client.class.getResource(path);
 				image = Toolkit.getDefaultToolkit().getImage(imageURL);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());

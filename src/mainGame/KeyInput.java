@@ -22,15 +22,15 @@ public class KeyInput extends KeyAdapter {
 
 	// instances
 	private boolean[] keyDown = new boolean[5];
-	private Game game;
+	private Waves game;
 	private String ability;
 	private final ControllerManager controllers;
 
 	// constructor
 	// used to initialize the state of the object
 	// uses current handler created in Game as parameter
-	public KeyInput(Game g) {
-        game = g;
+	public KeyInput(Waves waves) {
+        game = waves;
 		controllers = new ControllerManager();
 		controllers.initSDLGamepad();
 		keyDown[0] = false;
@@ -86,20 +86,20 @@ public class KeyInput extends KeyAdapter {
 				// key events for player 1
 				// if the p key is pressed, the game would paused, if the key is pressed again, it would unpaused
 				if(key == KeyEvent.VK_P){
-				    if(Game.devMode) {
+				    if(Client.devMode) {
                         game.setPaused(false);
                         AudioUtil.playClip("../gameSound/pause.wav", false);
                         AudioUtil.pauseGameClip();
                     }
 				}
 				if(key == KeyEvent.VK_U){
-				    if(Game.devMode) {
-                        game.setGameState(game.getUpgradeScreen());
+				    if(Client.devMode) {
+                        game.setState(game.getUpgradeScreen());
                     }
 				}
 				if (key == KeyEvent.VK_ESCAPE) {
-                    game.getCurrentGame().resetMode();
-                    game.setGameState(game.getMenu());
+                    game.resetMode();
+                    game.setState(game.getMenu());
                     game.getHandler().clearPlayer();
 				}
 				// if the w key is pressed, the player would move up
@@ -129,8 +129,8 @@ public class KeyInput extends KeyAdapter {
 				}
                 // if the enter key is pressed, the current level the player is currently in would skip to the next level
 				if (key == KeyEvent.VK_ENTER || key == KeyEvent.VK_E) {
-				    if(Game.devMode) {
-                        game.getCurrentGame().resetMode(false);
+				    if(Client.devMode) {
+                        game.resetMode(false);
                     }
 				}
 			}

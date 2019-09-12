@@ -30,9 +30,10 @@ public class UpgradeScreen extends GameState {
 	private ArrayList<String> imagePaths = new ArrayList<String>();
 	private Random r = new Random();
 	private int index1, index2, index3;
+	Waves game;
 
-	public UpgradeScreen(Game game) {
-	    super(game);
+	public UpgradeScreen(Waves waves) {
+	    game = waves;
 		addPaths();
 		resetPaths();
 		setIndex();
@@ -63,19 +64,19 @@ public class UpgradeScreen extends GameState {
             game.getUpgrades().activateUpgrade(getPath(1));
             //upgradeScreen.removeUpgradeOption(1);//remove that upgrade option since it was chosen
             resetIndexes();
-            game.setGameState(game.getCurrentGame());
+            game.setState(game.getCurrentLevel());
             game.setPaused(false);
         } else if (mouseOver(e.getX(), e.getY(), 100, 300 + (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174)) {
             game.getUpgrades().activateUpgrade(getPath(2));
             //upgradeScreen.removeUpgradeOption(2);//remove that upgrade option since it was chosen
             resetIndexes();
-            game.setGameState(game.getCurrentGame());
+            game.setState(game.getCurrentLevel());
             game.setPaused(false);
         } else if (mouseOver(e.getX(), e.getY(), 100, 300 + 2 * (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174)) {
             game.getUpgrades().activateUpgrade(getPath(3));
             //upgradeScreen.removeUpgradeOption(3);//remove that upgrade option since it was chosen
             resetIndexes();
-            game.setGameState(game.getCurrentGame());
+            game.setState(game.getCurrentLevel());
             game.setPaused(false);
         }
     }
@@ -144,7 +145,7 @@ public class UpgradeScreen extends GameState {
 	public Image getImage(String path) {
 		Image image = null;
 		try {
-			URL imageURL = Game.class.getResource(path);
+			URL imageURL = Client.class.getResource(path);
 			image = Toolkit.getDefaultToolkit().getImage(imageURL);
 		} catch (Exception e) {
 			System.err.println(e.getMessage() + " path:"+path);
