@@ -12,49 +12,42 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 public class Waves extends GameMode {
-	private Player player;
 	private int currentLevelNum = 0;
 	protected int maxTick = 2000,currentTick = 0;
-	private Handler handler;
 	private Random r = new Random();
 	private ArrayList<ID> currentEnemy;
 	private String[] side = { "left", "right", "top", "bottom" };
 	private Level currentLevel = null;
-	private Game game;
 	private ArrayList<Integer> currentEnemySpawns;
-	private HUD hud;
 	private static Image img;
 	private int levelPopTimer = 0;
 	private LevelText t;
 	private ID lastEnemy = null;
 	private ID lastBoss = (Math.random()*1 == 0 ? ID.EnemyBoss:ID.EnemyRocketBoss);
 
-    public Waves(Player p, Handler h, HUD _hud, Game g) {
-        player = p;
-        handler = h;
-        hud = _hud;
-        game = g;
+    public Waves(Game g) {
+        super(g);
     }
-	
-	//Links the ID of an enemy to actual creation.
+
+    //Links the ID of an enemy to actual creation.
 	//This allows the gameMode to override the generic Level Spawning Scheme. IE if a boss doesn't care where a player is. 
 	@Override
 	public GameObject getEnemyFromID(ID enemy,Point spawnLoc){
 		switch(enemy){
-		case EnemyBasic:  return new EnemyBasic(spawnLoc.getX(), spawnLoc.getY(), 9, 9, ID.EnemyBasic, handler);
-		case EnemySmart: return new EnemySmart(spawnLoc.getX(), spawnLoc.getY(), -5, ID.EnemySmart, handler);
-		case EnemySweep: return new EnemySweep(spawnLoc.getX(), spawnLoc.getY(), 9, 2, ID.EnemySweep, handler);
-		case EnemyShooter: return new EnemyShooter(spawnLoc.getX(),spawnLoc.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooter, this.handler);
-		case EnemyBurst: return new EnemyBurst(-200, 200, 15, 15, 200, side[r.nextInt(4)], ID.EnemyBurst, handler);
+		case EnemyBasic:  return new EnemyBasic(spawnLoc.getX(), spawnLoc.getY(), 9, 9, ID.EnemyBasic, game.getHandler());
+		case EnemySmart: return new EnemySmart(spawnLoc.getX(), spawnLoc.getY(), -5, ID.EnemySmart, game.getHandler());
+		case EnemySweep: return new EnemySweep(spawnLoc.getX(), spawnLoc.getY(), 9, 2, ID.EnemySweep, game.getHandler());
+		case EnemyShooter: return new EnemyShooter(spawnLoc.getX(),spawnLoc.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooter, game.getHandler());
+		case EnemyBurst: return new EnemyBurst(-200, 200, 15, 15, 200, side[r.nextInt(4)], ID.EnemyBurst, game.getHandler());
 		//case BossEye: return new EnemyBoss(ID.EnemyBoss, handler);
-		case EnemyBoss: return new EnemyBoss(ID.EnemyBoss, handler,currentLevelNum/10,hud);
-		case EnemyRocketBoss: return new EnemyRocketBoss(100,100,ID.EnemyRocketBoss,this.player, this.handler,this.hud, this,currentLevelNum/10);
-		case EnemyFast: return new EnemyFast(spawnLoc.getX(), spawnLoc.getY(), ID.EnemySmart, handler);
-		case EnemyShooterMover: return new EnemyShooterMover(spawnLoc.getX(),spawnLoc.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooterMover, this.handler);
-		case EnemyShooterSharp: return new EnemyShooterSharp(spawnLoc.getX(),spawnLoc.getY(), 200, 200, -20 + (int)(Math.random()*5), ID.EnemyShooter, this.handler);
+		case EnemyBoss: return new EnemyBoss(ID.EnemyBoss, game.getHandler(),currentLevelNum/10,game.getHUD());
+		case EnemyRocketBoss: return new EnemyRocketBoss(100,100,ID.EnemyRocketBoss,game.getPlayer(), game.getHandler(),game.getHUD(), this,currentLevelNum/10);
+		case EnemyFast: return new EnemyFast(spawnLoc.getX(), spawnLoc.getY(), ID.EnemySmart, game.getHandler());
+		case EnemyShooterMover: return new EnemyShooterMover(spawnLoc.getX(),spawnLoc.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooterMover, game.getHandler());
+		case EnemyShooterSharp: return new EnemyShooterSharp(spawnLoc.getX(),spawnLoc.getY(), 200, 200, -20 + (int)(Math.random()*5), ID.EnemyShooter, game.getHandler());
 		default: 
 			System.err.println("Enemy not found");
-			return new EnemyBasic(spawnLoc.getX(),spawnLoc.getY(), 9, 9, ID.EnemyBasic, handler);
+			return new EnemyBasic(spawnLoc.getX(),spawnLoc.getY(), 9, 9, ID.EnemyBasic, game.getHandler());
 		}
 	}
 	
@@ -113,36 +106,36 @@ public class Waves extends GameMode {
 		this.levelPopTimer++;
 		//after 3 seconds, the handler would remove the level text object "t".
 		if(this.levelPopTimer>=100){
-			handler.removeObject(t);
+            game.getHandler().removeObject(t);
 		}
 		if(currentLevel==null || currentLevel.running()==false){
 			this.currentLevelNum = this.currentLevelNum + 1;
-			hud.setLevel(this.currentLevelNum);
-			handler.clearEnemies();
+			game.getHUD().setLevel(this.currentLevelNum);
+            game.getHandler().clearEnemies();
 			this.levelPopTimer = 0;
 			t = new LevelText(
-                handler.getGameDimension().getWidth() / 2 - 675,
-                handler.getGameDimension().getHeight() / 2 - 200,
+                    game.getHandler().getGameDimension().getWidth() / 2 - 675,
+                    game.getHandler().getGameDimension().getHeight() / 2 - 200,
                 "Level " + this.currentLevelNum + (this.currentLevelNum%5 == 0 ? ": Boss Level!!!":""),
                 ID.Levels1to10Text,
-                handler
+                game.getHandler()
             );
-			handler.addObject(t);
+            game.getHandler().addObject(t);
 			
-			double tempx = (Math.random()*(handler.getGameDimension().getWidth()-300))+150;
-			double tempy = (Math.random()*(handler.getGameDimension().getHeight()-300))+150;
+			double tempx = (Math.random()*(game.getHandler().getGameDimension().getWidth()-300))+150;
+			double tempy = (Math.random()*(game.getHandler().getGameDimension().getHeight()-300))+150;
 			switch ((int)(Math.random()*5)){
-			case 0: handler.addObject(new PickupSize(tempx,tempy));break;
-			case 1: handler.addObject(new PickupHealth(tempx,tempy));break;
-			case 2: handler.addObject(new PickupLife(tempx,tempy));break;
-			case 3: handler.addObject(new PickupScore(tempx,tempy));break;
-			case 4: handler.addObject(new PickupFreeze(tempx,tempy));break;
+			case 0: game.getHandler().addObject(new PickupSize(tempx,tempy));break;
+			case 1: game.getHandler().addObject(new PickupHealth(tempx,tempy));break;
+			case 2: game.getHandler().addObject(new PickupLife(tempx,tempy));break;
+			case 3: game.getHandler().addObject(new PickupScore(tempx,tempy));break;
+			case 4: game.getHandler().addObject(new PickupFreeze(tempx,tempy));break;
 			}
 			if(this.currentLevelNum%5 == 0){
 				ArrayList<Integer>bossLimit = new ArrayList<Integer>();
 				bossLimit.add(1);
 				System.out.println("New Boss Level");
-				currentLevel = new Level(handler, this, this.game, this.player,0,randomBoss(), bossLimit, -1 , false, false,null);
+				currentLevel = new Level(this.game, 0,randomBoss(), bossLimit, -1 , false, false);
 			} else{
 				if ((currentLevelNum%5)-1 == 0 && currentLevelNum > 1) {game.setGameState(game.getUpgradeScreen());
 				    game.setPaused(true);
@@ -151,7 +144,7 @@ public class Waves extends GameMode {
 				this.createNewEnemyLists();
 				System.out.println(this.currentEnemy.size());
 				System.out.println(this.currentEnemySpawns.size());
-				currentLevel = new Level(handler, this, this.game, this.player,0, this.currentEnemy,this.currentEnemySpawns,60*(20),false,false,hud);
+				currentLevel = new Level( this.game,0, this.currentEnemy,this.currentEnemySpawns,60*(20),false,false);
 			}
 			
 		}
@@ -213,7 +206,7 @@ public class Waves extends GameMode {
 	 */
 	@Override
 	public void render(Graphics g) {
-		g.drawImage(img, 0, 0, (int)handler.getGameDimension().getWidth(), (int)handler.getGameDimension().getHeight(), null);
+		g.drawImage(img, 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
 	}
 
     @Override
@@ -228,13 +221,13 @@ public class Waves extends GameMode {
 		this.currentTick = 0;
 		this.currentEnemy = null;
 		this.currentLevel =  null;
-		handler.clearEnemies();
+        game.getHandler().clearEnemies();
 		if(hardReset) {
 			this.currentLevelNum = 0;
-			player.playerWidth = 32;
-			player.playerHeight = 32;
-			hud.setExtraLives(0);
-			hud.resetHealth();
+			game.getPlayer().playerWidth = 32;
+			game.getPlayer().playerHeight = 32;
+			game.getHUD().setExtraLives(0);
+			game.getHUD().resetHealth();
 		}
 	}
 	@Override

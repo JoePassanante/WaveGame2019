@@ -9,7 +9,7 @@ import java.awt.Rectangle;
  *
  */
 
-public abstract class GameObject {
+public abstract class GameObject implements Animatable {
 
 	// protected means that variables can only be accessed by 
 	//things that extends GameObject
@@ -26,8 +26,6 @@ public abstract class GameObject {
 	}
 	// abstract classes are needed in subclasses 
 	//(need to be explicitly implemented)
-	public abstract void tick();
-	public abstract void render(Graphics g);
 	public abstract Rectangle getBounds();
 	// non abstract can be accessed via OBJECT.________, does not need to be
 	// implemented, but can be overridden

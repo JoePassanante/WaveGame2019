@@ -14,7 +14,7 @@ import java.util.Scanner;
  * @author Joe Passanante 10/30/17
  * @author Aaron Paterson 9/9/19
  */
-public class Handler {
+public class Handler implements Animatable {
     int highscore = 0;
 
     /**

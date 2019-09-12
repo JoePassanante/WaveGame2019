@@ -9,7 +9,11 @@ import java.awt.Point;
  * and these functions can be overridden
  */
 public abstract class GameMode extends GameState {
-	abstract void resetMode();
+    public GameMode(Game g) {
+        super(g);
+    }
+
+    abstract void resetMode();
 	abstract GameObject getEnemyFromID(ID x, Point spawnLoc);
 	abstract void resetMode(boolean hardReset);
 }

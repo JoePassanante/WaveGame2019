@@ -24,30 +24,25 @@ import java.net.URL;
 
 public class GameOver extends GameState {
 
-	private Game game;
-	private Handler handler;
-	private HUD hud;
 	private int timer;
 	private Color retryColor;
 	private String text;
 	private Image img;
-	public GameOver(Game game, Handler handler, HUD hud) {
-		this.game = game;
-		this.handler = handler;
-		this.hud = hud;
+	public GameOver(Game game) {
+	    super(game);
 		timer = 90;
 		this.retryColor = Color.white;
 		//the background image is the same as the menu background S
 		img = getImage("/images/Background.png");
 	}
 	public void tick() {
-		handler.clearPlayer();
+		game.getHandler().clearPlayer();
 		flash();
 	}
 
 	public void render(Graphics g) {
 		//render the background image
-		g.drawImage(img, 0, 0, (int)handler.getGameDimension().getWidth(), (int)handler.getGameDimension().getHeight(), null);
+		g.drawImage(img, 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
 		//Set up the font
 		Font font = new Font("Amoebic", 1, 100);
 		Font font2 = new Font("Amoebic", 1, 60);
@@ -55,17 +50,17 @@ public class GameOver extends GameState {
 		g.setFont(font);
 		g.setColor(Color.white);
 		text = "Game Over";
-		g.drawString(text, (int)handler.getGameDimension().getWidth() / 2 - getTextWidth(font, text) / 2, (int)handler.getGameDimension().getHeight() / 2 - 150);
+		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font, text) / 2, (int)game.getHandler().getGameDimension().getHeight() / 2 - 150);
 		//The level the player died on
 		g.setFont(font2);
 		g.setColor(Color.white);
-		text = "Level: " + hud.getLevel();
+		text = "Level: " + game.getHUD().getLevel();
 		g.drawString(text, 100, 500);
 		//Get the high score of the PLAYER
 		g.setFont(font2);
 		g.setColor(Color.white);
-		text = "Your Score: " + hud.getScore();
-		g.drawString(text, (int)handler.getGameDimension().getWidth() / 2 - getTextWidth(font2, text) / 2, 500);
+		text = "Your Score: " + game.getHUD().getScore();
+		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font2, text) / 2, 500);
 		//This is the high score from the text file
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader("src/HighScores.txt"));
@@ -85,16 +80,16 @@ public class GameOver extends GameState {
 		g.setColor(this.retryColor);
 		g.setFont(font2);
 		text = "Click anywhere to play again";
-		g.drawString(text, (int)handler.getGameDimension().getWidth() / 2 - getTextWidth(font2, text) / 2, (int)handler.getGameDimension().getHeight() / 2 + 150);
+		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font2, text) / 2, (int)game.getHandler().getGameDimension().getHeight() / 2 + 150);
 	}
 
     @Override
     public void mousePressed(MouseEvent e) {
         super.mousePressed(e);
-        handler.object.clear();
-        hud.health = 100;
-        hud.setScore(0);
-        hud.setLevel(1);
+        game.getHandler().object.clear();
+        game.getHUD().health = 100;
+        game.getHUD().setScore(0);
+        game.getHUD().setLevel(1);
         game.setGameState(game.getMenu());
     }
 

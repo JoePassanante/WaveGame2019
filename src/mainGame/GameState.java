@@ -1,11 +1,12 @@
 package mainGame;
 
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 
-public abstract class GameState extends MouseAdapter {
-    abstract void tick();
-    abstract void render(Graphics g);
+public abstract class GameState extends MouseAdapter implements Animatable {
+    protected Game game;
+    public GameState(Game g) {
+        this.game = g;
+    }
 
     /** MOUSE OVER
      * Helper method to detect is the mouse is over a "button" drawn via Graphics
@@ -23,7 +24,7 @@ public abstract class GameState extends MouseAdapter {
      * 	button height
      * @return boolean, true if the mouse is contained within the button
      */
-    public boolean mouseOver(double mx, double my, int x, int y, int width, int height) {
+    public static boolean mouseOver(double mx, double my, int x, int y, int width, int height) {
         if (mx > x && mx < x + width) {
             if (my > y && my < y + height) {
                 return true;

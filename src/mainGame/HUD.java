@@ -14,7 +14,7 @@ import java.net.URL;
  *
  */
 
-public class HUD {
+public class HUD extends GameState {
 
 	public double health = 100;
 	private double healthMax = 100;
@@ -36,8 +36,7 @@ public class HUD {
 
 	private int extraLives = 0;
 	public int levelProgress;
-	public Player player;
-	
+
 	//calls background and each of the damage resistance shields
 	private Image img;
 	private Image HUDshield1;
@@ -46,9 +45,8 @@ public class HUD {
 	private Image HUDshield4;
 	private Image HUDshield5;
 
-	private Handler handler;
-	public HUD(Handler h) {
-	    handler = h;
+	public HUD(Game game) {
+        super(game);
     }
 
 	//game uses tick method to check amount of health player has and update health bar display. Also updates score using this method
@@ -75,7 +73,7 @@ public class HUD {
 	public void render(Graphics g) {
 		Font font = new Font("Amoebic", 1, 30);
 		
-		g.drawImage(img, 0, 0, (int)handler.getGameDimension().getWidth(), (int)handler.getGameDimension().getHeight(), null);
+		g.drawImage(img, 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
 		HUDshield1 = getImage("/images/shield1.png");
 		HUDshield2 = getImage("/images/shield2.png");
 		HUDshield3 = getImage("/images/shield3.png");
@@ -99,13 +97,13 @@ public class HUD {
 		g.drawString("Extra Lives: " + extraLives, 15, 125);
 		g.drawString("Level Progress: " + levelProgress + "%", 15, 175);
 		g.drawString("Health: " + (int)health + "/" + (int)healthMax, 15, 1050);
-		g.drawString("Player Size: " + player.getPlayerHeight(), 15, 225);
+		g.drawString("Player Size: " + game.getPlayer().getPlayerHeight(), 15, 225);
 		g.drawString("Regeneration: " + regenString, 15, 275);
-		g.drawString("High Score: " + handler.getHighScore(), 1500, 25);
+		g.drawString("High Score: " + game.getHandler().getHighScore(), 1500, 25);
 		
 		//this switch statement updates the damage resistance sprite on the HUD
 		Image shieldImg; 
-		switch ((int)((2 -player.getDamage())*100)){
+		switch ((int)((2 -game.getPlayer().getDamage())*100)){
 			case 0: shieldImg =  HUDshield1;break;
 			case 25: shieldImg =  HUDshield2;break;
 			case 50: shieldImg =  HUDshield3;break;
@@ -114,23 +112,23 @@ public class HUD {
 		}
 			//prints damage resistance next to HUD along with sprite
 			g.drawImage(shieldImg, healthBarWidth+40, 1010, 40, 40, null);
-			g.drawString("" + (2 -player.getDamage()),healthBarWidth+100, 1040);
+			g.drawString("" + (2 -game.getPlayer().getDamage()),healthBarWidth+100, 1040);
 
 		
 		
 		//this is a tough one, can't figure out what it does
-		if(handler.getHighScore() < score){
-			handler.setHighScore(score);
+		if(game.getHandler().getHighScore() < score){
+            game.getHandler().setHighScore(score);
 		}
 		
 
 		//if the player has an ability, display that to the screen
 		if (ability.equals("freezeTime")) {//comment
-			g.drawString("Time Freezes: " + abilityUses, (int)handler.getGameDimension().getWidth() - 300, 64);
+			g.drawString("Time Freezes: " + abilityUses, (int)game.getHandler().getGameDimension().getWidth() - 300, 64);
 		} else if (ability.equals("clearScreen")) {
-			g.drawString("Screen Clears: " + abilityUses, (int)handler.getGameDimension().getWidth() - 300, 64);
+			g.drawString("Screen Clears: " + abilityUses, (int)game.getHandler().getGameDimension().getWidth() - 300, 64);
 		} else if (ability.equals("levelSkip")) {
-			g.drawString("Level Skips: " + abilityUses, (int)handler.getGameDimension().getWidth() - 300, 64);
+			g.drawString("Level Skips: " + abilityUses, (int)game.getHandler().getGameDimension().getWidth() - 300, 64);
 		}
 	}
 	
@@ -209,7 +207,7 @@ public class HUD {
 	}
 	
 		public int thisHighScore() {
-		return handler.getHighScore();
+		return game.getHandler().getHighScore();
 	}
 
 		public boolean getRegen() {

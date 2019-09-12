@@ -1,20 +1,9 @@
 package mainGame;
 
 import javax.swing.*;
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.util.Scanner;
-import java.awt.GraphicsEnvironment;
 
 /**
  * Main game class. This class is the driver class and it follows the Holder
@@ -25,9 +14,9 @@ import java.awt.GraphicsEnvironment;
  * @author Aaron Paterson 9/9/19
  */
 
-public class Game extends JFrame {
+public class Game extends JFrame implements Runnable, Animatable {
     //---------------------------------------------------------------------------------
-    public static boolean devMode = true;//true - display game information | false - do not
+    public static boolean devMode = false;//true - enable cheats and debug info | false - do not
     //---------------------------------------------------------------------------------
 
     private static final long serialVersionUID = 1L;
@@ -36,46 +25,58 @@ public class Game extends JFrame {
 
 	private boolean running = false;
 	private HUD hud;
-	private Menu menu;
-	public Menu getMenu() {
+    public HUD getHUD() {
+        return hud;
+    }
+
+    private MouseListener mouseListener;
+
+    private GameState menu;
+	public GameState getMenu() {
 	    return menu;
     }
-	private GameOver gameOver;
+
+	private GameState gameOver;
 	public GameState getGameOver() {
 	    return gameOver;
     }
-	private UpgradeScreen upgradeScreen;
+
+	private GameState upgradeScreen;
 	public GameState getUpgradeScreen() {
 	    return upgradeScreen;
     }
-	private MouseListener mouseListener;
+
 	private Upgrades upgrades;
 	public Upgrades getUpgrades() {
 	    return upgrades;
     }
-	private int FPS = 0;
 
 	private Handler handler;
 	public Handler getHandler() {
 	    return handler;
     }
+
 	private Player player;
 	public Player getPlayer() {
 	    return player;
     }
-	private GameManager gm;
-	public GameManager getGameManager() {
-	    return gm;
+
+    private GameMode currentGame;
+	public GameMode getCurrentGame() {
+	    return currentGame;
     }
 
 	private GameState gameState;
-	public void setGameState(GameState gs) {
-	    gameState = gs;
-    }
     public GameState getGameState() {
 	    return gameState;
     }
+    public void setGameState(GameState gs) {
+        gameState = gs;
+    }
+
 	public GAME_AUDIO gameCurrentClip = GAME_AUDIO.Menu;
+
+    private int FPS = 0;
 
 	private boolean paused = false;
 	public void setPaused(boolean p) {
@@ -83,9 +84,6 @@ public class Game extends JFrame {
     }
 
 	private boolean africa = false;
-	public void setAfrica(boolean a) {
-	    africa = a;
-    }
 
 	/**
 	 * Used to switch between each of the screens shown to the user
@@ -103,18 +101,18 @@ public class Game extends JFrame {
 
         handler = new Handler(screenSize);
 		handler.updateSprites();
-		hud = new HUD(handler);
-		menu = new Menu(this, this.handler, this.hud);
+		hud = new HUD(this);
+		menu = new Menu(this);
 
 		gameState = menu;
 		
-		player = new Player(screenSize.getWidth() / 2 - 32, screenSize.getHeight() / 2 - 32, ID.Player, handler, this.hud, this);
-		upgradeScreen = new UpgradeScreen(this, handler, hud);
-		upgrades = new Upgrades(this, this.handler, this.hud, this.upgradeScreen, this.player);
-		gameOver = new GameOver(this, this.handler, this.hud);
+		player = new Player(screenSize.getWidth() / 2 - 32, screenSize.getHeight() / 2 - 32, ID.Player, this);
+		upgradeScreen = new UpgradeScreen(this);
+		upgrades = new Upgrades(this);
+		gameOver = new GameOver(this);
 		mouseListener = new MouseListener(this);
-		gm = new GameManager(this, hud);
-		addKeyListener(new KeyInput(this.handler, this, this.hud, this.player, this.upgrades));
+        currentGame = new Waves(this);
+		addKeyListener(new KeyInput(this));
 		addMouseListener(mouseListener);
 		AudioUtil.closeGameClip();
 		AudioUtil.playMenuClip(true, false);
@@ -144,14 +142,14 @@ public class Game extends JFrame {
 	/**
 	 * Starts the game loop.
 	 */
-	public synchronized void start() {
+	public void start() {
 		running = true;
 		run();
 	}
 	/**
 	 * Stops the game loop.
 	 */
-	public synchronized void stop() {
+	public void stop() {
 			running = false;
 	}
 	/**
@@ -174,8 +172,22 @@ public class Game extends JFrame {
 				tick();// 60 times a second, objects are being updated
 				delta--;
 			}
-			if (running)
-				render();// 60 times a second, objects are being drawn
+			if (running) {
+                /*
+                 * BufferStrategies are used to prevent screen tearing. In other words, this
+                 * allows for all objects to be redrawn at the same time, and not individually
+                 */
+                if (getWidth() > 0 && getHeight() > 0) {
+                    BufferStrategy bs = getBufferStrategy();
+                    if (bs == null) {
+                        createBufferStrategy(3);
+                    }
+                    else {
+                        render(bs.getDrawGraphics());// 60 times a second, objects are being drawn
+                        bs.show();
+                    }
+                }
+            }
 			frames++;
 
 			if (System.currentTimeMillis() - timer > 1000) {
@@ -191,7 +203,7 @@ public class Game extends JFrame {
 	 * Main tick function that calls it for all operating classes in the game. 
 	 * Ticks classes based on current game state. 
 	 */
-	private void tick() {
+	public void tick() {
 		if (this.paused) {return;}
 		
 		handler.tick();// handler must always be ticked in order to draw all entities.
@@ -202,50 +214,28 @@ public class Game extends JFrame {
 				AudioUtil.closeGameClip();
 				AudioUtil.playMenuClip(true, false);
 			}
-			//menu.tick();
-		} 
-		if (gameState == gm) {// game is running
+		}
+		if (gameState == currentGame) {// game is running
 			if (this.gameCurrentClip != GAME_AUDIO.Game) {
 				this.gameCurrentClip = GAME_AUDIO.Game;
 				AudioUtil.closeMenuClip();
 				AudioUtil.playGameClip(true);
 			}
 			hud.tick();
-			//gm.tick();
 		}
-		/*
-		else if (gameState == upgradeScreen) {// user is on upgrade screen, update the upgrade screen
-			//upgradeScreen.tick();
-		} else if (gameState == gameOver) {// game is over, update the game over screen
-			//gameOver.tick();
-		}
-		*/
-
 	}
 
 	/**
 	 * Constantly drawing to the many buffer screens of each entity requiring the
 	 * Graphics objects (entities, screens, HUD's, etc).
 	 */
-	private void render() {
-		/*
-		 * BufferStrategies are used to prevent screen tearing. In other words, this
-		 * allows for all objects to be redrawn at the same time, and not individually
-		 */
-		if (getWidth() <= 0 || getHeight() <= 0) {
-	        return;
-	    }
-		BufferStrategy bs = this.getBufferStrategy();
-		if (bs == null) {
-			this.createBufferStrategy(3);
-			return;
-		}
-		Graphics2D g = (Graphics2D) bs.getDrawGraphics();
+	public void render(Graphics gfx) {
+	    Graphics2D g = (Graphics2D)gfx;
         AffineTransform old = g.getTransform();
 
         double scaleFactor = Math.min(
-                Double.valueOf(getWidth())/screenSize.getWidth(),
-                Double.valueOf(getHeight())/screenSize.getHeight()
+                getWidth()/screenSize.getWidth(),
+                getHeight()/screenSize.getHeight()
         );
 
         g.translate(getWidth()/2,getHeight()/2);
@@ -257,7 +247,7 @@ public class Game extends JFrame {
 		g.setColor(Color.black);
 		g.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
 		gameState.render(g);
-		if(gameState == gm) {
+		if(gameState == currentGame) {
 		    hud.render(g);
         }
 		if(devMode){
@@ -274,7 +264,6 @@ public class Game extends JFrame {
 
 		g.dispose();
 		g.setTransform(old);
-		bs.show();
 	}
 
 	/**
