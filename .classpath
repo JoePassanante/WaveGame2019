@@ -9,7 +9,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AppleJavaExtensions"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jamepad"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AppleJavaExtensions (2)"/>
-	<classpathentry kind="lib" path="C:/Users/joeyg/Desktop/LohlesSandbox/Wave Game/Libraries/AppleJavaExtensions.jar"/>
-	<classpathentry kind="lib" path="C:/Users/joeyg/Desktop/LohlesSandbox/Wave Game/Libraries/Jamepad.jar"/>
+	<classpathentry kind="lib" path="C:\Users\JEPas\Documents\Quinnipiac\SER225\Wave\WaveGame2019\Libraries\AppleJavaExtensions.jar"/>
+	<classpathentry kind="lib" path="C:\Users\JEPas\Documents\Quinnipiac\SER225\Wave\WaveGame2019\Libraries\Jamepad.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
