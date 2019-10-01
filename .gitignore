@@ -6,7 +6,7 @@ tmp/
 **/HighScores.txt
 
 # OSX junk
-**/.DS_Store
+**.DS_Store
 
 # IDEA junk
 **/.idea/workspace.xml
@@ -18,3 +18,6 @@ tmp/
 
 # VScode junk
 .vscode
+
+# KDE Junk !?
+.directory
