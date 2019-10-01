@@ -15,3 +15,6 @@ tmp/
 # Eclipse junk
 .classpath
 .project
+
+# VScode junk
+.vscode
