@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
@@ -62,6 +61,7 @@ public class GameOver extends GameState {
 		g.setColor(Color.white);
 		text = "Your Score: " + game.getHUD().getScore();
 		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font2, text) / 2, 500);
+
 		//This is the high score from the text file
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader("src/HighScores.txt"));
@@ -76,6 +76,7 @@ public class GameOver extends GameState {
 			System.out.println(e);
 			System.exit(1);
 		}
+
 		//g.drawString(text, Game.WIDTH / 2 - getTextWidth(font2, text) / 2, Game.HEIGHT / 2 + 50);
 		//Text flashing
 		g.setColor(this.retryColor);

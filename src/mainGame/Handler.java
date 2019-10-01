@@ -29,8 +29,8 @@ public class Handler implements Animatable {
         highscore = h;
     }
 
-    ArrayList<GameObject> object = new ArrayList<GameObject>();
-    ArrayList<Pickup> pickups = new ArrayList<Pickup>();
+    ArrayList<GameObject> object = new ArrayList<>();
+    ArrayList<Pickup> pickups = new ArrayList<>();
     public int timer = 0;
     private Themes theme = Themes.Space;
 
@@ -93,11 +93,9 @@ public class Handler implements Animatable {
             }
         }
         for (int i = 0; i < pickups.size(); i++) {
-            Pickup tempObject = pickups.get(i);
-
             // Every Pickup has a tick method, so this effectively updates every single
             // object
-            tempObject.tick();
+            pickups.get(i).tick();
         }
 
     }
@@ -118,9 +116,7 @@ public class Handler implements Animatable {
             }
         }
         for (int i = 0; i < pickups.size(); i++) {
-            Pickup tempObject = pickups.get(i);
-
-            tempObject.render(g);
+            pickups.get(i).render(g);
         }
     }
 
@@ -152,11 +148,9 @@ public class Handler implements Animatable {
      * Clears all entities that have an ID of some sort of enemy
      */
     public void clearEnemies() {
-        for (int i = 0; i < this.object.size(); i++) {
-            GameObject tempObject = this.object.get(i);
-            if (tempObject.getId() != ID.Player && object.contains(tempObject)) {
-                this.removeObject(tempObject);
-                i--;
+        for(int i=object.size()-1; i>=0; i--) {
+            if(object.get(i).getId() != ID.Player) {
+                object.remove(i);
             }
         }
     }
@@ -164,6 +158,21 @@ public class Handler implements Animatable {
     /**
      * Clears all entities that have an ID of player
      */
+    public void clearPlayer() {
+        for(int i=object.size()-1; i>=0; i--) {
+            if(object.get(i).getId() == ID.Player) {
+                object.remove(i);
+            }
+        }
+    }
+
+    /**
+     * Clears all pickups
+     */
+    public void clearPickups() {
+        pickups.clear();
+    }
+
     public void checkForBounds(GameObject i) {
         try {
             if (i.x >= gameDimension.getWidth() * 3 || i.x <= 0 - (gameDimension.getWidth() * 2) ||
@@ -176,17 +185,6 @@ public class Handler implements Animatable {
             System.err.println("Trail item removed mid count. Do not be alarmed.");
         }
 
-    }
-
-    public void clearPlayer() {
-        for (int i = 0; i < this.object.size(); i++) {
-            GameObject tempObject = this.object.get(i);
-            if (tempObject.getId() == ID.Player) {
-                this.removeObject(tempObject);
-                i--; // Removing shrinks the array by 1, causing the loop to skip a player (should
-                // there be more than one)
-            }
-        }
     }
 
     public int getNumObjects() {

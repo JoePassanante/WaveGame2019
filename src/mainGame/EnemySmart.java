@@ -58,12 +58,14 @@ public class EnemySmart extends Enemy {
 		// if (this.x <= 0 || this.x >= Game.WIDTH - 16) velX *= -1;
 
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.green, 16, 16, 0.025, this.handler));
-		
-		double dir = pointDirection(new Point.Double(this.x,this.y),new Point.Double(player.x,player.y));
-		
+
+
+        double dir = pointDirection(
+            new Point.Double(this.x,this.y),
+            new Point.Double(player.x, player.y)
+        );
 		velX = Math.cos(dir)*speed;
 		velY = Math.sin(dir)*speed;
-
 	}
 
 	public void render(Graphics g) {

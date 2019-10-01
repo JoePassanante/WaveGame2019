@@ -119,7 +119,7 @@ public class Level extends GameState {
 	 * @param g Passed by parent (IE gamemode).
 	 */
 	public void render(Graphics g){
-		
+		game.getHandler().render(g);
 	}
 	private boolean checkIfBossDead(){
 		boolean isDead = true;

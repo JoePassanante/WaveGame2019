@@ -2,7 +2,7 @@ package mainGame;
 
 import java.awt.*;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,7 +87,6 @@ public class Waves extends GameMode {
         upgrades = new Upgrades(this);
         gameOver = new GameOver(this);
 
-        mouseInput = new MouseInput(this);
         keyInput = new KeyInput(this);
     }
 
@@ -178,37 +177,37 @@ public class Waves extends GameMode {
 	public void tick() {
         if (this.paused) {return;}
 
-		if(currentLevel==null || currentLevel.running()==false){
-			this.currentLevelNum = this.currentLevelNum + 1;
+		if(currentLevel==null || !currentLevel.running()){
+			currentLevelNum += 1;
 			getHUD().setLevel(this.currentLevelNum);
             getHandler().clearEnemies();
+            getHandler().clearPickups();
 
 			double tempx = (Math.random()*(getHandler().getGameDimension().getWidth()-300))+150;
 			double tempy = (Math.random()*(getHandler().getGameDimension().getHeight()-300))+150;
-			switch ((int)(Math.random()*5)){
-			case 0: getHandler().addObject(new PickupSize(tempx,tempy));break;
-			case 1: getHandler().addObject(new PickupHealth(tempx,tempy));break;
-			case 2: getHandler().addObject(new PickupLife(tempx,tempy));break;
-			case 3: getHandler().addObject(new PickupScore(tempx,tempy));break;
-			case 4: getHandler().addObject(new PickupFreeze(tempx,tempy));break;
-			}
+
 			if(this.currentLevelNum%5 == 0){
-				ArrayList<Integer>bossLimit = new ArrayList<Integer>();
+				ArrayList<Integer>bossLimit = new ArrayList<>();
 				bossLimit.add(1);
 				System.out.println("New Boss Level");
 				currentLevel = new Level(this, 0,randomBoss(), bossLimit, -1 , false, false, currentLevelNum);
-			} else{
-				if ((currentLevelNum%5)-1 == 0 && currentLevelNum > 1) {setState(getUpgradeScreen());
-				    setPaused(true);
-				}
+			} else if (currentLevelNum%5 == 1 && currentLevelNum > 1) {
+                setState(upgradeScreen);
+            } else {
 				System.out.println("New Normal Level");
+                switch ((int)(Math.random()*5)){
+                    case 0: getHandler().addPickup(new PickupSize(tempx,tempy));break;
+                    case 1: getHandler().addPickup(new PickupHealth(tempx,tempy));break;
+                    case 2: getHandler().addPickup(new PickupLife(tempx,tempy));break;
+                    case 3: getHandler().addPickup(new PickupScore(tempx,tempy));break;
+                    case 4: getHandler().addPickup(new PickupFreeze(tempx,tempy));break;
+                }
 				this.createNewEnemyLists();
 				System.out.println(this.currentEnemy.size());
 				System.out.println(this.currentEnemySpawns.size());
 				currentLevel = new Level( this,0, this.currentEnemy,this.currentEnemySpawns,60*(20),false,false, currentLevelNum);
 			}
 		}
-		//currentLevel.tick();
 
 		getState().tick();
         if (getState() == menu) {// user is on menu, update the menu items
@@ -284,8 +283,6 @@ public class Waves extends GameMode {
 	public void render(Graphics gfx) {
         Graphics2D g = (Graphics2D) gfx;
 
-        mouseInput.setSpace(g.getTransform());
-
         g.drawImage(img, 0, 0, (int)getHandler().getGameDimension().getWidth(), (int)getHandler().getGameDimension().getHeight(), null);
 
         getState().render(g);
@@ -302,7 +299,6 @@ public class Waves extends GameMode {
 //            g.drawString("FPS(?): " + this.FPS, WIDTH-300, HEIGHT-100);
 //            g.drawString("Trails: " + handler.getTrails() + " / " + handler.getNumObjects(), WIDTH-300, HEIGHT-50);
         }
-        handler.render(g);
 	}
 
     /**
@@ -323,10 +319,9 @@ public class Waves extends GameMode {
 		}
 	}
 
-	private MouseInput mouseInput;
     @Override
-    MouseListener getMouseInput() {
-        return mouseInput;
+    public void mousePressed(MouseEvent e) {
+	    getState().mousePressed(e);
     }
 
     private KeyInput keyInput;

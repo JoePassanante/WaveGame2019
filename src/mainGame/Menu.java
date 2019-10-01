@@ -88,8 +88,6 @@ public class Menu extends GameState {
 		if (!help) {
 			//display the background
 			g.drawImage(img, 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
-			//using the handler, render the graphics
-            game.getHandler().render(g);
 			//create the font objects
 			Font font = new Font("Amoebic", 1, 100); //the title
 			Font font2 = new Font("Amoebic", 1, 34); //help and quit

@@ -16,7 +16,8 @@ import javax.imageio.ImageIO;
  * Player object class w/ collision
  * 
  * @author Brandon Loehle 5/30/16
- * @Revised William Joseph 12/9/18
+ * @author William Joseph 12/9/18
+ * @author Aaron Paterson 10/1/19
  */
 
 public class Player extends GameObject {
@@ -80,6 +81,7 @@ public class Player extends GameObject {
 						System.exit(1);
 					}
 				game.setState(game.getGameOver());
+				game.setPaused(true);
 
                 game.getHandler().clearPlayer();
 			}
@@ -99,8 +101,7 @@ public class Player extends GameObject {
 		for (int i = 0; i < game.getHandler().object.size(); i++) {
             GameObject tempObject = game.getHandler().object.get(i);
 
-            if (Enemy.class.isInstance(tempObject)){//tempObject is an enemy
-
+            if (tempObject instanceof Enemy) {//tempObject is an enemy
                 // collision code
                 if (getBounds().intersects(tempObject.getBounds())) {//Player, Enemy Collision
                     AudioUtil.playClip("../gameSound/explosion.wav", false);
@@ -117,40 +118,40 @@ public class Player extends GameObject {
                     game.getHUD().updateScoreColor(Color.red);
                 }
             }
+        }
+
+        for(int i = 0; i < game.getHandler().pickups.size(); i++) {
             //if player collides with powerup, trigger what that powerup does, remove the powerup and play the collision sound
-            if (Pickup.class.isInstance(tempObject)) {//Power ups pickup
-                if (tempObject.getId() == ID.PickupHealth && (getBounds().intersects(tempObject.getBounds()))) {
+            if(getBounds().intersects(game.getHandler().pickups.get(i).getBounds())) {
+                Pickup tempObject = game.getHandler().pickups.remove(i);
+                if (tempObject.getId() == ID.PickupHealth) {
                     game.getHUD().restoreHealth();
-                    game.getHandler().removeObject(tempObject);
                     AudioUtil.playClip("../gameSound/powerup.wav", false);
                 }
 
-                if (tempObject.getId() == ID.PickupSize && (getBounds().intersects(tempObject.getBounds()))) {
-                    if (playerWidth>3) {
-                    playerWidth/=1.2;
-                    playerHeight/=1.2;}else {
-                        game.getHUD().setScore(game.getHUD().getScore()+1000);
+                if (tempObject.getId() == ID.PickupSize) {
+                    if (playerWidth > 3) {
+                        playerWidth /= 1.2;
+                        playerHeight /= 1.2;
+                    } else {
+                        game.getHUD().setScore(game.getHUD().getScore() + 1000);
                     }
-                    game.getHandler().removeObject(tempObject);
                     AudioUtil.playClip("../gameSound/powerup.wav", false);
                 }
 
-                if (tempObject.getId() == ID.PickupLife && (getBounds().intersects(tempObject.getBounds()))) {
-                    game.getHUD().setExtraLives(game.getHUD().getExtraLives()+1);
-                    game.getHandler().removeObject(tempObject);
+                if (tempObject.getId() == ID.PickupLife) {
+                    game.getHUD().setExtraLives(game.getHUD().getExtraLives() + 1);
                     AudioUtil.playClip("../gameSound/1up.wav", false);
                 }
 
-                if (tempObject.getId() == ID.PickupScore && (getBounds().intersects(tempObject.getBounds()))) {
-                    game.getHUD().setScore(game.getHUD().getScore()+1000);
-                    game.getHandler().removeObject(tempObject);
+                if (tempObject.getId() == ID.PickupScore) {
+                    game.getHUD().setScore(game.getHUD().getScore() + 1000);
                     AudioUtil.playClip("../gameSound/coin.wav", false);
                 }
 
-                if (tempObject.getId() == ID.PickupFreeze && (getBounds().intersects(tempObject.getBounds()))) {
+                if (tempObject.getId() == ID.PickupFreeze) {
                     AudioUtil.playClip("../gameSound/freeze1.wav", false);
                     game.getHandler().timer = 900;
-                    game.getHandler().removeObject(tempObject);
                 }
             }
         }
@@ -190,5 +191,4 @@ public class Player extends GameObject {
 	public double getDamage() {//get damage done
 		return damage;
 	}
-	
 }
