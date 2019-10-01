@@ -26,7 +26,6 @@ public class Client extends JFrame implements Runnable, Animatable {
 
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private GameMode currentGame;
-    private AffineTransform screenTransform;
 
 	/**
 	 * Display the game window
@@ -40,7 +39,7 @@ public class Client extends JFrame implements Runnable, Animatable {
 		AudioUtil.playMenuClip(true, false);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+        setResizable(true);
 
         // Set fullscreen
         if (System.getProperty("os.name").toLowerCase().contains("mac")) { //If user is on macOS
@@ -51,7 +50,7 @@ public class Client extends JFrame implements Runnable, Animatable {
                 System.err.println("Failed to load apple extensions package");
             }
         } else {
-            setUndecorated(true);
+            setUndecorated(false);
         }
         setVisible(true);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -67,40 +66,44 @@ public class Client extends JFrame implements Runnable, Animatable {
 	 * Ticks 60 times a second.
 	 */
 	public void run() {
-		requestFocus();
-        final double fps = 60, nano = 1_000_000_000, frame=nano/fps;
-		long tick = 0, tock = System.nanoTime(), delta = 0;
-		while (true) {
-		    tick = tock;
-            while (delta > frame) {
-				tick(); // 60 times a second, objects are being updated
-				delta -= frame;
-			}
-            /*
-             * BufferStrategies are used to prevent screen tearing. In other words, this
-             * allows for all objects to be redrawn at the same time, and not individually
-             */
+        requestFocus();
+
+        final long frame = 1_000_000_000/60;
+        long tick, tock = System.nanoTime(), delta = 0;
+
+        while (true) {
+            tick = tock;
+
+            while (delta >= frame) {
+                tick(); // Objects are being updated at most sixty times a second
+                delta -= frame;
+            }
+
             if (getWidth() > 0 && getHeight() > 0) {
-                BufferStrategy bs = getBufferStrategy();
+                BufferStrategy bs = getBufferStrategy(); // Draw entire frame all at once
                 if (bs == null) {
                     createBufferStrategy(3);
+                    tick = System.nanoTime();
                 }
                 else {
-                    render(bs.getDrawGraphics());// 60 times a second, objects are being drawn
+                    render(bs.getDrawGraphics()); // Objects are being drawn as frequently as possible
                     bs.show();
                 }
             }
+
             tock = System.nanoTime();
             delta += tock-tick;
         }
-	} 
+	}
 	/**
-	 * Main tick function that calls it for all operating classes in the game. 
-	 * Ticks classes based on current game state. 
+	 * Main tick function that calls it for all operating classes in the game.
+	 * Ticks classes based on current game state.
 	 */
 	public void tick() {
         currentGame.tick();
 	}
+
+	private AffineTransform screenSpace;
 
 	/**
 	 * Constantly drawing to the many buffer screens of each entity requiring the
@@ -121,6 +124,8 @@ public class Client extends JFrame implements Runnable, Animatable {
         g.scale(scaleFactor, scaleFactor);
         g.translate(-screenSize.getWidth()/2,-screenSize.getHeight()/2);
 
+        screenSpace = g.getTransform();
+
         currentGame.render(g);
 
 		g.dispose();
@@ -134,7 +139,7 @@ public class Client extends JFrame implements Runnable, Animatable {
     protected void processMouseEvent(MouseEvent e) {
         try {
             Point2D p = new Point();
-            ((Graphics2D)getGraphics()).getTransform().inverseTransform(e.getPoint(), p);
+            screenSpace.inverseTransform(e.getPoint(), p);
             super.processMouseEvent(new MouseEvent(
                     e.getComponent(),
                     e.getID(),
