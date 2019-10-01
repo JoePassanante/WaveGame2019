@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="AppleJavaExtensions">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/src/images/AppleJavaExtensions.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Libraries/AppleJavaExtensions.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

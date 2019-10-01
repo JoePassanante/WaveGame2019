@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
@@ -179,14 +180,26 @@ public class Menu extends GameState {
 		}
 	}
 
-    @Override
+    //Background image source path
+    public Image getImage(String path) {
+        Image image = null;
+        try {
+            URL imageURL = Client.class.getResource(path);
+            image = Toolkit.getDefaultToolkit().getImage(imageURL);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return image;
+    }
+
     public void mousePressed(MouseEvent e) {
-	    if (!getHelp()) {
+        if (!getHelp()) {
             // Waves Button
             if (mouseOver(e.getX(), e.getY(), 700, 300, 470, 250)) {
                 game.getHandler().object.clear();
                 game.setState(game.getCurrentLevel());
                 game.getHandler().addObject(game.getPlayer());
+                game.tick();
             }
             // Help Button
             else if (mouseOver(e.getX(), e.getY(), 230, 360, 260, 200)) {
@@ -213,16 +226,19 @@ public class Menu extends GameState {
         }
     }
 
-    //Background image source path
-    public Image getImage(String path) {
-        Image image = null;
-        try {
-            URL imageURL = Client.class.getResource(path);
-            image = Toolkit.getDefaultToolkit().getImage(imageURL);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return image;
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }
 

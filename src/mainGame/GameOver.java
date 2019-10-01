@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
@@ -22,7 +23,6 @@ import java.net.URL;
  */
 
 public class GameOver extends GameState {
-
 	private int timer;
 	private Color retryColor;
 	private String text;
@@ -85,17 +85,6 @@ public class GameOver extends GameState {
 		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font2, text) / 2, (int)game.getHandler().getGameDimension().getHeight() / 2 + 150);
 	}
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-        super.mousePressed(e);
-        game.getHandler().object.clear();
-        game.getHUD().health = 100;
-        game.getHUD().setScore(0);
-        game.getHUD().setLevel(1);
-        game.setState(game.getMenu());
-    }
-
-
     //This really isn't "flashing" so much as it's changing the color of the text to black then white
 	public void flash() {
 		timer--;
@@ -135,4 +124,28 @@ public class GameOver extends GameState {
 		}
 		return image;
 	}
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        game.getHandler().object.clear();
+        game.getHUD().health = 100;
+        game.getHUD().setScore(0);
+        game.getHUD().setLevel(1);
+        game.setState(game.getMenu());
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
 }

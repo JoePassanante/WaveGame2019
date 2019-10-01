@@ -14,8 +14,7 @@ import java.net.URL;
  *
  */
 
-public class HUD extends GameState {
-
+public class HUD implements Animatable {
 	public double health = 100;
 	private double healthMax = 100;
 	private double greenValue = 255;
@@ -206,23 +205,19 @@ public class HUD extends GameState {
 	public void restoreHealth() {
 		this.health = healthMax;
 	}
-	
-		public int thisHighScore() {
-		return game.getHandler().getHighScore();
-	}
 
-		public boolean getRegen() {
-			return regen;
-		}
-		//need this to have images work on HUD
-		public Image getImage(String path) {
-			Image image = null;
-			try {
-				URL imageURL = Client.class.getResource(path);
-				image = Toolkit.getDefaultToolkit().getImage(imageURL);
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
-			return image;
-		}
+    public boolean getRegen() {
+        return regen;
+    }
+    //need this to have images work on HUD
+    public Image getImage(String path) {
+        Image image = null;
+        try {
+            URL imageURL = Client.class.getResource(path);
+            image = Toolkit.getDefaultToolkit().getImage(imageURL);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return image;
+    }
 }

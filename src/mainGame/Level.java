@@ -2,6 +2,8 @@ package mainGame;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 /**
  * This class is meant to be a generic level that classes implementing gamemode can use to generate and throw away levels of different parameters.
@@ -31,7 +33,7 @@ public class Level extends GameState {
 	 * @param spawnPowerUp - True/False for spawning PowerUps(Not Implemented)
 	 * @param upgrades - True/False if when the level is completed the player can choose a upgrade (Not Implemented)
 	 */
-	public Level(Waves g,int dif, ArrayList<ID> enemyList, ArrayList<Integer>maxSpawn,int maxTick,boolean spawnPowerUp, boolean upgrades, int currentLevelNum){
+	public Level(Waves g, int dif, ArrayList<ID> enemyList, ArrayList<Integer>maxSpawn, int maxTick, boolean spawnPowerUp, boolean upgrades, int currentLevelNum){
 	    game = g;
 		this.enemyList = enemyList;
 		this.spawnLimits = maxSpawn;
@@ -133,4 +135,106 @@ public class Level extends GameState {
 	public boolean running(){
 		return this.levelRunning;
 	}
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    private boolean[] keyDown = new boolean[4];
+
+    private void changeDir() {
+        int goX = 0;
+        int goY = 0;
+        if (keyDown[0]) {goY--;}
+        if (keyDown[2]) {goY++;}
+        if (keyDown[1]) {goX--;}
+        if (keyDown[3]) {goX++;}
+
+        double h = 1;
+        if(goX != 0 && goY != 0) {
+            h = Math.hypot(goX, goY);
+        }
+
+        game.getPlayer().velX = goX * Player.playerSpeed/h;
+        game.getPlayer().velY = goY * Player.playerSpeed/h;
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        // key events for player 1
+        // if the p key is pressed, the game would paused, if the key is pressed again, it would unpaused
+        if(key == KeyEvent.VK_P){
+            if(Client.devMode) {
+                game.setPaused(false);
+                AudioUtil.playClip("../gameSound/pause.wav", false);
+                AudioUtil.pauseGameClip();
+            }
+        }
+        if(key == KeyEvent.VK_U){
+            if(Client.devMode) {
+                game.setState(game.getUpgradeScreen());
+            }
+        }
+        if (key == KeyEvent.VK_ESCAPE) {
+            game.resetMode();
+            game.setState(game.getMenu());
+            game.getHandler().clearPlayer();
+        }
+        // if the w key is pressed, the player would move up
+        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+            //tempObject.setVelY(-(this.speed));
+            keyDown[0] = true;
+        }
+        // if the a key is pressed, the player would move left
+        if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+            //tempObject.setVelX(-(this.speed));
+            keyDown[1] = true;
+        }
+        // if the s key is pressed, the player would move down
+        if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+            //tempObject.setVelY(this.speed);
+            keyDown[2] = true;
+        }
+        // if the d key is pressed, the player would move right
+        if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+            //tempObject.setVelX(this.speed);
+            keyDown[3] = true;
+        }
+        changeDir();
+        // if the spacebar key is pressed while having an ability, the ability would be used
+        if (key == KeyEvent.VK_SPACE) {
+            game.getUpgrades().useAbility();
+        }
+        // if the enter key is pressed, the current level the player is currently in would skip to the next level
+        if (key == KeyEvent.VK_ENTER || key == KeyEvent.VK_E) {
+            if(Client.devMode) {
+                game.resetMode(false);
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        // key events for player 1
+        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP)
+            keyDown[0] = false;// tempObject.setVelY(0);
+        if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT)
+            keyDown[1] = false;// tempObject.setVelX(0);
+        if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN)
+            keyDown[2] = false;// tempObject.setVelY(0);
+        if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+            keyDown[3] = false;// tempObject.setVelX(0);
+        }
+
+        changeDir();
+    }
 }

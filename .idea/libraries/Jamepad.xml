@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="Jamepad">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/Jamepad.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Libraries/Jamepad.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
