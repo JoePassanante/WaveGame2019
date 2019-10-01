@@ -2,4 +2,19 @@
 bin/
 classes/
 tmp/
+
+**/HighScores.txt
+
+# OSX junk
+**/.DS_Store
+
+# IDEA junk
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+
+# Eclipse junk
+.classpath
+.project
+
+# VScode junk
 .vscode

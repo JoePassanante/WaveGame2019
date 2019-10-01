@@ -3,34 +3,23 @@ package mainGame;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
+import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
-import mainGame.Game.STATE;
 
 /**
  * The main menu
  * 
  * @author Brandon Loehle 5/30/16
+ * @author Aaron Paterson 9/11/19
  *
  */
 
-/*****
- * 
- */
-
-public class Menu {
-
-	private Game game;
-	private Handler handler;
-	@SuppressWarnings("unused")
-	private HUD hud;
+public class Menu extends GameState {
 	private Image img;
 	private Image PowerCoin;
 	private Image PowerLife;
@@ -42,20 +31,26 @@ public class Menu {
 	private Random r;
 	private ArrayList<Color> colorPick = new ArrayList<Color>();
 	private int colorIndex;
+	private boolean help;
+	public void setHelp(boolean h) {
+	    help = h;
+    }
+    public boolean getHelp() {
+	    return help;
+    }
 	//private static boolean rockMusic = true; //the music that is supposed to play
+    private Waves game;
 
-	public Menu(Game game, Handler handler, HUD hud) {
-		this.game = game;
-		this.handler = handler;
-		this.hud = hud;
+	public Menu(Waves waves) {
+	    game = waves;
 		timer = 10;
 		r = new Random();
 		addColors();
 
 		img = getImage("/images/Background.png");
 
-		handler.addObject(new MenuFireworks((r.nextInt(Game.WIDTH) - 25), 500, 50, 50, 0, -2,
-				colorPick.get(r.nextInt(6)), ID.Firework, this.handler));
+		game.getHandler().addObject(new MenuFireworks((r.nextInt((int)game.getHandler().getGameDimension().getWidth()) - 25), 500, 50, 50, 0, -2,
+				colorPick.get(r.nextInt(6)), ID.Firework, game.getHandler()));
 	}
 
 	//using the java color picker, which colors you will add to the scene
@@ -73,28 +68,26 @@ public class Menu {
 	public void tick() {
 		timer--;
 		if (timer <= 0) {
-			handler.object.clear();
+			game.getHandler().object.clear();
 			colorIndex = r.nextInt(6);
-			handler.addObject(new MenuFireworks((r.nextInt(Game.WIDTH) - 25), 1080, 100, 100, 0, -4,
-					colorPick.get(colorIndex), ID.Firework, this.handler));
+            game.getHandler().addObject(new MenuFireworks((r.nextInt((int)game.getHandler().getGameDimension().getWidth()) - 25), 1080, 100, 100, 0, -4,
+					colorPick.get(colorIndex), ID.Firework, this.game.getHandler()));
 			timer = 300;
 		}
-		handler.tick();
+        game.getHandler().tick();
 	}
 	//THIS MAKES THE MENU LOOK THE WAY IT DOES USING THE GRAPHICS 
 	public void render(Graphics g) {
 	    // Change background on theme change
-	    if (handler.getTheme() == Themes.Space) {
+	    if (game.getHandler().getTheme() == Themes.Space) {
             img = getImage("/images/Background.png");
-        } else if (handler.getTheme() == Themes.Underwater) {
+        } else if (game.getHandler().getTheme() == Themes.Underwater) {
             img = getImage("/images/Water.jpg");
         }
 
-		if (game.gameState == STATE.Menu) {
-			//display the background  
-			g.drawImage(img, 0, 0, Game.WIDTH, Game.HEIGHT, null);
-			//using the handler, render the graphics
-			handler.render(g);
+		if (!help) {
+			//display the background
+			g.drawImage(img, 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
 			//create the font objects
 			Font font = new Font("Amoebic", 1, 100); //the title
 			Font font2 = new Font("Amoebic", 1, 34); //help and quit
@@ -139,7 +132,7 @@ public class Menu {
 			g.setFont(font2);
 			g.drawString("Credits: Irrelephant Games '18-'19", 0, 1000);
 			//Now if the user clicked the Help button
-		} else if (game.gameState == STATE.Help) {// if the user clicks on "help"
+		} else {// if the user clicks on "help"
 			Font font = new Font("impact", Font.PLAIN, 50); //make a new font
 			Font font2 = new Font("impact", Font.PLAIN, 30); //also make a new font
 			Font font3 = new Font("impact", Font.PLAIN, 30); //also make a new font
@@ -185,18 +178,52 @@ public class Menu {
 			g.drawString("Back", 955, 340); //make it the back button
 		}
 	}
-//Background image source path
-public Image getImage(String path) {
-	Image image = null;
-	try {
-		URL imageURL = Game.class.getResource(path);
-		image = Toolkit.getDefaultToolkit().getImage(imageURL);
-	} catch (Exception e) {
-		System.out.println(e.getMessage());
-	}
-	return image;
-}
 
+    @Override
+    public void mousePressed(MouseEvent e) {
+	    if (!getHelp()) {
+            // Waves Button
+            if (mouseOver(e.getX(), e.getY(), 700, 300, 470, 250)) {
+                game.getHandler().object.clear();
+                game.setState(game.getCurrentLevel());
+                game.getHandler().addObject(game.getPlayer());
+            }
+            // Help Button
+            else if (mouseOver(e.getX(), e.getY(), 230, 360, 260, 200)) {
+                setHelp(true);
+            }
+            // Quit Button
+            else if (mouseOver(e.getX(), e.getY(), 1390, 360, 260, 200)) {
+                System.exit(1);
+            }
+            // Space Theme Button
+            else if (mouseOver(e.getX(), e.getY(), 400, 730, 350, 120)) {
+                game.toggleMenuMusic();
+                game.getHandler().setTheme(Themes.Space);
+            }
+            // Underwater Theme Button
+            else if (mouseOver(e.getX(), e.getY(), 850, 730, 650, 120)) {
+                game.toggleMenuMusic();
+                game.getHandler().setTheme(Themes.Underwater);
+            }
+        }
+        // Back Button for Help screen
+        else if (mouseOver(e.getX(), e.getY(), 850, 300, 200, 64)) {
+            setHelp(false);
+        }
+    }
+
+    //Background image source path
+    public Image getImage(String path) {
+        Image image = null;
+        try {
+            URL imageURL = Client.class.getResource(path);
+            image = Toolkit.getDefaultToolkit().getImage(imageURL);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return image;
+    }
 }
 
 

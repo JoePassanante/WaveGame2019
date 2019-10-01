@@ -42,14 +42,14 @@ public class EnemyBasic extends Enemy {
 			this.y = 0;
 			velY *= -1;
 		}
-		if(this.y >= Game.HEIGHT - 40){
+		if(this.y >= handler.getGameDimension().getHeight() - 40){
 			velY *= -1;
 		}
 		if (this.x <= 0){
 			velX *= -1;
 			this.x = 0;
 		}
-		if(this.x >= Game.WIDTH - 16){
+		if(this.x >= handler.getGameDimension().getWidth() - 16){
 			velX *= -1;
 		}
 

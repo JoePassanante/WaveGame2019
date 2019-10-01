@@ -1,17 +1,23 @@
 package mainGame;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+
 /**
  * @author Team B3
- * This interface can be implemented in other classes
- * and these functions can be overridden
+ * @author Aaron Paterson 9/12/19
  */
-public interface GameMode {
-	public abstract void tick();
-	public abstract void render(Graphics g);
-	public abstract void resetMode();
-	public abstract GameObject getEnemyFromID(ID x, Point spawnLoc);
-	void resetMode(boolean hardReset);
+public abstract class GameMode extends MouseAdapter implements Animatable {
+    private GameState state;
+    public void setState(GameState s) {
+        state = s;
+    }
+    public GameState getState() {
+        return state;
+    }
+    abstract void resetMode();
+	abstract GameObject getEnemyFromID(ID x, Point spawnLoc);
+	abstract void resetMode(boolean hardReset);
+	abstract KeyListener getKeyInput();
 }

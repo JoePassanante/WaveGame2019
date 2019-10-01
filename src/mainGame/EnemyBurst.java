@@ -37,23 +37,23 @@ public class EnemyBurst extends Enemy {
 		this.size = size;
 
 		if (this.side.equals("left")) {
-			handler.object.add(new EnemyBurstWarning(0, 0, 25, Game.HEIGHT, ID.EnemyBurstWarning, handler));
+			handler.object.add(new EnemyBurstWarning(0, 0, 25, (int)handler.getGameDimension().getHeight(), ID.EnemyBurstWarning, handler));
 			setPos();
 			setVel();
 		} else if (this.side.equals("right")) {
 			handler.object
-					.add(new EnemyBurstWarning(Game.WIDTH - 25, 0, 25, Game.HEIGHT, ID.EnemyBurstWarning, handler));
+					.add(new EnemyBurstWarning(handler.getGameDimension().getWidth() - 25, 0, 25, (int)handler.getGameDimension().getHeight(), ID.EnemyBurstWarning, handler));
 			setPos();
 			setVel();
 
 		} else if (this.side.equals("top")) {
-			handler.object.add(new EnemyBurstWarning(0, 0, Game.WIDTH, 25, ID.EnemyBurstWarning, handler));
+			handler.object.add(new EnemyBurstWarning(0, 0, (int)handler.getGameDimension().getWidth(), 25, ID.EnemyBurstWarning, handler));
 			setPos();
 			setVel();
 
 		} else if (this.side.equals("bottom")) {
 			handler.object
-					.add(new EnemyBurstWarning(0, Game.HEIGHT - 25, Game.WIDTH, 25, ID.EnemyBurstWarning, handler));
+					.add(new EnemyBurstWarning(0, handler.getGameDimension().getHeight() - 25, (int)handler.getGameDimension().getWidth(), 25, ID.EnemyBurstWarning, handler));
 			setPos();
 			setVel();
 
@@ -63,8 +63,8 @@ public class EnemyBurst extends Enemy {
 
 	public void tick() {
 		//check for removal
-		if (this.y <= -Game.HEIGHT || this.y >= Game.HEIGHT*2){ handler.removeObject(this); return;}
-		if (this.x <= -Game.WIDTH || this.x >= Game.WIDTH*2){ handler.removeObject(this); return;}
+		if (this.y <= -handler.getGameDimension().getHeight() || this.y >= handler.getGameDimension().getHeight()*2){ handler.removeObject(this); return;}
+		if (this.x <= -handler.getGameDimension().getWidth() || this.x >= handler.getGameDimension().getWidth()*2){ handler.removeObject(this); return;}
 
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.orange, this.size, this.size, 0.025, this.handler));
 
@@ -79,19 +79,19 @@ public class EnemyBurst extends Enemy {
 
 	public void setPos() {
 		if (this.side.equals("left")) {
-			this.y = r.nextInt(((Game.HEIGHT - size) - 0) + 1) + 0;
+			this.y = r.nextInt(((int)(handler.getGameDimension().getHeight() - size) - 0) + 1) + 0;
 		} else if (this.side.equals("right")) {
-			this.x = Game.WIDTH + 200;
-			this.y = r.nextInt(((Game.HEIGHT - size) - 0) + 1) + 0;
+			this.x = handler.getGameDimension().getWidth() + 200;
+			this.y = r.nextInt(((int)(handler.getGameDimension().getHeight() - size) - 0) + 1) + 0;
 
 		} else if (this.side.equals("top")) {
 			this.y = -(size);
-			this.x = r.nextInt(((Game.WIDTH - size) - 0) + 1) + 0;
+			this.x = r.nextInt(((int)(handler.getGameDimension().getWidth() - size) - 0) + 1) + 0;
 
 		} else if (this.side.equals("bottom")) {
-			this.y = Game.HEIGHT + 200;
+			this.y = handler.getGameDimension().getHeight() + 200;
 			;
-			this.x = r.nextInt(((Game.WIDTH - size) - 0) + 1) + 0;
+			this.x = r.nextInt(((int)(handler.getGameDimension().getWidth() - size) - 0) + 1) + 0;
 
 		}
 	}

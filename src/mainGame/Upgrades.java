@@ -15,63 +15,55 @@ package mainGame;
  * respective function 
  */
 public class Upgrades {
-	private Game game;
-	private Handler handler;
-	private HUD hud;
-	private Player player;
-	private UpgradeScreen upgradeScreen;
+	private Waves game;
 	private String ability = "none";
 	//constructor
-	public Upgrades(Game game, Handler handler, HUD hud, UpgradeScreen upgradeScreen, Player player) {
-		this.game = game;
-		this.handler = handler;
-		this.hud = hud;
-		this.upgradeScreen = upgradeScreen;
-		this.player = player;
+	public Upgrades(Waves waves) {
+		this.game = waves;
 	}
 	//Remove all enemies on the screen
 	public void clearScreenAbility() {
-		handler.clearEnemies();
-		hud.setAbilityUses(hud.getAbilityUses() - 1);
-		if (hud.getAbilityUses() == 0) {
+		game.getHandler().clearEnemies();
+		game.getHUD().setAbilityUses(game.getHUD().getAbilityUses() - 1);
+		if (game.getHUD().getAbilityUses() == 0) {
 			ability = "";
 		}
 	}
 	//Shrink the player's size
 	public void decreasePlayerSize() {
-		player.setPlayerSize((int) (player.getPlayerHeight()/1.2));
+		game.getPlayer().setPlayerSize((int) (game.getPlayer().getPlayerHeight()/1.2));
 	}
 	//Add another life for the player
 	public void extraLife() {
-		hud.setExtraLives(hud.getExtraLives() + 1);
+		game.getHUD().setExtraLives(game.getHUD().getExtraLives() + 1);
 	}
 	//increase the amount of health the player has
 	public void healthIncrease() {
-		hud.healthIncrease();
+		game.getHUD().healthIncrease();
 	}
 	//Health comes back over time
 	public void healthRegeneration() {
-		hud.setRegen();
+		game.getHUD().setRegen();
 	}
 	//The player takes less hit damage when an enemy hits them
 	public void improvedDamageResistance() {
-		player.setDamage(player.getDamage()-.25);
+		game.getPlayer().setDamage(game.getPlayer().getDamage()-.25);
 	}
 	//Skip a level (p.s set dev mode to false to test if this works)
 	public void levelSkipAbility() {
-		handler.clearEnemies();
-		hud.setLevel(hud.getLevel() + 1);
-		hud.setAbilityUses(hud.getAbilityUses() - 1);
-		if (hud.getAbilityUses() == 0) {
+		game.getHandler().clearEnemies();
+		game.getHUD().setLevel(game.getHUD().getLevel() + 1);
+		game.getHUD().setAbilityUses(game.getHUD().getAbilityUses() - 1);
+		if (game.getHUD().getAbilityUses() == 0) {
 			ability = "";
 		}
 
 	}
 	//Freeze the screen so enemies don't move, time would still tick on
 	public void freezeTimeAbility() {
-		handler.pause();
-		hud.setAbilityUses(hud.getAbilityUses() - 1);
-		if (hud.getAbilityUses() == 0) {
+		game.getHandler().pause();
+		game.getHUD().setAbilityUses(game.getHUD().getAbilityUses() - 1);
+		if (game.getHUD().getAbilityUses() == 0) {
 			ability = "";
 		}
 	}
@@ -93,8 +85,8 @@ public class Upgrades {
 	public void activateUpgrade(String path) {
 		if (path.equals("/images/clearscreenability.png")) {
 			ability = "clearScreen";
-			hud.setAbility(ability);
-			hud.setAbilityUses(3);
+            game.getHUD().setAbility(ability);
+            game.getHUD().setAbilityUses(3);
 		} else if (path.equals("/images/decreaseplayersize.png")) {
 			decreasePlayerSize();
 		} else if (path.equals("/images/extralife.png")) {
@@ -107,24 +99,23 @@ public class Upgrades {
 			improvedDamageResistance();
 		} else if (path.equals("/images/levelskipability.png")) {
 			ability = "levelSkip";
-			hud.setAbility(ability);
-			hud.setAbilityUses(1);
+            game.getHUD().setAbility(ability);
+            game.getHUD().setAbilityUses(1);
 		} else if (path.equals("/images/freezetimeability.png")) {
 			ability = "freezeTime";
-			hud.setAbility(ability);
-			hud.setAbilityUses(5);
+            game.getHUD().setAbility(ability);
+            game.getHUD().setAbilityUses(5);
 		} else if (path.equals("/images/speedboost.png")) {
 			speedBoost();
 		}
+	}
 
-	}
-	//re add all the upgrades again
-	public void resetUpgrades() {
-		Player.playerSpeed = 10;
-		hud.resetHealth();
-		hud.resetRegen();
-		hud.setExtraLives(0);
-		player.setPlayerSize(32);
-		upgradeScreen.resetPaths();
-	}
+	public void useAbility() {
+	    if(ability.equals("clearScreen"))
+	        clearScreenAbility();
+	    if(ability.equals("levelSkip"))
+	        levelSkipAbility();
+	    if(ability.equals("freezeTime"))
+            freezeTimeAbility();
+    }
 }

@@ -49,7 +49,7 @@ public abstract class Pickup extends GameObject{
 	public Image setImg(String path) {
 		Image img = null;
 		try {
-			URL imageURL = Game.class.getResource(path);
+			URL imageURL = Client.class.getResource(path);
 			img = Toolkit.getDefaultToolkit().getImage(imageURL);
 		} catch (Exception e) {
 			e.printStackTrace();

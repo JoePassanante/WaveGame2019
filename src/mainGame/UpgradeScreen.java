@@ -5,15 +5,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
-
-import mainGame.Game.STATE;
 
 /**
  * After completing a boss, this screen appears. The upgrade stays effective the
@@ -25,24 +22,18 @@ import mainGame.Game.STATE;
  * No changes have been made to this class
  */
 
-public class UpgradeScreen {
-
-	private Game game;
-	private Handler handler;
-	private HUD hud;
-	private String text;
+public class UpgradeScreen extends GameState {
+    private String text;
 	private String[] paths = { "/images/clearscreenability.png", "/images/decreaseplayersize.png", "/images/extralife.png",
 			"/images/healthincrease.png", "/images/healthregeneration.png", "/images/improveddamageresistance.png",
 			"/images/levelskipability.png", "/images/freezetimeability.png", "/images/speedboost.png" };
 	private ArrayList<String> imagePaths = new ArrayList<String>();
 	private Random r = new Random();
-	private int index1, index2, index3, tempCounter;
+	private int index1, index2, index3;
+	Waves game;
 
-	public UpgradeScreen(Game game, Handler handler, HUD hud) {
-		this.game = game;
-		this.handler = handler;
-		this.hud = hud;
-		tempCounter = 0;
+	public UpgradeScreen(Waves waves) {
+	    game = waves;
 		addPaths();
 		resetPaths();
 		setIndex();
@@ -60,14 +51,37 @@ public class UpgradeScreen {
 		text = "Select an Upgrade!";
 		g.setFont(font);
 		g.setColor(Color.WHITE);
-		g.drawString(text, Game.WIDTH / 2 - getTextWidth(font, text) / 2, 200);
+		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font, text) / 2, 200);
 		// All pictures are 1721 x 174
 		g.drawImage(getImage(imagePaths.get(index1)), 100, 300, 1721, 174, null);
-		g.drawImage(getImage(imagePaths.get(index2)), 100, 300 + (60 + Game.HEIGHT / 6), 1721, 174, null);
-		g.drawImage(getImage(imagePaths.get(index3)), 100, 300 + 2 * (60 + Game.HEIGHT / 6), 1721, 174, null);
+		g.drawImage(getImage(imagePaths.get(index2)), 100, 300 + (60 + (int)game.getHandler().getGameDimension().getHeight() / 6), 1721, 174, null);
+		g.drawImage(getImage(imagePaths.get(index3)), 100, 300 + 2 * (60 + (int)game.getHandler().getGameDimension().getHeight() / 6), 1721, 174, null);
 	}
 
-	/**
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (mouseOver(e.getX(), e.getY(), 100, 300, 1721, 174)) {
+            game.getUpgrades().activateUpgrade(getPath(1));
+            //upgradeScreen.removeUpgradeOption(1);//remove that upgrade option since it was chosen
+            resetIndexes();
+            game.setState(game.getCurrentLevel());
+            game.setPaused(false);
+        } else if (mouseOver(e.getX(), e.getY(), 100, 300 + (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174)) {
+            game.getUpgrades().activateUpgrade(getPath(2));
+            //upgradeScreen.removeUpgradeOption(2);//remove that upgrade option since it was chosen
+            resetIndexes();
+            game.setState(game.getCurrentLevel());
+            game.setPaused(false);
+        } else if (mouseOver(e.getX(), e.getY(), 100, 300 + 2 * (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174)) {
+            game.getUpgrades().activateUpgrade(getPath(3));
+            //upgradeScreen.removeUpgradeOption(3);//remove that upgrade option since it was chosen
+            resetIndexes();
+            game.setState(game.getCurrentLevel());
+            game.setPaused(false);
+        }
+    }
+
+    /**
 	 * Reset the paths to each picture
 	 */
 	public void resetPaths() {
@@ -91,16 +105,16 @@ public class UpgradeScreen {
 	
 	public int getIndex(int maxIndex) {
 		int index = r.nextInt(maxIndex);
-		if (index == 1 && game.player.getPlayerHeight() <= 3) {
+		if (index == 1 && game.getPlayer().getPlayerHeight() <= 3) {
 			return getIndex(maxIndex);
 		}
-		if (index == 4 && hud.getRegen()) {
+		if (index == 4 && game.getHUD().getRegen()) {
 			return getIndex(maxIndex);
 		}
 		if (index == 8 && Player.playerSpeed > 10) {
 			return getIndex(maxIndex);
 		}
-		if (index == 5 && game.player.getDamage()<= 1) 
+		if (index == 5 && game.getPlayer().getDamage()<= 1)
 		{
 			return getIndex(maxIndex);
 		}
@@ -131,7 +145,7 @@ public class UpgradeScreen {
 	public Image getImage(String path) {
 		Image image = null;
 		try {
-			URL imageURL = Game.class.getResource(path);
+			URL imageURL = Client.class.getResource(path);
 			image = Toolkit.getDefaultToolkit().getImage(imageURL);
 		} catch (Exception e) {
 			System.err.println(e.getMessage() + " path:"+path);

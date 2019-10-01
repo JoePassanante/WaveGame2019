@@ -26,14 +26,16 @@ public class LevelText extends GameObject {
 			Color.PINK, Color.YELLOW };
 	private Random r = new Random();
 	private int index;
+	private Handler handler;
 
 	// constructor
 	// used to initialize the state of the object
-	public LevelText(double x, double y, String text, ID id) {
+	public LevelText(double x, double y, String text, ID id, Handler h) {
 		super(x, y, id);
 		this.text = text;
 		AffineTransform at = new AffineTransform();
 		timer = 15;
+		handler = h;
 	}
 
 	@Override
@@ -50,7 +52,7 @@ public class LevelText extends GameObject {
 		Font font = new Font("Amoebic", 1, 125);
 		g.setFont(font);
 		g.setColor(color[index]);// set the new random color
-		g.drawString(this.text, Game.WIDTH / 2 - getTextWidth(font, this.text) / 2, (int) this.y);
+		g.drawString(this.text, (int)handler.getGameDimension().getWidth() / 2 - getTextWidth(font, this.text) / 2, (int) this.y);
 		
 		// Controls color switch
 		if (timer == 0) {

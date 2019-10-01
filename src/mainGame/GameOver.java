@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.io.BufferedReader;
@@ -20,32 +21,28 @@ import java.net.URL;
  *
  */
 
-public class GameOver {
+public class GameOver extends GameState {
 
-	private Game game;
-	private Handler handler;
-	private HUD hud;
 	private int timer;
 	private Color retryColor;
 	private String text;
 	private Image img;
-	public GameOver(Game game, Handler handler, HUD hud) {
-		this.game = game;
-		this.handler = handler;
-		this.hud = hud;
+	private Waves game;
+	public GameOver(Waves waves) {
+	    game = waves;
 		timer = 90;
 		this.retryColor = Color.white;
 		//the background image is the same as the menu background S
 		img = getImage("/images/Background.png");
 	}
 	public void tick() {
-		handler.clearPlayer();
+		game.getHandler().clearPlayer();
 		flash();
 	}
 
 	public void render(Graphics g) {
 		//render the background image
-		g.drawImage(img, 0, 0, Game.WIDTH, Game.HEIGHT, null);
+		g.drawImage(img, 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
 		//Set up the font
 		Font font = new Font("Amoebic", 1, 100);
 		Font font2 = new Font("Amoebic", 1, 60);
@@ -53,17 +50,18 @@ public class GameOver {
 		g.setFont(font);
 		g.setColor(Color.white);
 		text = "Game Over";
-		g.drawString(text, Game.WIDTH / 2 - getTextWidth(font, text) / 2, Game.HEIGHT / 2 - 150);
+		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font, text) / 2, (int)game.getHandler().getGameDimension().getHeight() / 2 - 150);
 		//The level the player died on
 		g.setFont(font2);
 		g.setColor(Color.white);
-		text = "Level: " + hud.getLevel();
+		text = "Level: " + game.getHUD().getLevel();
 		g.drawString(text, 100, 500);
 		//Get the high score of the PLAYER
 		g.setFont(font2);
 		g.setColor(Color.white);
-		text = "Your Score: " + hud.getScore();
-		g.drawString(text, Game.WIDTH / 2 - getTextWidth(font2, text) / 2, 500);
+		text = "Your Score: " + game.getHUD().getScore();
+		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font2, text) / 2, 500);
+
 		//This is the high score from the text file
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader("src/HighScores.txt"));
@@ -78,14 +76,27 @@ public class GameOver {
 			System.out.println(e);
 			System.exit(1);
 		}
+
 		//g.drawString(text, Game.WIDTH / 2 - getTextWidth(font2, text) / 2, Game.HEIGHT / 2 + 50);
 		//Text flashing
 		g.setColor(this.retryColor);
 		g.setFont(font2);
 		text = "Click anywhere to play again";
-		g.drawString(text, Game.WIDTH / 2 - getTextWidth(font2, text) / 2, Game.HEIGHT / 2 + 150);
+		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font2, text) / 2, (int)game.getHandler().getGameDimension().getHeight() / 2 + 150);
 	}
-	//This really isn't "flashing" so much as it's changing the color of the text to black then white
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        super.mousePressed(e);
+        game.getHandler().object.clear();
+        game.getHUD().health = 100;
+        game.getHUD().setScore(0);
+        game.getHUD().setLevel(1);
+        game.setState(game.getMenu());
+    }
+
+
+    //This really isn't "flashing" so much as it's changing the color of the text to black then white
 	public void flash() {
 		timer--;
 		if (timer == 45) {
@@ -117,7 +128,7 @@ public class GameOver {
 	public Image getImage(String path) {
 		Image image = null;
 		try {
-			URL imageURL = Game.class.getResource(path);
+			URL imageURL = Client.class.getResource(path);
 			image = Toolkit.getDefaultToolkit().getImage(imageURL);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

@@ -6,11 +6,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -119,11 +117,11 @@ public class EnemyRocketBoss extends Enemy {
 	public void render(Graphics g) {
 	    //draw health bar
 		g.setColor(Color.GRAY);
-		g.fillRect(Game.WIDTH / 2 - 500, Game.HEIGHT - 150, 1000, 50);
+		g.fillRect((int)handler.getGameDimension().getWidth() / 2 - 500, (int)handler.getGameDimension().getHeight() - 150, 1000, 50);
 		g.setColor(Color.RED);
-		g.fillRect(Game.WIDTH / 2 - 500, Game.HEIGHT - 150, this.health, 50);
+		g.fillRect((int)handler.getGameDimension().getWidth() / 2 - 500, (int)handler.getGameDimension().getHeight() - 150, this.health, 50);
 		g.setColor(Color.WHITE);
-		g.drawRect(Game.WIDTH / 2 - 500, Game.HEIGHT - 150, 1000, 50);
+		g.drawRect((int)handler.getGameDimension().getWidth() / 2 - 500, (int)handler.getGameDimension().getHeight() - 150, 1000, 50);
 		
 		Graphics2D g2d = (Graphics2D)g;
 		//DEV TOOLS
@@ -175,7 +173,7 @@ public class EnemyRocketBoss extends Enemy {
 	public Image getImage(String path) {
 		Image image = null;
 		try {
-			URL imageURL = Game.class.getResource(path);
+			URL imageURL = Client.class.getResource(path);
 			image = Toolkit.getDefaultToolkit().getImage(imageURL);
 		} catch (Exception e) {
 			System.err.println("AHHHH");

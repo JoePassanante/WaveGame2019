@@ -39,7 +39,7 @@ public class EnemyBossBullet extends Enemy {
 		this.x += velX;
 		this.y += velY;
 
-		if (this.y >= Game.HEIGHT)
+		if (this.y >= handler.getGameDimension().getHeight())
 			handler.removeObject(this);
 
 		handler.addObject(new Trail(x-sizeX/2, y-sizeY/2, ID.Trail, Color.red,(int)sizeX,(int)sizeY, 0.025, this.handler));

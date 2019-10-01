@@ -58,9 +58,9 @@ public class EnemyShooterMover extends Enemy {
 		this.x += velX;
 		this.y += velY;
 
-		if (this.y <= 0 || this.y >= Game.HEIGHT - sizeY)
+		if (this.y <= 0 || this.y >= handler.getGameDimension().getHeight() - sizeY)
 			velY *= -1;
-		if (this.x <= 0 || this.x >= Game.WIDTH - sizeX)
+		if (this.x <= 0 || this.x >= handler.getGameDimension().getWidth() - sizeX)
 			velX *= -1;
 
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.yellow, this.sizeX, this.sizeY, 0.025, this.handler));

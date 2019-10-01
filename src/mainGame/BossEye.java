@@ -126,7 +126,7 @@ public class BossEye extends GameObject {
 	public Image getImage(String path) {
 		Image image = null;
 		try {
-			URL imageURL = Game.class.getResource(path);
+			URL imageURL = Client.class.getResource(path);
 			image = Toolkit.getDefaultToolkit().getImage(imageURL);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -134,5 +134,4 @@ public class BossEye extends GameObject {
 		return image;
 
 	}
-
 }
