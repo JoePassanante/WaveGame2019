@@ -6,7 +6,7 @@ tmp/
 **/HighScores.txt
 
 # OSX junk
-**/.DS_Store
+**.DS_Store
 
 # IDEA junk
 **/.idea/workspace.xml
