@@ -34,7 +34,7 @@ public class Client extends JFrame implements Runnable, Animatable {
 	public Client() {
         super("Wave Game");
         currentGame = new Waves(screenSize);
-		addKeyListener(currentGame.getKeyInput());
+		addKeyListener(currentGame);
 		addMouseListener(currentGame);
 		AudioUtil.closeGameClip();
 		AudioUtil.playMenuClip(true, false);
@@ -102,29 +102,6 @@ public class Client extends JFrame implements Runnable, Animatable {
         currentGame.tick();
 	}
 
-    /**
-     * Inverts transformation of this JFrame to process mouse events in game space
-     */
-	@Override
-    protected void processMouseEvent(MouseEvent e) {
-        try {
-            Point2D p = new Point();
-            ((Graphics2D)getGraphics()).getTransform().inverseTransform(e.getPoint(), p);
-            super.processMouseEvent(new MouseEvent(
-                    e.getComponent(),
-                    e.getID(),
-                    e.getWhen(),
-                    e.getModifiers(),
-                    (int)p.getX(),
-                    (int)p.getY(),
-                    e.getClickCount(),
-                    e.isPopupTrigger()
-            ));
-        } catch(NoninvertibleTransformException nite) {
-            nite.printStackTrace();
-        }
-    }
-
 	/**
 	 * Constantly drawing to the many buffer screens of each entity requiring the
 	 * Graphics objects (entities, screens, HUD's, etc).
@@ -150,7 +127,30 @@ public class Client extends JFrame implements Runnable, Animatable {
 		g.setTransform(old);
 	}
 
-	/**
+    /**
+     * Inverts transformation of this JFrame to process mouse events in game space
+     */
+    @Override
+    protected void processMouseEvent(MouseEvent e) {
+        try {
+            Point2D p = new Point();
+            ((Graphics2D)getGraphics()).getTransform().inverseTransform(e.getPoint(), p);
+            super.processMouseEvent(new MouseEvent(
+                    e.getComponent(),
+                    e.getID(),
+                    e.getWhen(),
+                    e.getModifiers(),
+                    (int)p.getX(),
+                    (int)p.getY(),
+                    e.getClickCount(),
+                    e.isPopupTrigger()
+            ));
+        } catch(NoninvertibleTransformException nite) {
+            nite.printStackTrace();
+        }
+    }
+
+    /**
 	 * 
 	 * Constantly checks bounds, makes sure players, enemies, and info doesn't leave
 	 * screen

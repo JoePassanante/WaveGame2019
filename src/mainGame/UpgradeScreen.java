@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
@@ -57,29 +58,6 @@ public class UpgradeScreen extends GameState {
 		g.drawImage(getImage(imagePaths.get(index2)), 100, 300 + (60 + (int)game.getHandler().getGameDimension().getHeight() / 6), 1721, 174, null);
 		g.drawImage(getImage(imagePaths.get(index3)), 100, 300 + 2 * (60 + (int)game.getHandler().getGameDimension().getHeight() / 6), 1721, 174, null);
 	}
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        if (mouseOver(e.getX(), e.getY(), 100, 300, 1721, 174)) {
-            game.getUpgrades().activateUpgrade(getPath(1));
-            //upgradeScreen.removeUpgradeOption(1);//remove that upgrade option since it was chosen
-            resetIndexes();
-            game.setState(game.getCurrentLevel());
-            game.setPaused(false);
-        } else if (mouseOver(e.getX(), e.getY(), 100, 300 + (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174)) {
-            game.getUpgrades().activateUpgrade(getPath(2));
-            //upgradeScreen.removeUpgradeOption(2);//remove that upgrade option since it was chosen
-            resetIndexes();
-            game.setState(game.getCurrentLevel());
-            game.setPaused(false);
-        } else if (mouseOver(e.getX(), e.getY(), 100, 300 + 2 * (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174)) {
-            game.getUpgrades().activateUpgrade(getPath(3));
-            //upgradeScreen.removeUpgradeOption(3);//remove that upgrade option since it was chosen
-            resetIndexes();
-            game.setState(game.getCurrentLevel());
-            game.setPaused(false);
-        }
-    }
 
     /**
 	 * Reset the paths to each picture
@@ -198,4 +176,42 @@ public class UpgradeScreen extends GameState {
 	public void resetIndexes() {
 		setIndex();
 	}
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (mouseOver(e.getX(), e.getY(), 100, 300, 1721, 174)) {
+            game.getUpgrades().activateUpgrade(getPath(1));
+            //upgradeScreen.removeUpgradeOption(1);//remove that upgrade option since it was chosen
+            resetIndexes();
+            game.setState(game.getCurrentLevel());
+            game.setPaused(false);
+        } else if (mouseOver(e.getX(), e.getY(), 100, 300 + (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174)) {
+            game.getUpgrades().activateUpgrade(getPath(2));
+            //upgradeScreen.removeUpgradeOption(2);//remove that upgrade option since it was chosen
+            resetIndexes();
+            game.setState(game.getCurrentLevel());
+            game.setPaused(false);
+        } else if (mouseOver(e.getX(), e.getY(), 100, 300 + 2 * (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174)) {
+            game.getUpgrades().activateUpgrade(getPath(3));
+            //upgradeScreen.removeUpgradeOption(3);//remove that upgrade option since it was chosen
+            resetIndexes();
+            game.setState(game.getCurrentLevel());
+            game.setPaused(false);
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
 }

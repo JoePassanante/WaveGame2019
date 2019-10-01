@@ -1,8 +1,6 @@
 package mainGame;
 
 import java.awt.*;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -86,8 +84,6 @@ public class Waves extends GameMode {
         upgradeScreen = new UpgradeScreen(this);
         upgrades = new Upgrades(this);
         gameOver = new GameOver(this);
-
-        keyInput = new KeyInput(this);
     }
 
     //Links the ID of an enemy to actual creation.
@@ -157,7 +153,6 @@ public class Waves extends GameMode {
 		this.lastEnemy = returnID;
 		return returnID;
 	}
-
 
     /**
      * Used to switch between each of the screens shown to the user
@@ -318,17 +313,6 @@ public class Waves extends GameMode {
 			getHUD().resetHealth();
 		}
 	}
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-	    getState().mousePressed(e);
-    }
-
-    private KeyInput keyInput;
-    @Override
-    KeyListener getKeyInput() {
-	    return keyInput;
-    }
 
     @Override
 	public void resetMode() {

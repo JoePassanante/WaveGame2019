@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
-import java.sql.Time;
 import java.util.Random;
 
 /**

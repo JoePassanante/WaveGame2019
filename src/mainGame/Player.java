@@ -81,6 +81,7 @@ public class Player extends GameObject {
 						System.exit(1);
 					}
 				game.setState(game.getGameOver());
+				game.resetMode();
 				game.setPaused(true);
 
                 game.getHandler().clearPlayer();

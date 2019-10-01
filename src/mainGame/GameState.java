@@ -1,9 +1,11 @@
 package mainGame;
 
-import java.awt.event.MouseAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public abstract class GameState extends MouseAdapter implements Animatable {
+public abstract class GameState implements Animatable, MouseListener, KeyListener {
     /** MOUSE OVER
      * Helper method to detect is the mouse is over a "button" drawn via Graphics
      * @param mx
@@ -20,7 +22,6 @@ public abstract class GameState extends MouseAdapter implements Animatable {
      * 	button height
      * @return boolean, true if the mouse is contained within the button
      */
-
     public static boolean mouseOver(double mx, double my, int x, int y, int width, int height) {
         if (mx > x && mx < x + width) {
             if (my > y && my < y + height) {
@@ -30,4 +31,10 @@ public abstract class GameState extends MouseAdapter implements Animatable {
         } else
             return false;
     }
+
+    // Unused input events
+    @Override public final void keyTyped(KeyEvent e) { }
+    @Override public final void mouseClicked(MouseEvent e) { }
+    @Override public final void mouseEntered(MouseEvent e) { }
+    @Override public final void mouseExited(MouseEvent e) { }
 }
