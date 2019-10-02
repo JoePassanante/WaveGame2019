@@ -22,7 +22,7 @@ public class Client extends JFrame implements Runnable, Animatable {
 
     public static boolean devMode = false; //true - enable cheats and debug info | false - do not
 
-	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	private Dimension screenSize;
     private GameMode currentGame;
 
 	/**
@@ -30,6 +30,7 @@ public class Client extends JFrame implements Runnable, Animatable {
 	 */
 	public Client() {
         super("Wave Game");
+        screenSize = new Dimension(1920,1080); // Toolkit.getDefaultToolkit().getScreenSize();
         currentGame = new Waves(screenSize);
 		addKeyListener(currentGame);
 		addMouseListener(currentGame);
@@ -37,10 +38,11 @@ public class Client extends JFrame implements Runnable, Animatable {
 		AudioUtil.playMenuClip(true, false);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(devMode);
 
+        setResizable(devMode);
         // Set fullscreen
         if (System.getProperty("os.name").toLowerCase().contains("mac")) { //If user is on macOS
+            setResizable(true);
             try {
                 com.apple.eawt.FullScreenUtilities.setWindowCanFullScreen(this, true);
                 com.apple.eawt.Application.getApplication().requestToggleFullScreen(this);
@@ -54,9 +56,7 @@ public class Client extends JFrame implements Runnable, Animatable {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setPreferredSize(screenSize);
         pack();
-        setLocationRelativeTo(null);
-
-        enableEvents(AWTEvent.MOUSE_EVENT_MASK);
+        setLocationRelativeTo(null);     
 	}
 
 	/**
@@ -73,6 +73,7 @@ public class Client extends JFrame implements Runnable, Animatable {
             tick = tock;
 
             while (delta >= frame) {
+            	setFocusable(true);
                 tick(); // Objects are being updated at most sixty times a second
                 delta -= frame;
             }
