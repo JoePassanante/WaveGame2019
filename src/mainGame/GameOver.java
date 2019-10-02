@@ -4,16 +4,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * The game over screen
@@ -26,14 +23,12 @@ public class GameOver extends GameState {
 	private int timer;
 	private Color retryColor;
 	private String text;
-	private Image img;
 	private Waves game;
 	public GameOver(Waves waves) {
 	    game = waves;
 		timer = 90;
 		this.retryColor = Color.white;
 		//the background image is the same as the menu background S
-		img = getImage("/images/Background.png");
 	}
 	public void tick() {
 		game.getHandler().clearPlayer();
@@ -42,7 +37,7 @@ public class GameOver extends GameState {
 
 	public void render(Graphics g) {
 		//render the background image
-		g.drawImage(img, 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
+		g.drawImage(game.getHandler().getTheme().get(ID.Menu), 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
 		//Set up the font
 		Font font = new Font("Amoebic", 1, 100);
 		Font font2 = new Font("Amoebic", 1, 60);
@@ -110,19 +105,6 @@ public class GameOver extends GameState {
 		FontRenderContext frc = new FontRenderContext(at, true, true);
 		int textWidth = (int) (font.getStringBounds(text, frc).getWidth());
 		return textWidth;
-	}
-	/**
-	 * Function for getting the path of the image background
-	 */
-	public Image getImage(String path) {
-		Image image = null;
-		try {
-			URL imageURL = Client.class.getResource(path);
-			image = Toolkit.getDefaultToolkit().getImage(imageURL);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return image;
 	}
 
     @Override

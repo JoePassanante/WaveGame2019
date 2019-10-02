@@ -1,7 +1,5 @@
 package mainGame;
 
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Rectangle;
 
 /**
@@ -12,23 +10,11 @@ import java.awt.Rectangle;
  * 
  */
 
-public class PickupFreeze extends Pickup{
-	
-	// instance
-
-	// constructor
-	// used to initialize the state of the object
-	public PickupFreeze(double x, double y) {
-		super(x, y, ID.PickupFreeze,"src/images/freezeAbilitySnowflake.png");
+public class PickupFreeze extends GameObject {
+	public PickupFreeze(double x, double y, Handler handler) {
+		super(x, y, 30, 30, ID.PickupFreeze, handler);
 	}
 
-	// methods
-	// is called every frame, allows game objects to update themselves before being rendered.
-	public void tick() {	
+	public void tick() {
 	}
-
-	// is the abstract base class for all graphics contexts that allow an application to draw 
-	// onto components that are realized on various devices, as well as onto off-screen images
-	
-
 }

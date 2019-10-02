@@ -11,16 +11,14 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
  * After completing a boss, this screen appears. The upgrade stays effective the
- * rest of the game. A user cannot choose the same upgrade twice
+ * rest of the game.
  * @author Brandon Loehle 5/30/16 
- */
-/**
- * @author Team B3
- * No changes have been made to this class
  */
 
 public class UpgradeScreen extends GameState {
@@ -28,7 +26,13 @@ public class UpgradeScreen extends GameState {
 	private String[] paths = { "/images/clearscreenability.png", "/images/decreaseplayersize.png", "/images/extralife.png",
 			"/images/healthincrease.png", "/images/healthregeneration.png", "/images/improveddamageresistance.png",
 			"/images/levelskipability.png", "/images/freezetimeability.png", "/images/speedboost.png" };
-	private ArrayList<String> imagePaths = new ArrayList<String>();
+	private Map<String, Image> memo = new HashMap<>();
+	Thread load= new Thread( () -> {
+        for (String s : paths) {
+            memo.put(s, getImage(s));
+        }
+    });
+	private ArrayList<String> imagePaths = new ArrayList<>();
 	private Random r = new Random();
 	private int index1, index2, index3;
 	Waves game;
@@ -39,7 +43,8 @@ public class UpgradeScreen extends GameState {
 		resetPaths();
 		setIndex();
 		text = "";
-		
+
+		load.start();
 	}
 	//nothing needs to be in this function since it's just
 	//a screen with text
@@ -54,9 +59,11 @@ public class UpgradeScreen extends GameState {
 		g.setColor(Color.WHITE);
 		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font, text) / 2, 200);
 		// All pictures are 1721 x 174
-		g.drawImage(getImage(imagePaths.get(index1)), 100, 300, 1721, 174, null);
-		g.drawImage(getImage(imagePaths.get(index2)), 100, 300 + (60 + (int)game.getHandler().getGameDimension().getHeight() / 6), 1721, 174, null);
-		g.drawImage(getImage(imagePaths.get(index3)), 100, 300 + 2 * (60 + (int)game.getHandler().getGameDimension().getHeight() / 6), 1721, 174, null);
+        if(!load.isAlive()) {
+            g.drawImage(memo.get(imagePaths.get(index1)), 100, 300, 1721, 174, null);
+            g.drawImage(memo.get(imagePaths.get(index2)), 100, 300 + (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174, null);
+            g.drawImage(memo.get(imagePaths.get(index3)), 100, 300 + 2 * (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174, null);
+        }
 	}
 
     /**
@@ -83,7 +90,7 @@ public class UpgradeScreen extends GameState {
 	
 	public int getIndex(int maxIndex) {
 		int index = r.nextInt(maxIndex);
-		if (index == 1 && game.getPlayer().getPlayerHeight() <= 3) {
+		if (index == 1 && game.getPlayer().getHeight() <= 3) {
 			return getIndex(maxIndex);
 		}
 		if (index == 4 && game.getHUD().getRegen()) {

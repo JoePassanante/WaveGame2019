@@ -11,13 +11,9 @@ import java.awt.Rectangle;
  *
  */
 
-public class EnemyShooterBullet extends Enemy {
-
-	private Handler handler;
-
+public class EnemyShooterBullet extends GameObject {
 	public EnemyShooterBullet(double x, double y, double velX, double velY, ID id, Handler handler) {
-		super(x, y, id);
-		this.handler = handler;
+		super(x, y, 16, 16, id, handler);
 		this.velX = velX;
 		this.velY = velY;
 	}
@@ -29,20 +25,19 @@ public class EnemyShooterBullet extends Enemy {
 		// if (this.y <= 0 || this.y >= Game.HEIGHT - 40) velY *= -1;
 		// if (this.x <= 0 || this.x >= Game.WIDTH - 16) velX *= -1;
 
-		handler.addObject(new Trail(x, y, ID.Trail, Color.yellow, 4, 4, 0.025, this.handler));
+        getHandler().addObject(new Trail(x, y, ID.Trail, Color.yellow, 4, 4, 0.025, getHandler()));
 
 		removeBullets();
 	}
 
 	public void removeBullets() {
-
-		for (int i = 0; i < handler.object.size(); i++) {
-			GameObject tempObject = handler.object.get(i);
+		for (int i = 0; i < getHandler().object.size(); i++) {
+			GameObject tempObject = getHandler().object.get(i);
 			if (tempObject.getId() == ID.EnemyShooterBullet) {
 				//check for removal
-				if ((tempObject.getX() >= handler.getGameDimension().getWidth() || tempObject.getY() >= handler.getGameDimension().getHeight()) ||
+				if ((tempObject.getX() >= getHandler().getGameDimension().getWidth() || tempObject.getY() >= getHandler().getGameDimension().getHeight()) ||
 					(tempObject.getX() < -100 || tempObject.getY() < -100)){
-					handler.removeObject(tempObject);
+                    getHandler().removeObject(tempObject);
 				}
 			}
 
@@ -55,10 +50,4 @@ public class EnemyShooterBullet extends Enemy {
 		g.fillRect((int) x, (int) y, 4, 4);
 
 	}
-
-	@Override
-	public Rectangle getBounds() {
-		return new Rectangle((int) this.x, (int) this.y, 16, 16);
-	}
-
 }

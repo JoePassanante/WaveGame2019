@@ -20,17 +20,12 @@ import java.awt.Rectangle;
  */
 
 public class Trail extends GameObject{
-
 	private float alpha = 1;
-	private Handler handler;
 	private Color color;
-	private int width, height;
 	private double life;	//life = 0.01 -> 0.1
 	
-	
 	public Trail(double x, double y, ID id, Color color, int width, int height, double life, Handler handler) {
-		super(x, y, id);
-		this.handler = handler;
+		super(x, y, width, height, id, handler);
 		this.color = color;
 		this.width = width;
 		this.height = height;
@@ -38,25 +33,25 @@ public class Trail extends GameObject{
 
 	}
 
-
 	public void tick() {//slowly fades each square
 		if (alpha > life){
 			alpha = (float) (alpha - (life - 0.001));
 		}
 		else{
-			handler.removeObject(this);
+            getHandler().removeObject(this);
 		}
 	}
 
-
+	@Override
 	public void render(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.setComposite(makeTransparent(alpha));
 		g.setColor(color);
-		g.fillRect((int)this.x, (int)this.y, this.width, this.height);
+		Rectangle bounds = getBounds();
+		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 		g2d.setComposite(makeTransparent(1));//allows for the rectangle to appear like it's fading
 	}
-	
+
 	/**
 	 * Helps make the rectangle fade away
 	 * @param alpha is the amount of fade
@@ -65,12 +60,5 @@ public class Trail extends GameObject{
 	private AlphaComposite makeTransparent(float alpha){
 		int type = AlphaComposite.SRC_OVER;
 		return (AlphaComposite.getInstance(type, alpha));
-		
 	}
-
-
-	public Rectangle getBounds() {
-		return null;
-	}
-
 }

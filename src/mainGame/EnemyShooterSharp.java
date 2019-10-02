@@ -1,16 +1,8 @@
 package mainGame;
 
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.Point2D;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 /**
  * A type of enemy in the game
@@ -19,26 +11,17 @@ import javax.imageio.ImageIO;
  *
  */
 
-public class EnemyShooterSharp extends Enemy {
-
-	private Handler handler;
-	private int sizeX;
-	private int sizeY;
+public class EnemyShooterSharp extends GameObject {
 	private int timer;
 	private GameObject player;
 	private double bulletVelX;
 	private double bulletVelY, speed;
 	private int bulletSpeed;
-	private static Image img = null;
-	
 
 	public EnemyShooterSharp(double x, double y, int sizeX, int sizeY, int bulletSpeed, ID id, Handler handler) {
-		super(x, y, id);
-		this.handler = handler;
+		super(x, y, 200, 150, id, handler);
 		this.velX = 0;
 		this.velY = 0;
-		this.sizeX = 200;
-		this.sizeY = 150;
 		this.timer = 60;
 		speed = 1;
 		this.bulletSpeed = Math.abs(bulletSpeed);
@@ -54,9 +37,9 @@ public class EnemyShooterSharp extends Enemy {
 		this.x += velX;
 		this.y += velY;
 
-		if (this.y <= 0 || this.y >= handler.getGameDimension().getHeight() - 40)
+		if (this.y <= 0 || this.y >= getHandler().getGameDimension().getHeight() - 40)
 			velY *= -1;
-		if (this.x <= 0 || this.x >= handler.getGameDimension().getWidth() - 16)
+		if (this.x <= 0 || this.x >= getHandler().getGameDimension().getWidth() - 16)
 			velX *= -1;
 
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.yellow, this.sizeX, this.sizeY, 0.025, this.handler));
@@ -92,29 +75,29 @@ public class EnemyShooterSharp extends Enemy {
 			velX = Math.cos(dir)*speed;
 			velY = Math.sin(dir)*speed;
 			//supposed to shoot where they're going, not 100% accurate in terms of time yet though
-			
-			handler.addObject(
-					new EnemyShooterBullet(this.x -10, this.y-10, bulletVelX, bulletVelY, ID.EnemyShooterBullet, this.handler));
+
+            getHandler().addObject(
+					new EnemyShooterBullet(this.x -10, this.y-10, bulletVelX, bulletVelY, ID.EnemyShooterBullet, getHandler()));
 		bulletVelX = -((this.bulletSpeed / distance) * diffX); // numerator affects speed of enemy
 		bulletVelY = -((this.bulletSpeed / distance) * diffY);// numerator affects speed of enemy}
-		
-		handler.addObject(
-				new EnemyShooterBullet(this.x -10, this.y-10, bulletVelX, bulletVelY, ID.EnemyShooterBullet, this.handler));
+
+            getHandler().addObject(
+				new EnemyShooterBullet(this.x -10, this.y-10, bulletVelX, bulletVelY, ID.EnemyShooterBullet, getHandler()));
 		}else {
 			System.err.println("player is null on shooter!");//bpm
-			for (int i = 0; i < handler.object.size(); i++) {
-				if (handler.object.get(i).getId() == ID.Player)
-					player = handler.object.get(i);
+			for (int i = 0; i < getHandler().object.size(); i++) {
+				if (getHandler().object.get(i).getId() == ID.Player)
+					player = getHandler().object.get(i);
 			}
 		}
 	}
 
 	public void updateEnemy() {
-		this.sizeX*= .95;
-		this.sizeY*=.95;
+		width*= .95;
+		height*=.95;
 
-		if (sizeX <= 1 || sizeY <= 1) {
-			handler.removeObject(this);
+		if (width <= 1 || height <= 1) {
+            getHandler().removeObject(this);
 		}
 	}
 	
@@ -127,31 +110,5 @@ public class EnemyShooterSharp extends Enemy {
     
     public static double angleDifference(double angleFrom, double angleTo) {
         return ((((angleFrom - angleTo) % 360) + 540) % 360) - 180;
-    }
-
-	public void render(Graphics g) {
-		Graphics2D a = (Graphics2D) g;
-		a.drawImage(img, (int)this.x-this.sizeX/2, (int) this.y-sizeY/2, this.sizeX, this.sizeY, null);
-	}
-
-	@Override
-	public Rectangle getBounds() {
-		return new Rectangle((int) this.x-this.sizeX/2, (int) this.y-sizeY/2, this.sizeX, this.sizeY);
-	}
-
-    public static void updateSprite(Themes theme) {
-        // Set sprite based on current theme
-        try {
-            switch (theme) {
-                case Space:
-                    img = ImageIO.read(new File("src/images/spaceship1Red.png"));
-                    break;
-                case Underwater:
-                    img = ImageIO.read(new File("src/images/spaceship1sub.png"));
-                    break;
-            }
-        } catch (IOException e) {
-            System.err.println("Error reading sprite file for EnemyShooterSharp");
-        }
     }
 }

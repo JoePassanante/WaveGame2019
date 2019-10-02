@@ -1,51 +1,78 @@
 package mainGame;
 
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 
 /**
  * Every object in the game extends this abstract class 
  * @author Brandon Loehle 5/30/16
- *
+ * @author Aaron Paterson 10/1/19
  */
 
 public abstract class GameObject implements Animatable {
-
-	// protected means that variables can only be accessed by 
-	//things that extends GameObject
-	protected double x, y;
 	protected ID id;
-	protected double velX, velY;
+	protected double x, y, width, height, velX, velY, health;
 	protected boolean isMoving;
-	protected int health;
-	//What constructors are there to create a GameObject class
-	public GameObject(double x, double y, ID id) {
-		this.x = x;
-		this.y = y;
+	private Handler handler;
+	public Handler getHandler() {
+	    return handler;
+    }
+
+    public GameObject(double x, double y, double w, double h, ID id, Handler hand) {
+	    this.x = x;
+	    this.y = y;
+	    this.width = w;
+	    this.height = h;
 		this.id = id;
+		this.handler = hand;
 	}
-	// abstract classes are needed in subclasses 
-	//(need to be explicitly implemented)
-	public abstract Rectangle getBounds();
-	// non abstract can be accessed via OBJECT.________, does not need to be
-	// implemented, but can be overridden
-	/**
-	 * What the functions below do is get/set the game object's
-	 * position, ID and health. These functions can be implemented
-	 * overridden. Used for ALL game objects in the game
-	 */
-	public double getX() {
-		return x;
-	}
-	public void setX(int x) {
+
+    public void drawHitBox(Graphics g) {
+	    Rectangle bounds = getBounds();
+        g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+    }
+
+    public void render(Graphics g) {
+        //drawHitBox(g);
+        Image img = handler.getTheme().get(id);
+        if(img != null) {
+            Rectangle bounds = getBounds();
+            g.drawImage(img, bounds.x, bounds.y, bounds.width, bounds.height, null);
+        }
+    }
+
+    public Rectangle getBounds() {
+	    return new Rectangle(
+            (int)(x-Math.abs(width/2)),
+            (int)(y-Math.abs(height/2)),
+            (int)width,
+            (int)height
+        );
+    }
+
+	public void setX(double x) {
 		this.x = x;
 	}
-	public double getY() {
-		return y;
-	}
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
+	public double getX() {
+	    return x;
+    }
+    public double getY() {
+	    return y;
+    }
+	public void setWidth(double w) {
+	    this.width = w;
+    }
+    public void setHeight(double h) {
+	    this.height = h;
+    }
+    public double getWidth() {
+	    return width;
+    }
+    public double getHeight() {
+	    return height;
+    }
 	public ID getId() {
 		return id;
 	}
@@ -64,7 +91,7 @@ public abstract class GameObject implements Animatable {
 	public void setVelY(int velY) {
 		this.velY = velY;
 	}
-	public int getHealth() {
+	public double getHealth() {
 		return this.health;
 	}
 }

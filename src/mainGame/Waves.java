@@ -1,12 +1,8 @@
 package mainGame;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-
-import javax.imageio.ImageIO;
 
 public class Waves extends GameMode {
 	private int currentLevelNum = 0;
@@ -19,7 +15,6 @@ public class Waves extends GameMode {
 	    return currentLevel;
     }
 	private ArrayList<Integer> currentEnemySpawns;
-	private static Image img;
 	private ID lastEnemy = null;
 	private ID lastBoss = (Math.random()*1 == 0 ? ID.EnemyBoss:ID.EnemyRocketBoss);
 
@@ -64,9 +59,9 @@ public class Waves extends GameMode {
     }
 
     private boolean africa = false;
-    public void toggleMenuMusic() {
+    public void setMenuMusic(boolean a) {
         // Toggle menu theme between Space Jam and Africa
-        africa = !africa;
+        africa = a;
         // Restart menu music
         AudioUtil.closeMenuClip();
         AudioUtil.playMenuClip(true, africa);
@@ -74,7 +69,6 @@ public class Waves extends GameMode {
 
     public Waves(Dimension screenSize) {
         handler = new Handler(screenSize);
-        handler.updateSprites();
         hud = new HUD(this);
         menu = new Menu(this);
 
@@ -99,15 +93,15 @@ public class Waves extends GameMode {
 		//case BossEye: return new EnemyBoss(ID.EnemyBoss, handler);
 		case EnemyBoss: return new EnemyBoss(ID.EnemyBoss, getHandler(),currentLevelNum/10,getHUD());
 		case EnemyRocketBoss: return new EnemyRocketBoss(100,100,ID.EnemyRocketBoss,getPlayer(), getHandler(), getHUD(), this,currentLevelNum/10);
-		case EnemyFast: return new EnemyFast(spawnLoc.getX(), spawnLoc.getY(), ID.EnemySmart, getHandler());
+		case EnemyFast: return new EnemyFast(spawnLoc.getX(), spawnLoc.getY(), ID.EnemyFast, getHandler());
 		case EnemyShooterMover: return new EnemyShooterMover(spawnLoc.getX(),spawnLoc.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooterMover, getHandler());
-		case EnemyShooterSharp: return new EnemyShooterSharp(spawnLoc.getX(),spawnLoc.getY(), 200, 200, -20 + (int)(Math.random()*5), ID.EnemyShooter, getHandler());
+		case EnemyShooterSharp: return new EnemyShooterSharp(spawnLoc.getX(),spawnLoc.getY(), 200, 200, -20 + (int)(Math.random()*5), ID.EnemyShooterSharp, getHandler());
 		default: 
 			System.err.println("Enemy not found");
 			return new EnemyBasic(spawnLoc.getX(),spawnLoc.getY(), 9, 9, ID.EnemyBasic, getHandler());
 		}
 	}
-	
+
 	/**
 	 * Generates a random enemy ID
 	 * @return ID (for entities)
@@ -191,11 +185,11 @@ public class Waves extends GameMode {
             } else {
 				System.out.println("New Normal Level");
                 switch ((int)(Math.random()*5)){
-                    case 0: getHandler().addPickup(new PickupSize(tempx,tempy));break;
-                    case 1: getHandler().addPickup(new PickupHealth(tempx,tempy));break;
-                    case 2: getHandler().addPickup(new PickupLife(tempx,tempy));break;
-                    case 3: getHandler().addPickup(new PickupScore(tempx,tempy));break;
-                    case 4: getHandler().addPickup(new PickupFreeze(tempx,tempy));break;
+                    case 0: getHandler().addPickup(new PickupSize(tempx, tempy, getHandler())); break;
+                    case 1: getHandler().addPickup(new PickupHealth(tempx, tempy, getHandler())); break;
+                    case 2: getHandler().addPickup(new PickupLife(tempx, tempy, getHandler())); break;
+                    case 3: getHandler().addPickup(new PickupScore(tempx, tempy, getHandler())); break;
+                    case 4: getHandler().addPickup(new PickupFreeze(tempx, tempy, getHandler())); break;
                 }
 				this.createNewEnemyLists();
 				System.out.println(this.currentEnemy.size());
@@ -228,7 +222,7 @@ public class Waves extends GameMode {
 	 * Problem - Java Tuples cannot return both an arraylist of enemies, and the # of times they spawn. 
 	 */
 	private void createNewEnemyLists() {
-		ArrayList<ID>newEnemy = new ArrayList<ID>();
+		ArrayList<ID>newEnemy = new ArrayList<>();
 		ArrayList<Integer>newSpawn = new ArrayList<Integer>();
 		int curr = this.currentLevelNum/5;
 		do{
@@ -258,7 +252,7 @@ public class Waves extends GameMode {
 	 * See tick above.
 	 */
 	private ArrayList<ID> randomBoss() {
-		ArrayList<ID>bossReturn = new ArrayList<ID>();
+		ArrayList<ID>bossReturn = new ArrayList<>();
 		if(this.lastBoss==ID.EnemyRocketBoss){
 			System.out.println("Enemy Boss");
 			bossReturn.add(ID.EnemyBoss);
@@ -275,10 +269,10 @@ public class Waves extends GameMode {
 	 * IE Background. 
 	 */
 	@Override
-	public void render(Graphics gfx) {
-        Graphics2D g = (Graphics2D) gfx;
-
-        g.drawImage(img, 0, 0, (int)getHandler().getGameDimension().getWidth(), (int)getHandler().getGameDimension().getHeight(), null);
+	public void render(Graphics g) {
+	    if(getHandler().getTheme().get(ID.Waves) != null) {
+            g.drawImage(getHandler().getTheme().get(ID.Waves), 0, 0, (int) getHandler().getGameDimension().getWidth(), (int) getHandler().getGameDimension().getHeight(), null);
+        }
 
         getState().render(g);
         if(getState() == currentLevel) {
@@ -307,8 +301,8 @@ public class Waves extends GameMode {
         getHandler().clearEnemies();
 		if(hardReset) {
 			this.currentLevelNum = 0;
-			getPlayer().playerWidth = 32;
-			getPlayer().playerHeight = 32;
+			getPlayer().setWidth(32);
+			getPlayer().setHeight(32);
 			getHUD().setExtraLives(0);
 			getHUD().resetHealth();
 		}
@@ -318,20 +312,4 @@ public class Waves extends GameMode {
 	public void resetMode() {
 		resetMode(true);
 	}
-
-    public static void updateSprite(Themes theme) {
-        // Set sprite based on current theme
-        try {
-            switch (theme) {
-                case Space:
-                    img = ImageIO.read(new File("src/images/space2.jpg"));
-                    break;
-                case Underwater:
-                    img = ImageIO.read(new File("src/images/Water.jpg"));
-                    break;
-            }
-        } catch (IOException e) {
-            System.err.println("Error reading sprite file for Waves (game background)");
-        }
-    }
 }

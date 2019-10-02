@@ -31,7 +31,7 @@ public class Upgrades {
 	}
 	//Shrink the player's size
 	public void decreasePlayerSize() {
-		game.getPlayer().setPlayerSize((int) (game.getPlayer().getPlayerHeight()/1.2));
+		game.getPlayer().setPlayerSize((int) (game.getPlayer().getHeight()/1.2));
 	}
 	//Add another life for the player
 	public void extraLife() {

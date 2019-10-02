@@ -2,7 +2,6 @@ package mainGame;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.util.Random;
 
 /**
@@ -13,24 +12,18 @@ import java.util.Random;
  *
  */
 
-public class EnemyBossBombBullet extends Enemy {
-
+public class EnemyBossBombBullet extends GameObject {
 	// instances
-	private Handler handler;
 	Random r = new Random();
 	private int max = 15;
 	private int min = -15;
-	double sizeX, sizeY;
 
 	// constructor
 	// used to initialize the state of the object
-	public EnemyBossBombBullet(double x, double y, ID id, Handler handler,int velX,int velY) {
-		super(x, y, id);
-		this.handler = handler;
+	public EnemyBossBombBullet(double x, double y, ID id, Handler handler, int velX, int velY) {
+		super(x, y, 16, 16, id, handler);
 		this.velX = velX;
 		this. velY = velY;
-		sizeX = 16;
-		sizeY = 16;
 	}
 
 	// methods
@@ -39,25 +32,18 @@ public class EnemyBossBombBullet extends Enemy {
 		this.x += velX;
 		this.y += velY;
 
-		if (this.y >= handler.getGameDimension().getHeight() || this.y < 0 || this.x > handler.getGameDimension().getHeight()  || this.x < 0) {
-			handler.removeObject(this);}
+		if (this.y >= getHandler().getGameDimension().getHeight() || this.y < 0 || this.x > getHandler().getGameDimension().getHeight()  || this.x < 0) {
+            getHandler().removeObject(this);}
 
-		handler.addObject(new Trail(x-sizeX/2, y-sizeY/2, ID.Trail, Color.PINK,(int)sizeX,(int)sizeY, 0.025, this.handler));
+        getHandler().addObject(new Trail(x-width/2, y-height/2, ID.Trail, Color.PINK,(int)width,(int)height, 0.025, this.getHandler()));
 
 	}
 	
 	// is the abstract base class for all graphics contexts that allow an application to draw 
 	// onto components that are realized on various devices, as well as onto off-screen images
+    @Override
 	public void render(Graphics g) {
 		g.setColor(Color.green);
-		g.fillRect((int) (x-sizeX/2), (int) (y-sizeY/2), (int)sizeX,(int)sizeY);
+		g.fillRect((int)x, (int)y, (int)width, (int)height);
 	}
-
-	@Override
-	// gets the bounding rectangle of this rectangle
-	// returns a new rectangle, equal to the bounding rectangle for this rectangle
-	public Rectangle getBounds() {
-		return new Rectangle((int) (x-sizeX/2), (int) (y-sizeY/2), (int)sizeX,(int)sizeY);
-	}
-
 }

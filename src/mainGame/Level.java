@@ -1,10 +1,11 @@
 package mainGame;
 
-import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Random;
+
 /**
  * This class is meant to be a generic level that classes implementing gamemode can use to generate and throw away levels of different parameters.
  * 
@@ -106,15 +107,8 @@ public class Level extends GameState {
 		
 	}
 	private Point getSpawnLoc(){
-		int x = (int)((Math.random()*(game.getHandler().getGameDimension().getWidth()*1.2))-game.getHandler().getGameDimension().getWidth()*0.1); //20% increase for a 10% margin.
-		int y = (int)((Math.random()*(game.getHandler().getGameDimension().getHeight()*1.2))-game.getHandler().getGameDimension().getHeight()*0.1);
-		if(Math.sqrt(Math.pow((game.getPlayer().getX()-x), 2) + Math.pow((game.getPlayer().getY()-y), 2))<=game.getPlayer().playerWidth*5){ //don't spawn within 5X of player size
-			return getSpawnLoc(); //try another point
-		}
-		if(x>=game.getHandler().getGameDimension().getWidth()-50 || y>=game.getHandler().getGameDimension().getHeight()-50 || y < 50 || x < 50){
-			return getSpawnLoc(); //try another point
-		}
-		return new Point(x,y);
+	    Dimension d = game.getHandler().getGameDimension();
+		return new Point((int)((Math.random()+1)*d.width/3),(int)((Math.random()+1)*d.width/3));
 	}
 	/**
 	 * render anything that is specific to this level(not static content for the gamemode itself. 
@@ -155,9 +149,9 @@ public class Level extends GameState {
         if (keyDown[1]) {goX--;}
         if (keyDown[3]) {goX++;}
 
-        double h = 1;
-        if(goX != 0 && goY != 0) {
-            h = Math.hypot(goX, goY);
+        double h = Math.hypot(goX, goY);
+        if(h < .5) {
+            h = 1;
         }
 
         game.getPlayer().velX = goX * Player.playerSpeed/h;

@@ -14,17 +14,14 @@ import java.util.Random;
  *
  */
 
-public class EnemySweep extends Enemy {
-
-	private Handler handler;
+public class EnemySweep extends GameObject {
 	private Color[] colors= {Color.red, Color.blue, Color.green, Color.cyan, Color.magenta, Color.orange, Color.yellow, Color.pink};
 	private Random index = new Random();
 
 	Color random = colors[index.nextInt(8)];
 	
 	public EnemySweep(double x, double y, double velX, double velY, ID id, Handler handler) {
-		super(x, y, id);
-		this.handler = handler;
+		super(x, y, 16, 16, id, handler);
 		this.velX = velX;
 		this.velY = velY;
 		if (Math.random() > .5) {
@@ -41,26 +38,20 @@ public class EnemySweep extends Enemy {
 		this.y += velY;
 
 		// if (this.y <= 0 || this.y >= Game.HEIGHT - 43) velY *= -1;
-		if (this.x <= 0 || this.x >= handler.getGameDimension().getWidth() - 16)
+		if (this.x <= 0 || this.x >= getHandler().getGameDimension().getWidth() - 16)
 			velX *= -1;
 		//check for removal once bottom of screen is hit. 
-		if (this.y <= 0 || this.y >= handler.getGameDimension().getWidth() - 43){
-			handler.removeObject(this);
+		if (this.y <= 0 || this.y >= getHandler().getGameDimension().getWidth() - 43){
+            getHandler().removeObject(this);
 			return;
 		}
 		
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.cyan, 16, 16, 0.025, this.handler));
-		handler.addObject(new Trail(x, y, ID.Trail, random, 16, 16, 0.025, this.handler));
+        getHandler().addObject(new Trail(x, y, ID.Trail, random, 16, 16, 0.025, getHandler()));
 	}
 
 	public void render(Graphics g) {
 		g.setColor(random);
 		g.fillRect((int) x, (int) y, 16, 16);
 	}
-
-	@Override
-	public Rectangle getBounds() {
-		return new Rectangle((int) this.x, (int) this.y, 16, 16);
-	}
-
 }

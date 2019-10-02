@@ -25,65 +25,48 @@ public class Player extends GameObject {
 	Random r = new Random();
 	private Waves game;
 	private double damage;
-	protected int playerWidth, playerHeight;
 	public static int playerSpeed = 10;
-	public static Image img;
 	public static Color playerColor = Color.WHITE;
 
 	public Player(double x, double y, ID id, Waves waves) {
-		super(x, y, id);
+		super(x, y, 32, 32, id, waves.getHandler());
 		game = waves;
 		this.damage = 2;
 		//Player Width and Height change the size of the image, use the same number for both for scaling
-		playerWidth = 32;
-		playerHeight = 32;
-		
-		if (img == null) { //Player Sprite
-			try {
-				img = ImageIO.read(new File("src/images/playership.png"));
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-			}
-		
-
 	}
 
 	@Override
-	public void tick() {//Heartbeat of the Player class
+	public void tick() { // Heartbeat of the Player class
 		this.x += velX;
 		this.y += velY;
-		x = Client.clamp(x, 0, game.getHandler().getGameDimension().getWidth()  - playerWidth);
-		y = Client.clamp(y, 0, game.getHandler().getGameDimension().getHeight() - playerHeight);
-        game.getHandler().addObject(new Trail(x, y, ID.Trail, playerColor, playerWidth, playerHeight, 0.05, game.getHandler()));
+		x = Client.clamp(x, 0, game.getHandler().getGameDimension().getWidth()  - width);
+		y = Client.clamp(y, 0, game.getHandler().getGameDimension().getHeight() - height);
+        game.getHandler().addObject(new Trail(x, y, ID.Trail, playerColor, (int)width, (int)height, 0.05, game.getHandler()));
 		playerColor = Color.white; //player trail code
 		collision();
 		checkIfDead();
-		
 	}
 
 	public void checkIfDead() {
 		if (game.getHUD().health <= 0) {// player is dead, game over!
 			if (game.getHUD().getExtraLives() == 0) {
-				game.resetMode();
 				AudioUtil.closeGameClip();
 				AudioUtil.stopCurrentClip(); //Clears audio for game over sound
 				AudioUtil.playClip("../gameSound/gameover.wav", false);
-				
-				try{//Saves Highscore
-						File set = new File("src/HighScores.txt");
-						BufferedWriter out = new BufferedWriter(new FileWriter(set));
-						out.write(Integer.toString(game.getHandler().getHighScore()));
-						out.close();				
-					}
-					catch (IOException e) {
-						System.out.println(e);
-						System.exit(1);
-					}
-				game.setState(game.getGameOver());
-				game.resetMode();
-				game.setPaused(true);
 
+				new Thread( () -> {
+                    try { // Saves Highscore
+                        File set = new File("src/HighScores.txt");
+                        BufferedWriter out = new BufferedWriter(new FileWriter(set));
+                        out.write(Integer.toString(game.getHandler().getHighScore()));
+                        out.close();
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
+                    }
+                }).start();
+
+                game.resetMode();
+				game.setState(game.getGameOver());
                 game.getHandler().clearPlayer();
 			}
 			else if (game.getHUD().getExtraLives() > 0) {//Player has extra life
@@ -102,7 +85,7 @@ public class Player extends GameObject {
 		for (int i = 0; i < game.getHandler().object.size(); i++) {
             GameObject tempObject = game.getHandler().object.get(i);
 
-            if (tempObject instanceof Enemy) {//tempObject is an enemy
+            if (tempObject.getId().getDifficuty() > 0) {//tempObject is an enemy
                 // collision code
                 if (getBounds().intersects(tempObject.getBounds())) {//Player, Enemy Collision
                     AudioUtil.playClip("../gameSound/explosion.wav", false);
@@ -124,16 +107,16 @@ public class Player extends GameObject {
         for(int i = 0; i < game.getHandler().pickups.size(); i++) {
             //if player collides with powerup, trigger what that powerup does, remove the powerup and play the collision sound
             if(getBounds().intersects(game.getHandler().pickups.get(i).getBounds())) {
-                Pickup tempObject = game.getHandler().pickups.remove(i);
+                GameObject tempObject = game.getHandler().pickups.remove(i);
                 if (tempObject.getId() == ID.PickupHealth) {
                     game.getHUD().restoreHealth();
                     AudioUtil.playClip("../gameSound/powerup.wav", false);
                 }
 
                 if (tempObject.getId() == ID.PickupSize) {
-                    if (playerWidth > 3) {
-                        playerWidth /= 1.2;
-                        playerHeight /= 1.2;
+                    if (width > 3) {
+                        width /= 1.2;
+                        height /= 1.2;
                     } else {
                         game.getHUD().setScore(game.getHUD().getScore() + 1000);
                     }
@@ -164,29 +147,18 @@ public class Player extends GameObject {
 	@Override
 	public void render(Graphics g) {//renders player
 		g.setColor(playerColor);
-		g.fillRect((int) x, (int) y, playerWidth, playerHeight);
+		Rectangle bounds = getBounds();
+		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 		//g.drawImage(img, (int) this.x, (int) this.y, playerWidth, playerHeight, null);
 	}
 
-	@Override
-	public Rectangle getBounds() {//creates hitbox
-		return new Rectangle((int) this.x, (int) this.y, playerWidth,playerHeight);
-	}
-	
 	public void setDamage(double d) {//set players damage
 		this.damage = d;
 	}
 	
 	public void setPlayerSize(int size) {//changes player size
-		this.playerWidth = size;
-		this.playerHeight = size;
-	}
-
-	public int getPlayerWidth() {//get player width
-		return playerWidth;
-	}
-	public int getPlayerHeight(){//get player width
-		return this.playerHeight;
+		width = size;
+		height = size;
 	}
 
 	public double getDamage() {//get damage done
