@@ -1,36 +1,35 @@
 package mainGame;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 
-public class EnemyBossBomb extends Enemy {
-
+public class EnemyBossBomb extends GameObject {
 	// instances
-	private Handler handler;
 	int explodeHeight;
-	private double sizeX, sizeY;
 	private int shots;
 	// constructor
 	// used to initialize the state of the object
-	public EnemyBossBomb(double x, double y, ID id, Handler handler,int shots) {
-		super(x, y, id);
-		this.handler = handler;
+	public EnemyBossBomb(double x, double y, ID id, Handler handler, int shots) {
+		super(x, y, 32, 32, id, handler);
 		this.explodeHeight = (int) (Math.random()*handler.getGameDimension().getHeight());
 		velY = 5;
-		sizeX = 32;
-		sizeY = 32;
 		this.shots = shots;
 	}
 
 	// methods
-	// is called every frame, allows game objects to update themselves before being rendered.
+	// is called every 1/60 seconds, allows game objects to update themselves before being rendered.
 	public void tick() {
 		this.y += velY;
 		if (y>explodeHeight) {
-			handler.removeObject(this);
+            getHandler().removeObject(this);
 			for (int i = 0; i < shots; i++) {
-			handler.addObject(new EnemyBossBombBullet((int) this.x, (int) this.y, ID.EnemyBossBombBullet, handler,(int)(16*Math.cos(Math.toRadians(360*i/shots))),(int)(16*Math.sin(Math.toRadians(360*i/shots)))));
+                getHandler().addObject( new EnemyBossBombBullet(
+                    (int) this.x,
+                    (int) this.y,
+                    ID.EnemyBossBombBullet,
+                    getHandler(),
+                    (int)(16*Math.cos(Math.toRadians(360.0*i/shots))),
+                    (int)(16*Math.sin(Math.toRadians(360.0*i/shots)))
+                ));
 			}
 		}
 
@@ -40,14 +39,6 @@ public class EnemyBossBomb extends Enemy {
 	// onto components that are realized on various devices, as well as onto off-screen images
 	public void render(Graphics g) {
 		g.setColor(Color.PINK);
-		g.fillRect((int) (x-sizeX/2), (int) (y-sizeY/2), (int)sizeX,(int)sizeY);
+		g.fillRect(getBounds().x, getBounds().y, getBounds().width, getBounds().height);
 	}
-
-	@Override
-	// gets the bounding rectangle of this rectangle
-	// returns a new rectangle, equal to the bounding rectangle for this rectangle
-	public Rectangle getBounds() {
-		return new Rectangle((int) (x-sizeX/2), (int) (y-sizeY/2), (int)sizeX,(int)sizeY);
-	}
-
 }

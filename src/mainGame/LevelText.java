@@ -25,16 +25,14 @@ public class LevelText extends GameObject {
 			Color.PINK, Color.YELLOW };
 	private Random r = new Random();
 	private int index;
-	private Handler handler;
 
 	// constructor
 	// used to initialize the state of the object
 	public LevelText(double x, double y, String text, ID id, Handler h) {
-		super(x, y, id);
+		super(x, y, 0, 0, id, h);
 		this.text = text;
 		AffineTransform at = new AffineTransform();
 		timer = 15;
-		handler = h;
 	}
 
 	@Override
@@ -51,17 +49,16 @@ public class LevelText extends GameObject {
 		Font font = new Font("Amoebic", 1, 125);
 		g.setFont(font);
 		g.setColor(color[index]);// set the new random color
-		g.drawString(this.text, (int)handler.getGameDimension().getWidth() / 2 - getTextWidth(font, this.text) / 2, (int) this.y);
+		g.drawString(this.text, (int)getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font, this.text) / 2, (int) this.y);
 		
 		// Controls color switch
 		if (timer == 0) {
 			index = r.nextInt(9);// get a new random color
 			timer = 15;
 		}
-
 	}
 
-	public int getTextWidth(Font font, String text) {
+    public int getTextWidth(Font font, String text) {
 		AffineTransform affinetransform = new AffineTransform();
 		FontRenderContext frc = new FontRenderContext(affinetransform, true, true);
 		int textWidth = (int) (font.getStringBounds(text, frc).getWidth());
@@ -69,11 +66,8 @@ public class LevelText extends GameObject {
 	}
 
 	@Override
-	// gets the bounding rectangle of this rectangle
-	// returns a new rectangle, equal to the bounding rectangle for this rectangle
 	public Rectangle getBounds() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

@@ -18,7 +18,6 @@ import java.util.Random;
  */
 
 public class BossEye extends GameObject {
-
 	private Image img;
 	private Random r = new Random();;
 	private float alpha = 0;
@@ -30,15 +29,15 @@ public class BossEye extends GameObject {
 	private double speed;
 	private double[] speedTypes = { -5, -6, -7, -8, -9 };
 	private GameObject player;
-	private Handler handler;
 
 	public BossEye(double x, double y, ID id, Handler handler, int placement) {
-		super(x, y, id);
-		this.img = getImage("/images/bosseye.png");
+		super(x, y, 0, 0, id, handler);
+		this.img = getHandler().getTheme().get(ID.BossEye);
+        this.width = img.getWidth(null);
+        this.height = img.getHeight(null);
 		this.velX = 0;
 		this.velY = 0;
 		this.speed = speedTypes[r.nextInt(4)];
-		this.handler = handler;
 		this.placement = placement;
 		this.timer = 400;
 	}
@@ -49,9 +48,9 @@ public class BossEye extends GameObject {
 				alpha += life + 0.001;
 			} else {
 				tempCounter++;
-				for (int i = 0; i < handler.object.size(); i++) {
-					if (handler.object.get(i).getId() == ID.Player)
-						this.player = handler.object.get(i);
+				for (int i = 0; i < getHandler().object.size(); i++) {
+					if (getHandler().object.get(i).getId() == ID.Player)
+						this.player = getHandler().object.get(i);
 				}
 			}
 		} else if (tempCounter == 1) {
@@ -116,22 +115,6 @@ public class BossEye extends GameObject {
 	private AlphaComposite makeTransparent(float alpha) {
 		int type = AlphaComposite.SRC_OVER;
 		return (AlphaComposite.getInstance(type, alpha));
-
-	}
-
-	public Rectangle getBounds() {
-		return new Rectangle((int) this.x, (int) this.y, (int) this.img.getWidth(null), (int) this.img.getHeight(null));
-	}
-
-	public Image getImage(String path) {
-		Image image = null;
-		try {
-			URL imageURL = Client.class.getResource(path);
-			image = Toolkit.getDefaultToolkit().getImage(imageURL);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return image;
 
 	}
 }

@@ -12,8 +12,6 @@ import java.awt.Rectangle;
  */
 
 public class EnemyBurstWarning extends GameObject {
-
-	private Handler handler;
 	private int width;
 	private int height;
 	private int timer;
@@ -21,8 +19,7 @@ public class EnemyBurstWarning extends GameObject {
 	private int hasFlashed;
 
 	public EnemyBurstWarning(double x, double y, int width, int height, ID id, Handler handler) {
-		super(x, y, id);
-		this.handler = handler;
+		super(x, y, 16, 16, id, handler);
 		this.width = width;
 		this.height = height;
 		timer = 10;
@@ -50,25 +47,19 @@ public class EnemyBurstWarning extends GameObject {
 
 	public void checkFlash() {
 		if (this.hasFlashed == 5) {
-			for (int i = 0; i < handler.object.size(); i++) {
-				GameObject tempObject = handler.object.get(i);
+			for (int i = 0; i < getHandler().object.size(); i++) {
+				GameObject tempObject = getHandler().object.get(i);
 				if (tempObject.getId() == ID.EnemyBurstWarning) {
-					handler.removeObject(tempObject);
+                    getHandler().removeObject(tempObject);
 					i--;
 				}
 			}
 		}
 	}
 
+	@Override
 	public void render(Graphics g) {
 		g.setColor(this.color);
 		g.fillRect((int) x, (int) y, this.width, this.height);
-
 	}
-
-	@Override
-	public Rectangle getBounds() {
-		return new Rectangle((int) this.x, (int) this.y, 16, 16);
-	}
-
 }

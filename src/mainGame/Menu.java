@@ -4,13 +4,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
-
 
 /**
  * The main menu
@@ -21,13 +18,6 @@ import java.util.Random;
  */
 
 public class Menu extends GameState {
-	private Image img;
-	private Image PowerCoin;
-	private Image PowerLife;
-	private Image PowerHealth;
-	private Image PowerSpeed;
-	private Image PowerSlow;
-	private Image HUDshield1;
 	private int timer;
 	private Random r;
 	private ArrayList<Color> colorPick = new ArrayList<Color>();
@@ -41,6 +31,7 @@ public class Menu extends GameState {
     }
 	//private static boolean rockMusic = true; //the music that is supposed to play
     private Waves game;
+	private Theme space, water;
 
 	public Menu(Waves waves) {
 	    game = waves;
@@ -48,10 +39,16 @@ public class Menu extends GameState {
 		r = new Random();
 		addColors();
 
-		img = getImage("/images/Background.png");
-
 		game.getHandler().addObject(new MenuFireworks((r.nextInt((int)game.getHandler().getGameDimension().getWidth()) - 25), 500, 50, 50, 0, -2,
 				colorPick.get(r.nextInt(6)), ID.Firework, game.getHandler()));
+
+		space = new SpaceTheme();
+		new Thread(() -> space.initialize()).start();
+
+		water = new WaterTheme();
+		new Thread(() -> water.initialize()).start();
+
+		game.getHandler().setTheme(space);
 	}
 
 	//using the java color picker, which colors you will add to the scene
@@ -77,18 +74,14 @@ public class Menu extends GameState {
 		}
         game.getHandler().tick();
 	}
+
 	//THIS MAKES THE MENU LOOK THE WAY IT DOES USING THE GRAPHICS 
 	public void render(Graphics g) {
 	    // Change background on theme change
-	    if (game.getHandler().getTheme() == Themes.Space) {
-            img = getImage("/images/Background.png");
-        } else if (game.getHandler().getTheme() == Themes.Underwater) {
-            img = getImage("/images/Water.jpg");
-        }
 
 		if (!help) {
 			//display the background
-			g.drawImage(img, 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
+			g.drawImage(game.getHandler().getTheme().get(ID.Menu), 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
 			//create the font objects
 			Font font = new Font("Amoebic", 1, 100); //the title
 			Font font2 = new Font("Amoebic", 1, 34); //help and quit
@@ -131,19 +124,25 @@ public class Menu extends GameState {
 			//Credits to team that worked on game last editor
 			g.setColor(Color.white);
 			g.setFont(font2);
-			g.drawString("Credits: Irrelephant Games '18-'19", 0, 1000);
+			g.drawString("Credits: Team", 0, 1000);
+			int shake = (int)(Math.random()*3);
+			int blake = (int)(Math.random()*2);
+			g.translate(shake, blake);
+			g.drawString("Shakey", 233, 1000);
+			g.translate(-shake,-blake);
+			g.drawString(" Blakey", 350, 1000);
 			//Now if the user clicked the Help button
 		} else {// if the user clicks on "help"
 			Font font = new Font("impact", Font.PLAIN, 50); //make a new font
 			Font font2 = new Font("impact", Font.PLAIN, 30); //also make a new font
 			Font font3 = new Font("impact", Font.PLAIN, 30); //also make a new font
 			//gets images, allows them to be used on help menu
-			PowerCoin = getImage("/images/PickupCoin.png");
-			PowerSlow = getImage("/images/freezeAbilitySnowflake.png");
-			PowerHealth = getImage("/images/PickupHealth.png");
-			PowerLife = getImage("/images/PickupLife.png");
-			PowerSpeed = getImage("/images/ShrinkAbility0.png");
-			HUDshield1 = getImage("/images/shield1.png");
+			Image PowerCoin = game.getHandler().getTheme().get(ID.PickupScore);
+			Image PowerSlow = game.getHandler().getTheme().get(ID.PickupFreeze);
+			Image PowerHealth = game.getHandler().getTheme().get(ID.PickupHealth);
+			Image PowerLife = game.getHandler().getTheme().get(ID.PickupLife);
+			Image PowerSpeed = game.getHandler().getTheme().get(ID.PickupSize);
+			Image HUDshield1 = game.getHandler().getTheme().get(ID.Shield);
 			//Help text
 			g.setFont(font); //set the font with its parameters above 
 			g.setColor(Color.white);
@@ -180,18 +179,6 @@ public class Menu extends GameState {
 		}
 	}
 
-    //Background image source path
-    public Image getImage(String path) {
-        Image image = null;
-        try {
-            URL imageURL = Client.class.getResource(path);
-            image = Toolkit.getDefaultToolkit().getImage(imageURL);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return image;
-    }
-
     public void mousePressed(MouseEvent e) {
         if (!getHelp()) {
             // Waves Button
@@ -199,7 +186,6 @@ public class Menu extends GameState {
                 game.getHandler().object.clear();
                 game.setState(game.getCurrentLevel());
                 game.getHandler().addObject(game.getPlayer());
-                game.tick();
             }
             // Help Button
             else if (mouseOver(e.getX(), e.getY(), 230, 360, 260, 200)) {
@@ -211,13 +197,13 @@ public class Menu extends GameState {
             }
             // Space Theme Button
             else if (mouseOver(e.getX(), e.getY(), 400, 730, 350, 120)) {
-                game.toggleMenuMusic();
-                game.getHandler().setTheme(Themes.Space);
+                game.setMenuMusic(false);
+                game.getHandler().setTheme(space);
             }
             // Underwater Theme Button
             else if (mouseOver(e.getX(), e.getY(), 850, 730, 650, 120)) {
-                game.toggleMenuMusic();
-                game.getHandler().setTheme(Themes.Underwater);
+                game.setMenuMusic(true);
+                game.getHandler().setTheme(water);
             }
         }
         // Back Button for Help screen

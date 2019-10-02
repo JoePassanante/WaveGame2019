@@ -1,15 +1,8 @@
 package mainGame;
 
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Rectangle;
-import java.io.File;
-import java.io.IOException;
 import java.util.Random;
-
-import javax.imageio.ImageIO;
 
 /**
  * A type of enemy in the game
@@ -18,18 +11,14 @@ import javax.imageio.ImageIO;
  *
  */
 
-public class EnemyBurst extends Enemy {
-
-	private Handler handler;
+public class EnemyBurst extends GameObject {
 	private int timer;
 	private int size;
 	private String side;
 	private Random r = new Random();
-	private static Image img;
 
 	public EnemyBurst(double x, double y, double velX, double velY, int size, String side, ID id, Handler handler) {
-		super(x, y, id);
-		this.handler = handler;
+		super(x, y, 150, 150, id, handler);
 		this.velX = velX*2;
 		this.velY = velY*2;
 		this.timer = 60;
@@ -52,19 +41,16 @@ public class EnemyBurst extends Enemy {
 			setVel();
 
 		} else if (this.side.equals("bottom")) {
-			handler.object
-					.add(new EnemyBurstWarning(0, handler.getGameDimension().getHeight() - 25, (int)handler.getGameDimension().getWidth(), 25, ID.EnemyBurstWarning, handler));
+			handler.object.add(new EnemyBurstWarning(0, handler.getGameDimension().getHeight() - 25, (int)handler.getGameDimension().getWidth(), 25, ID.EnemyBurstWarning, handler));
 			setPos();
 			setVel();
-
 		}
-
 	}
 
 	public void tick() {
 		//check for removal
-		if (this.y <= -handler.getGameDimension().getHeight() || this.y >= handler.getGameDimension().getHeight()*2){ handler.removeObject(this); return;}
-		if (this.x <= -handler.getGameDimension().getWidth() || this.x >= handler.getGameDimension().getWidth()*2){ handler.removeObject(this); return;}
+		if (this.y <= -getHandler().getGameDimension().getHeight() || this.y >= getHandler().getGameDimension().getHeight()*2){ getHandler().removeObject(this); return;}
+		if (this.x <= -getHandler().getGameDimension().getWidth() || this.x >= getHandler().getGameDimension().getWidth()*2){ getHandler().removeObject(this); return;}
 
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.orange, this.size, this.size, 0.025, this.handler));
 
@@ -79,19 +65,18 @@ public class EnemyBurst extends Enemy {
 
 	public void setPos() {
 		if (this.side.equals("left")) {
-			this.y = r.nextInt(((int)(handler.getGameDimension().getHeight() - size) - 0) + 1) + 0;
+			this.y = r.nextInt(((int)(getHandler().getGameDimension().getHeight() - size)) + 1);
 		} else if (this.side.equals("right")) {
-			this.x = handler.getGameDimension().getWidth() + 200;
-			this.y = r.nextInt(((int)(handler.getGameDimension().getHeight() - size) - 0) + 1) + 0;
+			this.x = getHandler().getGameDimension().getWidth() + 200;
+			this.y = r.nextInt(((int)(getHandler().getGameDimension().getHeight() - size)) + 1);
 
 		} else if (this.side.equals("top")) {
 			this.y = -(size);
-			this.x = r.nextInt(((int)(handler.getGameDimension().getWidth() - size) - 0) + 1) + 0;
+			this.x = r.nextInt(((int)(getHandler().getGameDimension().getWidth() - size)) + 1);
 
 		} else if (this.side.equals("bottom")) {
-			this.y = handler.getGameDimension().getHeight() + 200;
-			;
-			this.x = r.nextInt(((int)(handler.getGameDimension().getWidth() - size) - 0) + 1) + 0;
+			this.y = getHandler().getGameDimension().getHeight() + 200;
+			this.x = r.nextInt(((int)(getHandler().getGameDimension().getWidth() - size)) + 1);
 
 		}
 	}
@@ -111,30 +96,4 @@ public class EnemyBurst extends Enemy {
 			this.velY = -(this.velY);
 		}
 	}
-
-	public void render(Graphics g) {
-		Graphics2D a = (Graphics2D) g;
-		a.drawImage(img, (int) x, (int) y, 150, 150, null);
-	}
-
-	@Override
-	public Rectangle getBounds() {
-		return new Rectangle((int) this.x, (int) this.y, 150,150);
-	}
-
-    public static void updateSprite(Themes theme) {
-        // Set sprite based on current theme
-        try {
-            switch (theme) {
-                case Space:
-                    img = ImageIO.read(new File("src/images/asteroid.png"));
-                    break;
-                case Underwater:
-                    img = ImageIO.read(new File("src/images/pufferfish.png"));
-                    break;
-            }
-        } catch (IOException e) {
-            System.err.println("Error reading sprite file for EnemyBurst");
-        }
-    }
 }

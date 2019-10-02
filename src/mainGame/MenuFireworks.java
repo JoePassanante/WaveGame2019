@@ -14,13 +14,7 @@ import java.util.Random;
  */
 
 public class MenuFireworks extends GameObject {
-
-	private Handler handler;
 	private Random r;
-	private double x;
-	private double y;
-	private int sizeX;
-	private int sizeY;
 	private int max = 5;
 	private int min = -5;
 	private Color color;
@@ -38,14 +32,9 @@ public class MenuFireworks extends GameObject {
 	 */
 	public MenuFireworks(double x, double y, int sizeX, int sizeY, double velX, double velY, Color color, ID id,
 			Handler handler) {
-		super(x, y, id);
-		this.handler = handler;
-		this.x = x;
-		this.y = y;
+		super(x, y, sizeX, sizeY, id, handler);
 		this.velX = velX;
 		this.velY = velY;
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
 		r = new Random();
 		this.color = color;
 
@@ -53,7 +42,8 @@ public class MenuFireworks extends GameObject {
 	//render the circle object
 	public void render(Graphics g) {
 		g.setColor(this.color);
-		g.fillOval((int) this.x-sizeX/2, (int) this.y-sizeY/2, sizeX, sizeY);
+		Rectangle bounds = getBounds();
+		g.fillOval(bounds.x, bounds.y, bounds.width, bounds.height);
 	}
 	/**
 	 * In the tick function it checks where the circle fire work is on
@@ -63,11 +53,11 @@ public class MenuFireworks extends GameObject {
 		this.x += velX;
 		this.y += velY;
 		if (this.y <= 100) {// once it gets this high
-			for (int i = 0; i < handler.object.size(); i++) {
-				GameObject tempObject = handler.object.get(i);
+			for (int i = 0; i < getHandler().object.size(); i++) {
+				GameObject tempObject = getHandler().object.get(i);
 				if (tempObject.id == ID.Firework) {// find the firework
 					sparks(tempObject);// create sparks
-					handler.removeObject(tempObject);// delete big circle
+                    getHandler().removeObject(tempObject);// delete big circle
 				}
 			}
 		}
@@ -78,36 +68,10 @@ public class MenuFireworks extends GameObject {
 	 */
 	public void sparks(GameObject tempObject) {
 		for (int ii = 0; ii < 3; ii++) {
-			handler.addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), -5,
-					this.color, ID.FireworkSpark, handler));
-			handler.addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), -4,
-					this.color, ID.FireworkSpark, handler));
-			handler.addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), -3,
-					this.color, ID.FireworkSpark, handler));
-			handler.addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), -2,
-					this.color, ID.FireworkSpark, handler));
-			handler.addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), -1,
-					this.color, ID.FireworkSpark, handler));
-			handler.addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt(4) + 1), 0, this.color,
-					ID.FireworkSpark, handler));
-			handler.addObject(new MenuFireworks(this.x, this.y, 20, 20, -(r.nextInt(4) + 1), 0, this.color,
-					ID.FireworkSpark, handler));
-			handler.addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), 1,
-					this.color, ID.FireworkSpark, handler));
-			handler.addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), 2,
-					this.color, ID.FireworkSpark, handler));
-			handler.addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), 3,
-					this.color, ID.FireworkSpark, handler));
-			handler.addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), 4,
-					this.color, ID.FireworkSpark, handler));
-			handler.addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), 5,
-					this.color, ID.FireworkSpark, handler)); 
+		    for(int i=-5; i<=5; i++) {
+                getHandler().addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), i,
+                        this.color, ID.FireworkSpark, getHandler()));
+            }
 		}
 	}
-
-	@Override
-	public Rectangle getBounds() {
-		return null;
-	}
-
 }

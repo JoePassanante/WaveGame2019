@@ -1,7 +1,5 @@
 package mainGame;
 
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Rectangle;
 
 /**
@@ -12,23 +10,13 @@ import java.awt.Rectangle;
  * 
  */
 
-public class PickupSize extends Pickup{
-	
-	// instance
-
-	// constructor
-	// used to initialize the state of the object
-	public PickupSize(double x, double y) {
-		super(x, y, ID.PickupSize,"src/images/ShrinkAbility0.png");
+public class PickupSize extends GameObject {
+	public PickupSize(double x, double y, Handler handler) {
+		super(x, y, 30, 30, ID.PickupSize, handler);
 	}
 
-	// methods
-	// is called every frame, allows game objects to update themselves before being rendered.
-	public void tick() {	
-	}
+    @Override
+    public void tick() {
 
-	// is the abstract base class for all graphics contexts that allow an application to draw 
-	// onto components that are realized on various devices, as well as onto off-screen images
-	
-
+    }
 }

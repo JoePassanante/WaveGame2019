@@ -15,7 +15,15 @@ import java.util.Scanner;
  * @author Aaron Paterson 9/9/19
  */
 public class Handler implements Animatable {
-    int highscore = 0;
+    private int highscore = 0;
+
+    private Theme theme;
+    public void setTheme(Theme t) {
+        theme = t;
+    }
+    public Theme getTheme() {
+        return theme;
+    }
 
     /**
      *
@@ -30,9 +38,8 @@ public class Handler implements Animatable {
     }
 
     ArrayList<GameObject> object = new ArrayList<>();
-    ArrayList<Pickup> pickups = new ArrayList<>();
+    ArrayList<GameObject> pickups = new ArrayList<>();
     public int timer = 0;
-    private Themes theme = Themes.Space;
 
     private Dimension gameDimension;
 
@@ -91,10 +98,10 @@ public class Handler implements Animatable {
                     tempObject.tick();
                 }
             }
+
+            this.checkForBounds(tempObject);
         }
         for (int i = 0; i < pickups.size(); i++) {
-            // Every Pickup has a tick method, so this effectively updates every single
-            // object
             pickups.get(i).tick();
         }
 
@@ -102,18 +109,13 @@ public class Handler implements Animatable {
 
     /**
      * Redraws each entity in the game by looping through each ArrayList and calling
-     * the tick() function on each object
+     * the render() function on each object
      */
+    @Override
     public void render(Graphics g) {
         for (int i = 0; i < object.size(); i++) {
             GameObject tempObject = object.get(i);
-            this.checkForBounds(tempObject);
-            try {
-                tempObject.render(g);
-            } catch (java.lang.NullPointerException e) {
-                e.getStackTrace();
-                System.err.println("Object removed mid count. Do not be alarmed.");
-            }
+            tempObject.render(g);
         }
         for (int i = 0; i < pickups.size(); i++) {
             pickups.get(i).render(g);
@@ -136,11 +138,11 @@ public class Handler implements Animatable {
         this.object.remove(object);
     }
 
-    public void addPickup(Pickup object) {
+    public void addPickup(GameObject object) {
         this.pickups.add(object);
     }
 
-    public void removePickup(Pickup object) {
+    public void removePickup(GameObject object) {
         this.pickups.remove(object);
     }
 
@@ -176,7 +178,7 @@ public class Handler implements Animatable {
     public void checkForBounds(GameObject i) {
         try {
             if (i.x >= gameDimension.getWidth() * 3 || i.x <= 0 - (gameDimension.getWidth() * 2) ||
-                    i.y >= gameDimension.getHeight() * 3 || i.y <= 0 - (gameDimension.getHeight() * 2)) { // 100% greater/smaller then game width/height.
+                i.y >= gameDimension.getHeight() * 3 || i.y <= 0 - (gameDimension.getHeight() * 2)) { // 100% greater/smaller then game width/height.
                 System.out.println("Object out of bounds: " + i.getId());
                 object.remove(i);
             }
@@ -193,28 +195,5 @@ public class Handler implements Animatable {
 
     public int getNumPickUps() {
         return pickups.size();
-    }
-
-    public void setTheme(Themes t) {
-        this.theme = t;
-        updateSprites();
-    }
-
-    public Themes getTheme() {
-        return this.theme;
-    }
-
-    public void updateSprites() {
-        // Call the static sprite update method for each enemy class, passing on the current theme
-        EnemyBoss.updateSprite(theme);
-        EnemyBurst.updateSprite(theme);
-        EnemyFast.updateSprite(theme);
-        EnemyRocketBoss.updateSprite(theme);
-        EnemyRocketBossMissile.updateSprite(theme);
-        EnemyShooter.updateSprite(theme);
-        EnemyShooterMover.updateSprite(theme);
-        EnemyShooterSharp.updateSprite(theme);
-        EnemySmart.updateSprite(theme);
-        Waves.updateSprite(theme);
     }
 }

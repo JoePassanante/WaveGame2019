@@ -34,7 +34,7 @@ public class HUD implements Animatable {
 	private Color scoreColor = Color.white;
 
 	private int extraLives = 0;
-	public int levelProgress;
+	public double levelProgress;
 
 	//calls background and each of the damage resistance shields
 	private Image img;
@@ -47,6 +47,12 @@ public class HUD implements Animatable {
 	Waves game;
 	public HUD(Waves waves) {
 	    game = waves;
+
+        HUDshield1 = getImage("/images/shield1.png");
+        HUDshield2 = getImage("/images/shield2.png");
+        HUDshield3 = getImage("/images/shield3.png");
+        HUDshield4 = getImage("/images/shield4.png");
+        HUDshield5 = getImage("/images/shield5.png");
     }
 
 	//game uses tick method to check amount of health player has and update health bar display. Also updates score using this method
@@ -74,11 +80,6 @@ public class HUD implements Animatable {
 		Font font = new Font("Amoebic", 1, 30);
 		
 		g.drawImage(img, 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
-		HUDshield1 = getImage("/images/shield1.png");
-		HUDshield2 = getImage("/images/shield2.png");
-		HUDshield3 = getImage("/images/shield3.png");
-		HUDshield4 = getImage("/images/shield4.png");
-		HUDshield5 = getImage("/images/shield5.png");
 
 		g.setColor(Color.GRAY);
 		g.fillRect(15, 1000, healthBarWidth, 64);
@@ -97,7 +98,7 @@ public class HUD implements Animatable {
 		g.drawString("Extra Lives: " + extraLives, 15, 125);
 		g.drawString("Level Progress: " + levelProgress + "%", 15, 175);
 		g.drawString("Health: " + (int)health + "/" + (int)healthMax, 15, 1050);
-		g.drawString("Player Size: " + game.getPlayer().getPlayerHeight(), 15, 225);
+		g.drawString("Player Size: " + game.getPlayer().getHeight(), 15, 225);
 		g.drawString("Regeneration: " + regenString, 15, 275);
 		g.drawString("High Score: " + game.getHandler().getHighScore(), 1500, 25);
 		

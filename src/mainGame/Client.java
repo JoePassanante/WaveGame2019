@@ -18,11 +18,9 @@ import java.awt.image.BufferStrategy;
  */
 
 public class Client extends JFrame implements Runnable, Animatable {
-    //---------------------------------------------------------------------------------
-    public static boolean devMode = false;//true - enable cheats and debug info | false - do not
-    //---------------------------------------------------------------------------------
-
     private static final long serialVersionUID = 1L;
+
+    public static boolean devMode = false; //true - enable cheats and debug info | false - do not
 
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private GameMode currentGame;
@@ -39,7 +37,7 @@ public class Client extends JFrame implements Runnable, Animatable {
 		AudioUtil.playMenuClip(true, false);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(true);
+        setResizable(devMode);
 
         // Set fullscreen
         if (System.getProperty("os.name").toLowerCase().contains("mac")) { //If user is on macOS
@@ -50,7 +48,7 @@ public class Client extends JFrame implements Runnable, Animatable {
                 System.err.println("Failed to load apple extensions package");
             }
         } else {
-            setUndecorated(false);
+            setUndecorated(!devMode);
         }
         setVisible(true);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -68,10 +66,10 @@ public class Client extends JFrame implements Runnable, Animatable {
 	public void run() {
         requestFocus();
 
-        final long frame = 1_000_000_000/60;
-        long tick, tock = System.nanoTime(), delta = 0;
+        final long frame = 1_000_000_000 / 60; // time per ticks, here it is one billion nanoseconds per sixty ticks
+        long tick = 0, tock = System.nanoTime(), delta = 0;
 
-        while (true) {
+        while (tock >= tick) {
             tick = tock;
 
             while (delta >= frame) {
@@ -103,7 +101,7 @@ public class Client extends JFrame implements Runnable, Animatable {
         currentGame.tick();
 	}
 
-	private AffineTransform screenSpace;
+	private AffineTransform screenSpace; // The graphical transformation of this JFrame
 
 	/**
 	 * Constantly drawing to the many buffer screens of each entity requiring the
@@ -140,7 +138,7 @@ public class Client extends JFrame implements Runnable, Animatable {
         try {
             Point2D p = new Point();
             screenSpace.inverseTransform(e.getPoint(), p);
-            super.processMouseEvent(new MouseEvent(
+            super.processMouseEvent( new MouseEvent(
                     e.getComponent(),
                     e.getID(),
                     e.getWhen(),

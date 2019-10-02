@@ -2,7 +2,6 @@ package mainGame;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.util.Random;
 
 /**
@@ -13,51 +12,30 @@ import java.util.Random;
  *
  */
 
-public class EnemyBossBullet extends Enemy {
-
-	// instances
-	private Handler handler;
+public class EnemyBossBullet extends GameObject {
 	Random r = new Random();
 	private int max = 15;
 	private int min = -15;
-	double sizeX, sizeY;
 
-	// constructor
-	// used to initialize the state of the object
 	public EnemyBossBullet(double x, double y, ID id, Handler handler) {
-		super(x, y, id);
-		this.handler = handler;
+		super(x, y, 16, 16, id, handler);
 		velX = (r.nextInt((max - min) + 1) + min);// OFFICIAL WAY TO GET A RANGE FOR randInt()
 		velY = 30;
-		sizeX = 16;
-		sizeY = 16;
 	}
 
-	// methods
-	// is called every frame, allows game objects to update themselves before being rendered.
 	public void tick() {
 		this.x += velX;
 		this.y += velY;
 
-		if (this.y >= handler.getGameDimension().getHeight())
-			handler.removeObject(this);
+		if (this.y >= getHandler().getGameDimension().getHeight())
+            getHandler().removeObject(this);
 
-		handler.addObject(new Trail(x-sizeX/2, y-sizeY/2, ID.Trail, Color.red,(int)sizeX,(int)sizeY, 0.025, this.handler));
-
+        getHandler().addObject(new Trail(x-width/2, y-height/2, ID.Trail, Color.red,(int)width,(int)height, 0.025, getHandler()));
 	}
 	
-	// is the abstract base class for all graphics contexts that allow an application to draw 
-	// onto components that are realized on various devices, as well as onto off-screen images
+    @Override
 	public void render(Graphics g) {
 		g.setColor(Color.red);
-		g.fillRect((int) (x-sizeX/2), (int) (y-sizeY/2), (int)sizeX,(int)sizeY);
+		g.fillRect((int) (x-width/2), (int) (y-height/2), (int)width,(int)height);
 	}
-
-	@Override
-	// gets the bounding rectangle of this rectangle
-	// returns a new rectangle, equal to the bounding rectangle for this rectangle
-	public Rectangle getBounds() {
-		return new Rectangle((int) (x-sizeX/2), (int) (y-sizeY/2), (int)sizeX,(int)sizeY);
-	}
-
 }
