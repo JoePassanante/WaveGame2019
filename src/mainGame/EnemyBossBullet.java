@@ -1,7 +1,6 @@
 package mainGame;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.Random;
 
 /**
@@ -13,7 +12,7 @@ import java.util.Random;
  */
 
 public class EnemyBossBullet extends GameObject {
-	Random r = new Random();
+	private Random r = new Random();
 	private int max = 15;
 	private int min = -15;
 
@@ -30,12 +29,13 @@ public class EnemyBossBullet extends GameObject {
 		if (this.y >= getHandler().getGameDimension().getHeight())
             getHandler().removeObject(this);
 
-        getHandler().addObject(new Trail(x-width/2, y-height/2, ID.Trail, Color.red,(int)width,(int)height, 0.025, getHandler()));
+        getHandler().addObject(new Trail(x, y, ID.Trail, Color.red,(int)width,(int)height, 0.025, getHandler()));
 	}
 	
     @Override
 	public void render(Graphics g) {
 		g.setColor(Color.red);
-		g.fillRect((int) (x-width/2), (int) (y-height/2), (int)width,(int)height);
+		Rectangle bounds = getBounds();
+		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 	}
 }

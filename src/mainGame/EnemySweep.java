@@ -18,7 +18,7 @@ public class EnemySweep extends GameObject {
 	private Color[] colors= {Color.red, Color.blue, Color.green, Color.cyan, Color.magenta, Color.orange, Color.yellow, Color.pink};
 	private Random index = new Random();
 
-	Color random = colors[index.nextInt(8)];
+	private Color random = colors[index.nextInt(8)];
 	
 	public EnemySweep(double x, double y, double velX, double velY, ID id, Handler handler) {
 		super(x, y, 16, 16, id, handler);
@@ -47,11 +47,12 @@ public class EnemySweep extends GameObject {
 		}
 		
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.cyan, 16, 16, 0.025, this.handler));
-        getHandler().addObject(new Trail(x, y, ID.Trail, random, 16, 16, 0.025, getHandler()));
+        getHandler().addObject(new Trail(x, y, ID.Trail, random, (int)width, (int)height, 0.025, getHandler()));
 	}
 
 	public void render(Graphics g) {
 		g.setColor(random);
-		g.fillRect((int) x, (int) y, 16, 16);
+		Rectangle bounds = new Rectangle();
+		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 	}
 }

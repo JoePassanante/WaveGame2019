@@ -1,7 +1,6 @@
 package mainGame;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.Random;
 
 /**
@@ -35,7 +34,7 @@ public class EnemyBossBombBullet extends GameObject {
 		if (this.y >= getHandler().getGameDimension().getHeight() || this.y < 0 || this.x > getHandler().getGameDimension().getHeight()  || this.x < 0) {
             getHandler().removeObject(this);}
 
-        getHandler().addObject(new Trail(x-width/2, y-height/2, ID.Trail, Color.PINK,(int)width,(int)height, 0.025, this.getHandler()));
+        getHandler().addObject(new Trail(x, y, ID.Trail, Color.PINK,(int)width,(int)height, 0.025, this.getHandler()));
 
 	}
 	
@@ -44,6 +43,7 @@ public class EnemyBossBombBullet extends GameObject {
     @Override
 	public void render(Graphics g) {
 		g.setColor(Color.green);
-		g.fillRect((int)x, (int)y, (int)width, (int)height);
+		Rectangle bounds = getBounds();
+		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 	}
 }

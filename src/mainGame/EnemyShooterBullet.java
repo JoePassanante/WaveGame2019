@@ -25,12 +25,12 @@ public class EnemyShooterBullet extends GameObject {
 		// if (this.y <= 0 || this.y >= Game.HEIGHT - 40) velY *= -1;
 		// if (this.x <= 0 || this.x >= Game.WIDTH - 16) velX *= -1;
 
-        getHandler().addObject(new Trail(x, y, ID.Trail, Color.yellow, 4, 4, 0.025, getHandler()));
+        getHandler().addObject(new Trail(x, y, ID.Trail, Color.yellow, (int)width/4, (int)width/4, 0.025, getHandler()));
 
 		removeBullets();
 	}
 
-	public void removeBullets() {
+	private void removeBullets() {
 		for (int i = 0; i < getHandler().object.size(); i++) {
 			GameObject tempObject = getHandler().object.get(i);
 			if (tempObject.getId() == ID.EnemyShooterBullet) {
@@ -47,7 +47,7 @@ public class EnemyShooterBullet extends GameObject {
 
 	public void render(Graphics g) {
 		g.setColor(Color.red);
-		g.fillRect((int) x, (int) y, 4, 4);
-
+		Rectangle bounds = getBounds();
+		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 	}
 }
