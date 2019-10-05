@@ -48,8 +48,8 @@ public class EnemyRocketBossMissile extends GameObject {
 		
 		a.translate(Math.cos(Math.toRadians(direction-90))*20 +this.x, Math.sin(Math.toRadians(direction-90))*20 +this.y);
 		a.rotate(Math.toRadians(direction - 90));
-		super.render(a);
-		Rectangle2D rec = new Rectangle.Double(30, 0, 20,60);
+        a.drawImage(getHandler().getTheme().get(ID.EnemyRocketBossMissile),0,64,32,-64, null);
+        Rectangle2D rec = new Rectangle.Double(30, 0, 20,60);
 		AffineTransform trans = new AffineTransform();
 		trans.translate(Math.cos(Math.toRadians(this.direction-90))*-5 +this.x, Math.sin(Math.toRadians(this.direction-90))*-5 +this.y);
 		trans.rotate(Math.toRadians(this.direction - 90));

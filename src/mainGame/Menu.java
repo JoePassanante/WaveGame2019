@@ -1,9 +1,6 @@
 package mainGame;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -39,16 +36,16 @@ public class Menu extends GameState {
 		r = new Random();
 		addColors();
 
-		game.getHandler().addObject(new MenuFireworks((r.nextInt((int)game.getHandler().getGameDimension().getWidth()) - 25), 500, 50, 50, 0, -2,
+        space = new SpaceTheme();
+        new Thread(() -> space.initialize()).start();
+
+        water = new WaterTheme();
+        new Thread(() -> water.initialize()).start();
+
+        game.getHandler().setTheme(space);
+
+        game.getHandler().addObject(new MenuFireworks((r.nextInt((int)game.getHandler().getGameDimension().getWidth()) - 25), 500, 50, 50, 0, -2,
 				colorPick.get(r.nextInt(6)), ID.Firework, game.getHandler()));
-
-		space = new SpaceTheme();
-		new Thread(() -> space.initialize()).start();
-
-		water = new WaterTheme();
-		new Thread(() -> water.initialize()).start();
-
-		game.getHandler().setTheme(space);
 	}
 
 	//using the java color picker, which colors you will add to the scene
@@ -66,7 +63,7 @@ public class Menu extends GameState {
 	public void tick() {
 		timer--;
 		if (timer <= 0) {
-			game.getHandler().object.clear();
+			game.getHandler().clear();
 			colorIndex = r.nextInt(6);
             game.getHandler().addObject(new MenuFireworks((r.nextInt((int)game.getHandler().getGameDimension().getWidth()) - 25), 1080, 100, 100, 0, -4,
 					colorPick.get(colorIndex), ID.Firework, this.game.getHandler()));
@@ -75,10 +72,7 @@ public class Menu extends GameState {
         game.getHandler().tick();
 	}
 
-	//THIS MAKES THE MENU LOOK THE WAY IT DOES USING THE GRAPHICS 
 	public void render(Graphics g) {
-	    // Change background on theme change
-
 		if (!help) {
 			//display the background
 			g.drawImage(game.getHandler().getTheme().get(ID.Menu), 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
@@ -90,7 +84,7 @@ public class Menu extends GameState {
 			g.setFont(font);
 			g.setColor(Color.white);
 			g.drawString("Loehle's Sandbox", 500, 100);
-			//Waves button, the start game button essentially
+			//Waves button, the start game button
 			g.setColor(Color.white);
 			g.drawRect(700, 300, 470, 250); //changes the rectangle size drawn
 			g.setFont(font3);
@@ -133,9 +127,9 @@ public class Menu extends GameState {
 			g.drawString(" Blakey", 350, 1000);
 			//Now if the user clicked the Help button
 		} else {// if the user clicks on "help"
-			Font font = new Font("impact", Font.PLAIN, 50); //make a new font
-			Font font2 = new Font("impact", Font.PLAIN, 30); //also make a new font
-			Font font3 = new Font("impact", Font.PLAIN, 30); //also make a new font
+			Font font = new Font("impact", Font.PLAIN, 50);
+			Font font2 = new Font("impact", Font.PLAIN, 30);
+			Font font3 = new Font("impact", Font.PLAIN, 30);
 			//gets images, allows them to be used on help menu
 			Image PowerCoin = game.getHandler().getTheme().get(ID.PickupScore);
 			Image PowerSlow = game.getHandler().getTheme().get(ID.PickupFreeze);
@@ -183,7 +177,7 @@ public class Menu extends GameState {
         if (!getHelp()) {
             // Waves Button
             if (mouseOver(e.getX(), e.getY(), 700, 300, 470, 250)) {
-                game.getHandler().object.clear();
+                game.getHandler().clear();
                 game.setState(game.getCurrentLevel());
                 game.getHandler().addObject(game.getPlayer());
             }

@@ -34,7 +34,7 @@ public class HUD implements Animatable {
 	private Color scoreColor = Color.white;
 
 	private int extraLives = 0;
-	public double levelProgress;
+	public int levelProgress;
 
 	//calls background and each of the damage resistance shields
 	private Image img;
@@ -58,13 +58,9 @@ public class HUD implements Animatable {
 	//game uses tick method to check amount of health player has and update health bar display. Also updates score using this method
 	public void tick() {
 		health = Client.clamp(health, 0, health);
-
 		greenValue = Client.clamp(greenValue, 0, 255);
-
 		greenValue = health * healthBarModifier;
-		
 		greenValue = Client.clamp(greenValue, 0, 255);
-
 		score++;
 
 		if (regen) {// regenerates health if that ability has been unlocked
@@ -98,7 +94,7 @@ public class HUD implements Animatable {
 		g.drawString("Extra Lives: " + extraLives, 15, 125);
 		g.drawString("Level Progress: " + levelProgress + "%", 15, 175);
 		g.drawString("Health: " + (int)health + "/" + (int)healthMax, 15, 1050);
-		g.drawString("Player Size: " + game.getPlayer().getHeight(), 15, 225);
+		g.drawString("Player Size: " + String.format("%.2f",game.getPlayer().getWidth()), 15, 225);
 		g.drawString("Regeneration: " + regenString, 15, 275);
 		g.drawString("High Score: " + game.getHandler().getHighScore(), 1500, 25);
 		

@@ -20,9 +20,9 @@ public class EnemySmart extends GameObject {
 		super(x, y, 150, 75, id, handler);
 		this.speed = speed;
 
-		for (int i = 0; i < handler.object.size(); i++) {
-			if (handler.object.get(i).getId() == ID.Player)
-				player = handler.object.get(i);
+		for (int i = 0; i < handler.size(); i++) {
+			if (handler.get(i).getId() == ID.Player)
+				player = handler.get(i);
 		}
 
 	}

@@ -2,15 +2,12 @@ package mainGame;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Rectangle;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
-
-import javax.imageio.ImageIO;
 
 /**
  * Player object class w/ collision
@@ -82,8 +79,8 @@ public class Player extends GameObject {
 	public void collision() {
 		try{
             game.getHUD().updateScoreColor(Color.white);
-		for (int i = 0; i < game.getHandler().object.size(); i++) {
-            GameObject tempObject = game.getHandler().object.get(i);
+		for (int i = 0; i < game.getHandler().size(); i++) {
+            GameObject tempObject = game.getHandler().get(i);
 
             if (tempObject.getId().getDifficuty() > 0) {//tempObject is an enemy
                 // collision code
@@ -96,7 +93,7 @@ public class Player extends GameObject {
             }
             if (tempObject.getId() == ID.EnemyBoss) {
                 //Gives players safety window to move from boss restricted region
-                if (this.y <= 138 && tempObject.isMoving) {
+                if (this.y <= 138 && Math.hypot(tempObject.getVelX(),tempObject.getVelY()) < 1E-6 ) {
                     AudioUtil.playClip("../gameSound/damaged.wav", false);
                     game.getHUD().health -= 2;
                     game.getHUD().updateScoreColor(Color.red);

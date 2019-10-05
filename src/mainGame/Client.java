@@ -20,9 +20,9 @@ import java.awt.image.BufferStrategy;
 public class Client extends JFrame implements Runnable, Animatable {
     private static final long serialVersionUID = 1L;
 
-    public static boolean devMode = false; //true - enable cheats and debug info | false - do not
+    public static boolean devMode = true; // true - enable cheats and debug info | false - do not
 
-	private Dimension screenSize;
+	private Dimension gameSize;
     private GameMode currentGame;
 
 	/**
@@ -30,8 +30,8 @@ public class Client extends JFrame implements Runnable, Animatable {
 	 */
 	public Client() {
         super("Wave Game");
-        screenSize = new Dimension(1920,1080); // Toolkit.getDefaultToolkit().getScreenSize();
-        currentGame = new Waves(screenSize);
+        gameSize = new Dimension(1920,1080); // Toolkit.getDefaultToolkit().getScreenSize();
+        currentGame = new Waves(gameSize);
 		addKeyListener(currentGame);
 		addMouseListener(currentGame);
 		AudioUtil.closeGameClip();
@@ -54,7 +54,7 @@ public class Client extends JFrame implements Runnable, Animatable {
         }
         setVisible(true);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setPreferredSize(screenSize);
+        setPreferredSize(gameSize);
         pack();
         setLocationRelativeTo(null);     
 	}
@@ -112,16 +112,16 @@ public class Client extends JFrame implements Runnable, Animatable {
         Graphics2D g = (Graphics2D)gfx;
         AffineTransform old = g.getTransform();
 
-        g.clearRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
+        g.clearRect(0, 0, (int)gameSize.getWidth(), (int)gameSize.getHeight());
 
         double scaleFactor = Math.min(
-                getWidth()/screenSize.getWidth(),
-                getHeight()/screenSize.getHeight()
+                getWidth()/gameSize.getWidth(),
+                getHeight()/gameSize.getHeight()
         );
 
         g.translate(getWidth()/2,getHeight()/2);
         g.scale(scaleFactor, scaleFactor);
-        g.translate(-screenSize.getWidth()/2,-screenSize.getHeight()/2);
+        g.translate(-gameSize.getWidth()/2,-gameSize.getHeight()/2);
 
         screenSpace = g.getTransform();
 

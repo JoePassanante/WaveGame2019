@@ -6,16 +6,9 @@ package mainGame;
  * 5/30/16
  */
 
-/**
- * 
- * @author Katie Rosell
- * These enumerators permanently identify each game entity to 
- * make it easy for identification.
- * Class fixing implemented by Joe P.
- */
 public enum ID {
-	//How many of these should be spawned (will be changed + or - 20% unless marked as 1(for boss)
-	//-1 is a non-enemy entity
+	// How many of these should be spawned (will be changed + or - 20% unless marked as 1(for boss)
+	// -1 is a non-enemy entity
 	EnemyBasic(8),
     EnemyBoss(1),
     EnemyFast(15),
@@ -32,7 +25,7 @@ public enum ID {
     EnemyBossBullet(1),
     EnemyShooterBullet(1),
     EnemyRocketBossMissile(1),
-    //non-enemies
+    // non-enemies
     PickupHealth(-1),
     PickupSize(-1),
     PickupLife(-1),

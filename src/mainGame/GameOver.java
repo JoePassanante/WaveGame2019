@@ -3,7 +3,6 @@ package mainGame;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
@@ -109,7 +108,7 @@ public class GameOver extends GameState {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        game.getHandler().object.clear();
+        game.getHandler().clear();
         game.getHUD().health = 100;
         game.getHUD().setScore(0);
         game.getHUD().setLevel(1);

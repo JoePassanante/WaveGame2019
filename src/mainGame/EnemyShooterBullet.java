@@ -31,8 +31,8 @@ public class EnemyShooterBullet extends GameObject {
 	}
 
 	private void removeBullets() {
-		for (int i = 0; i < getHandler().object.size(); i++) {
-			GameObject tempObject = getHandler().object.get(i);
+		for (int i = 0; i < getHandler().size(); i++) {
+			GameObject tempObject = getHandler().get(i);
 			if (tempObject.getId() == ID.EnemyShooterBullet) {
 				//check for removal
 				if ((tempObject.getX() >= getHandler().getGameDimension().getWidth() || tempObject.getY() >= getHandler().getGameDimension().getHeight()) ||

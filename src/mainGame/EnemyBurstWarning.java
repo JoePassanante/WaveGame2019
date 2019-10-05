@@ -47,8 +47,8 @@ public class EnemyBurstWarning extends GameObject {
 
 	public void checkFlash() {
 		if (this.hasFlashed == 5) {
-			for (int i = 0; i < getHandler().object.size(); i++) {
-				GameObject tempObject = getHandler().object.get(i);
+			for (int i = 0; i < getHandler().size(); i++) {
+				GameObject tempObject = getHandler().get(i);
 				if (tempObject.getId() == ID.EnemyBurstWarning) {
                     getHandler().removeObject(tempObject);
 					i--;

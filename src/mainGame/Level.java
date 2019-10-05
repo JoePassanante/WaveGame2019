@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * This class is meant to be a generic level that classes implementing gamemode can use to generate and throw away levels of different parameters.
@@ -19,42 +18,177 @@ public class Level extends GameState {
 	private ArrayList<Integer> spawnTicks;
 	private int currentTick = 0;
 	private boolean bossDead = false;
-	int dif = 0;
-	int x;
+	// private int dif = 0;
     private LevelText t;
     private int levelPopTimer = 0;
-    Waves game;
+    private int currentLevelNum = 0;
+    private ID lastEnemy;
+    private ID lastBoss = (Math.random()*1 == 0 ? ID.EnemyBoss:ID.EnemyRocketBoss);
+
+    private Waves game;
 	/**
 	 * 
 	 * @param g - The game class that the gamemode is apart of.
-	 * @param dif - The level of difficulty (This can be left at 0)
-	 * @param enemyList - The list of Enemy ID's that the level can spawn
-	 * @param maxSpawn - The corresponding spawn rates of the enemyList (index for index, must be equal in size) 
 	 * @param maxTick - The time the level takes to complete, if boss level leave at -1
-	 * @param spawnPowerUp - True/False for spawning PowerUps(Not Implemented)
-	 * @param upgrades - True/False if when the level is completed the player can choose a upgrade (Not Implemented)
 	 */
-	public Level(Waves g, int dif, ArrayList<ID> enemyList, ArrayList<Integer>maxSpawn, int maxTick, boolean spawnPowerUp, boolean upgrades, int currentLevelNum){
+	public Level(Waves g, int maxTick, int currentLevelNum){
 	    game = g;
-		this.enemyList = enemyList;
-		this.spawnLimits = maxSpawn;
-		this.maxTick = maxTick;
-		this.spawnTicks = new ArrayList<Integer>();
-		for(int i = 0; i<enemyList.size();i++){
+	    this.currentLevelNum = currentLevelNum;
+		this.enemyList = new ArrayList<>();
+		this.spawnLimits = new ArrayList<>();
+
+        if(this.currentLevelNum%5 == 0) {
+            System.out.println("New Boss Level");
+
+            enemyList = randomBoss();
+            spawnLimits.add(1);
+        } else {
+            System.out.println("New Normal Level");
+            createNewEnemyLists();
+
+            double x = (Math.random()*(game.getHandler().getGameDimension().getWidth()-300))+150;
+            double y = (Math.random()*(game.getHandler().getGameDimension().getHeight()-300))+150;
+            switch ((int)(Math.random()*5)){
+                case 0: game.getHandler().addPickup(new PickupSize(x, y, game.getHandler())); break;
+                case 1: game.getHandler().addPickup(new PickupHealth(x, y, game.getHandler())); break;
+                case 2: game.getHandler().addPickup(new PickupLife(x, y, game.getHandler())); break;
+                case 3: game.getHandler().addPickup(new PickupScore(x, y, game.getHandler())); break;
+                case 4: game.getHandler().addPickup(new PickupFreeze(x, y, game.getHandler())); break;
+            }
+        }
+        System.out.println(this.enemyList.size());
+        System.out.println(this.spawnLimits.size());
+
+        this.maxTick = maxTick;
+		this.spawnTicks = new ArrayList<>();
+		for(int i = 0; i < enemyList.size(); i++){
 			spawnTicks.add(0);
 		}
 
+		this.currentLevelNum = currentLevelNum;
+
         t = new LevelText(
-                game.getHandler().getGameDimension().getWidth() / 2 - 675,
-                game.getHandler().getGameDimension().getHeight() / 2 - 200,
-                "Level " + currentLevelNum + (currentLevelNum%5 == 0 ? ": Boss Level!!!":""),
-                ID.Levels1to10Text,
-                game.getHandler()
+            game.getHandler().getGameDimension().getWidth() / 2 - 675,
+            game.getHandler().getGameDimension().getHeight() / 2 - 200,
+            "Level " + currentLevelNum + (currentLevelNum%5 == 0 ? ": Boss Level!!!":""),
+            ID.Levels1to10Text,
+            game.getHandler()
         );
-		if(currentLevelNum > 1) {
-            game.getHandler().addObject(t);
-        }
     }
+
+    /**
+     * Generates a random enemy ID
+     * @return ID (for entities)
+     */
+    private ID randomEnemy(){
+        int r = (int)(Math.random()*5); //0-6 can be generated
+        ID returnID = null;
+        System.out.println("Enemy type of level " + this.currentLevelNum + " is " + r);
+        switch(r){ //pick what enemy the random integer represents
+            case 0: returnID = ID.EnemySmart; break;
+            case 1: returnID = ID.EnemyBasic; break;
+            case 2: returnID = ID.EnemyShooter; break;
+            case 3: returnID = ID.EnemyBurst; break;
+            case 4: returnID = ID.EnemyFast; break;
+            default: returnID = randomEnemy(); break;
+        }
+        System.out.println(returnID + "| " + this.lastEnemy);
+        if(returnID == this.lastEnemy){
+            returnID = this.randomEnemy();
+        }
+        this.lastEnemy = returnID;
+        return returnID;
+    }
+
+    /**
+     * Generates a random enemy ID
+     * @return ID (for entities)
+     */
+    private ID randomEnemyHard(){
+        int r = (int)(Math.random()*3);
+        ID returnID = null;
+        System.out.println("Hard Enemy type of level " + this.currentLevelNum + " is " + r);
+        switch(r){ //pick what enemy the random integer represents
+            case 0: returnID = ID.EnemyShooterMover;break;
+            case 1: returnID = ID.EnemySweep; break;
+            case 2: returnID = ID.EnemyShooterSharp; break;
+            default: returnID = randomEnemyHard(); break;
+        }
+        System.out.println(returnID + "| " + this.lastEnemy);
+        if(returnID == this.lastEnemy){
+            returnID = this.randomEnemyHard();
+        }
+        this.lastEnemy = returnID;
+        return returnID;
+    }
+
+    /**
+     * Creates a new list of enemies for the next level to spawn.
+     */
+    private void createNewEnemyLists() {
+        enemyList.clear();
+        spawnLimits.clear();
+        int curr = this.currentLevelNum/5;
+        do{
+            curr--;
+            ID e = this.randomEnemy();
+            if (curr >= 1) {//potential for a harder enemy to spawn
+                if (curr >= 3 || Math.random() > .5) {
+                    e = this.randomEnemyHard();
+                    curr--;
+                }
+            }
+
+            enemyList.add(e);
+            int s = (e.getDifficuty() + (int)(Math.random()*((e.getDifficuty()*0.1))));
+            if(e.getDifficuty()==1)
+                s = 1;
+            spawnLimits.add(s);
+            System.out.println("-----" + e + "-----" + s);
+        }
+        while(curr>= 0);
+    }
+
+    //Links the ID of an enemy to actual creation.
+    //This allows the gameMode to override the generic Level Spawning Scheme. IE if a boss doesn't care where a player is.
+	private GameObject getEnemyFromID(ID enemy, Point spawnLoc){
+		switch(enemy){
+            case EnemyBasic: return new EnemyBasic(spawnLoc.getX(), spawnLoc.getY(), 9, 9, ID.EnemyBasic, game.getHandler());
+            case EnemySmart: return new EnemySmart(spawnLoc.getX(), spawnLoc.getY(), -5, ID.EnemySmart, game.getHandler());
+            case EnemySweep: return new EnemySweep(spawnLoc.getX(), spawnLoc.getY(), 9, 2, ID.EnemySweep, game.getHandler());
+            case EnemyShooter: return new EnemyShooter(spawnLoc.getX(),spawnLoc.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooter, game.getHandler());
+            case EnemyBurst: return new EnemyBurst(-200, 200, 15, 15, 200, new String[]{ "left", "right", "top", "bottom" }[(int)(Math.random()*4)], ID.EnemyBurst, game.getHandler());
+            // case BossEye: return new EnemyBoss(ID.EnemyBoss, handler);
+            case EnemyBoss: return new EnemyBoss(ID.EnemyBoss, game.getHandler(),currentLevelNum/10, game.getHUD());
+            case EnemyRocketBoss: return new EnemyRocketBoss(100,100,ID.EnemyRocketBoss, game.getPlayer(), game.getHandler(), game.getHUD(), game,currentLevelNum/10);
+            case EnemyFast: return new EnemyFast(spawnLoc.getX(), spawnLoc.getY(), ID.EnemyFast, game.getHandler());
+            case EnemyShooterMover: return new EnemyShooterMover(spawnLoc.getX(),spawnLoc.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooterMover, game.getHandler());
+            case EnemyShooterSharp: return new EnemyShooterSharp(spawnLoc.getX(),spawnLoc.getY(), 200, 200, -20 + (int)(Math.random()*5), ID.EnemyShooterSharp, game.getHandler());
+            default:
+                System.err.println("Enemy not found");
+                return new EnemyBasic(spawnLoc.getX(),spawnLoc.getY(), 9, 9, ID.EnemyBasic, game.getHandler());
+		}
+	}
+
+    /**
+     * @return Returns an array of enemy bosses to be generated.
+     * As of right now, enemy bosses are hard coded to only spawn once during a level.
+     * See tick above.
+     */
+    private ArrayList<ID> randomBoss() {
+        ArrayList<ID>bossReturn = new ArrayList<>();
+        if(this.lastBoss==ID.EnemyRocketBoss){
+            System.out.println("Enemy Boss");
+            bossReturn.add(ID.EnemyBoss);
+            this.lastBoss = ID.EnemyBoss;
+        }else{
+            System.out.println("Enemy Rocket Boss");
+            this.lastBoss = ID.EnemyRocketBoss;
+            bossReturn.add(ID.EnemyRocketBoss);
+        }
+        return bossReturn;
+    }
+
 	/**
 	 * Tick spawns new enemies depending on their spawn limit and current tick.
 	 * Takes the max level tick, and for every enemy divides it by the # of enemies.
@@ -66,8 +200,11 @@ public class Level extends GameState {
 
         currentTick++;
         this.levelPopTimer++;
-        //after 3 seconds, the handler would remove the level text object "t".
-        if(this.levelPopTimer>=100){
+        //after 3 seconds, remove the level text
+        if(this.levelPopTimer == 2) {
+            game.getHandler().addObject(t);
+        }
+        else if(this.levelPopTimer>=100){
             game.getHandler().removeObject(t);
         }
 
@@ -75,19 +212,19 @@ public class Level extends GameState {
 		    game.getHUD().levelProgress = (int) (((double)currentTick/(double)maxTick)*100);
 		}
 		if(currentTick>=maxTick && maxTick>=0) this.levelRunning = false;
-		if(running()==false) {
+		if(!running()) {
 		    game.setState(game.getCurrentLevel());
 		    return;
         }
 		this.currentTick++;
-	
-		for(int i = 0; i<enemyList.size();i++){ //run through all the enemies we can spawn
+
+        for(int i = 0; i<enemyList.size();i++){ //run through all the enemies we can spawn
 			//check if we should even be spawning them(max spawn?)
 			if(this.spawnTicks.get(i)==0){
 				//check if its the right tick we should be checking?
 				if(this.spawnLimits.get(i)>0){
 					//if good time, spawn 1 enemy, subtract from max spawn and reset tick counter.
-					game.getHandler().addObject(game.getEnemyFromID(this.enemyList.get(i), getSpawnLoc()));
+					game.getHandler().addObject(getEnemyFromID(this.enemyList.get(i), getSpawnLoc()));
 					this.spawnLimits.set(i, this.spawnLimits.get(i)-1);
 					this.spawnTicks.set(i,(this.maxTick-this.currentTick)/(this.spawnLimits.get(i)+1));
 				}
@@ -107,8 +244,8 @@ public class Level extends GameState {
 		
 	}
 	private Point getSpawnLoc(){
-	    Dimension d = game.getHandler().getGameDimension();
-		return new Point((int)((Math.random()+1)*d.width/3),(int)((Math.random()+1)*d.width/3));
+	    Dimension dim = game.getHandler().getGameDimension();
+		return new Point((int)((Math.random()+1)*dim.width/3),(int)((Math.random()+1)*dim.width/3));
 	}
 	/**
 	 * render anything that is specific to this level(not static content for the gamemode itself. 
@@ -119,7 +256,7 @@ public class Level extends GameState {
 	}
 	private boolean checkIfBossDead(){
 		boolean isDead = true;
-		for(GameObject b: game.getHandler().object){
+		for(GameObject b: game.getHandler()){
 			for(ID id: this.enemyList){
 				if (b.id==id) isDead = false;
 			}

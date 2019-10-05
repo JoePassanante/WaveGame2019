@@ -48,7 +48,6 @@ public class EnemyBoss extends GameObject {
 		if (timer2 <= 0) {
 			if (velX == 0)
 				velX = 8;
-			this.isMoving = true;
 			spawn = r.nextInt(5);
 			if (spawn == 0) {
 				getHandler().addObject(
@@ -79,7 +78,7 @@ public class EnemyBoss extends GameObject {
 
 		// handler.addObject(new Trail(x, y, ID.Trail, Color.red, 96, 96, 0.025,
 		// this.handler));
-		hud.levelProgress = (1000-this.health)/(10);
+		hud.levelProgress = (int)(1000-this.health)/10;
 		if (this.health <= 0) {
 			System.out.println("Removing Boss");
 			getHandler().removeObject(this);

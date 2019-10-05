@@ -48,9 +48,9 @@ public class BossEye extends GameObject {
 				alpha += life + 0.001;
 			} else {
 				tempCounter++;
-				for (int i = 0; i < getHandler().object.size(); i++) {
-					if (getHandler().object.get(i).getId() == ID.Player)
-						this.player = getHandler().object.get(i);
+				for (int i = 0; i < getHandler().size(); i++) {
+					if (getHandler().get(i).getId() == ID.Player)
+						this.player = getHandler().get(i);
 				}
 			}
 		} else if (tempCounter == 1) {

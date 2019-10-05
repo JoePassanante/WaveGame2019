@@ -1,6 +1,5 @@
 package mainGame;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -16,8 +15,6 @@ public abstract class GameMode extends GameState {
     public GameState getState() {
         return state;
     }
-	abstract GameObject getEnemyFromID(ID x, Point spawnLoc);
-    abstract void resetMode();
 	abstract void resetMode(boolean hardReset);
 
     @Override

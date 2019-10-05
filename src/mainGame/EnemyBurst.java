@@ -1,7 +1,6 @@
 package mainGame;
 
 
-import java.awt.Rectangle;
 import java.util.Random;
 
 /**
@@ -26,22 +25,21 @@ public class EnemyBurst extends GameObject {
 		this.size = size;
 
 		if (this.side.equals("left")) {
-			handler.object.add(new EnemyBurstWarning(0, 0, 25, (int)handler.getGameDimension().getHeight(), ID.EnemyBurstWarning, handler));
+			handler.add(new EnemyBurstWarning(0, 0, 25, (int)handler.getGameDimension().getHeight(), ID.EnemyBurstWarning, handler));
 			setPos();
 			setVel();
 		} else if (this.side.equals("right")) {
-			handler.object
-					.add(new EnemyBurstWarning(handler.getGameDimension().getWidth() - 25, 0, 25, (int)handler.getGameDimension().getHeight(), ID.EnemyBurstWarning, handler));
+			handler.add(new EnemyBurstWarning(handler.getGameDimension().getWidth() - 25, 0, 25, (int)handler.getGameDimension().getHeight(), ID.EnemyBurstWarning, handler));
 			setPos();
 			setVel();
 
 		} else if (this.side.equals("top")) {
-			handler.object.add(new EnemyBurstWarning(0, 0, (int)handler.getGameDimension().getWidth(), 25, ID.EnemyBurstWarning, handler));
+			handler.add(new EnemyBurstWarning(0, 0, (int)handler.getGameDimension().getWidth(), 25, ID.EnemyBurstWarning, handler));
 			setPos();
 			setVel();
 
 		} else if (this.side.equals("bottom")) {
-			handler.object.add(new EnemyBurstWarning(0, handler.getGameDimension().getHeight() - 25, (int)handler.getGameDimension().getWidth(), 25, ID.EnemyBurstWarning, handler));
+			handler.add(new EnemyBurstWarning(0, handler.getGameDimension().getHeight() - 25, (int)handler.getGameDimension().getWidth(), 25, ID.EnemyBurstWarning, handler));
 			setPos();
 			setVel();
 		}

@@ -8,7 +8,7 @@ package mainGame;
  */
 
 public class EnemyBasic extends GameObject {
-	public EnemyBasic(double x, double y, int velX, int velY, ID id, Handler handler) {
+	public EnemyBasic(double x, double y, double velX, double velY, ID id, Handler handler) {
 		super(x, y, 125, 60, id, handler);
 		if (Math.random() > .5) {
 			velX *= -1;

@@ -24,9 +24,9 @@ public class EnemyShooter extends GameObject {
 		this.timer = 60;
 		this.bulletSpeed = bulletSpeed;
 
-		for (int i = 0; i < handler.object.size(); i++) {
-			if (handler.object.get(i).getId() == ID.Player)
-				player = handler.object.get(i);
+		for (int i = 0; i < handler.size(); i++) {
+			if (handler.get(i).getId() == ID.Player)
+				player = handler.get(i);
 		}
 	}
 
@@ -73,9 +73,9 @@ public class EnemyShooter extends GameObject {
 		}
 		else {
 			System.err.println("player is null on shooter!");//bpm
-			for (int i = 0; i < getHandler().object.size(); i++) {
-				if (getHandler().object.get(i).getId() == ID.Player)
-					player = getHandler().object.get(i);
+			for (int i = 0; i < getHandler().size(); i++) {
+				if (getHandler().get(i).getId() == ID.Player)
+					player = getHandler().get(i);
 			}
 		}
 	}

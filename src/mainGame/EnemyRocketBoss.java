@@ -46,7 +46,16 @@ public class EnemyRocketBoss extends GameObject {
 			}
 		}
 		if(this.health%150 == 0){
-            getHandler().addObject(mode.getEnemyFromID(ID.EnemyBurst, new Point(100,100)));
+            getHandler().addObject( new EnemyBurst(
+                -200,
+                200,
+                15,
+                15,
+                200,
+                new String[]{ "left", "right", "top", "bottom" }[(int)(Math.random()*4)],
+                ID.EnemyBurst,
+                getHandler()
+            ));
 		}
 		health--;
 //		handler.addObject(new Trail(this.x - 80, this.y-296, ID.Trail, Color.red, 20, 20, 0.05, this.handler));

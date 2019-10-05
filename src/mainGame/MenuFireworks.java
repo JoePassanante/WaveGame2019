@@ -53,8 +53,8 @@ public class MenuFireworks extends GameObject {
 		this.x += velX;
 		this.y += velY;
 		if (this.y <= 100) {// once it gets this high
-			for (int i = 0; i < getHandler().object.size(); i++) {
-				GameObject tempObject = getHandler().object.get(i);
+			for (int i = 0; i < getHandler().size(); i++) {
+				GameObject tempObject = getHandler().get(i);
 				if (tempObject.id == ID.Firework) {// find the firework
 					sparks(tempObject);// create sparks
                     getHandler().removeObject(tempObject);// delete big circle
