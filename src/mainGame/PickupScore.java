@@ -1,7 +1,5 @@
 package mainGame;
 
-import java.awt.Rectangle;
-
 /**
  *
  * @author Brandon Loehle 5/30/16

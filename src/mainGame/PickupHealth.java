@@ -1,7 +1,5 @@
 package mainGame;
 
-import java.awt.*;
-
 /**
  * TO BE IMPLEMENTED - adds health to the player when they move over it
  * 

@@ -101,15 +101,14 @@ public class Player extends GameObject {
             }
         }
 
-        for(int i = 0; i < game.getHandler().pickups.size(); i++) {
+        for(int i = 0; i < game.getHandler().getPickups().size(); i++) {
             //if player collides with powerup, trigger what that powerup does, remove the powerup and play the collision sound
-            if(getBounds().intersects(game.getHandler().pickups.get(i).getBounds())) {
-                GameObject tempObject = game.getHandler().pickups.remove(i);
+            if(getBounds().intersects(game.getHandler().getPickups().get(i).getBounds())) {
+                GameObject tempObject = game.getHandler().getPickups().remove(i);
                 if (tempObject.getId() == ID.PickupHealth) {
                     game.getHUD().restoreHealth();
                     AudioUtil.playClip("../gameSound/powerup.wav", false);
                 }
-
                 if (tempObject.getId() == ID.PickupSize) {
                     if (width > 3) {
                         width /= 1.2;

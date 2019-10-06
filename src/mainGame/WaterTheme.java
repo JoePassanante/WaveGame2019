@@ -12,6 +12,7 @@ public class WaterTheme extends Theme {
         put(ID.EnemyBurst, "pufferfish.png");
         put(ID.EnemyFast, "Rocket_BossShark.png");
         put(ID.EnemyRocketBoss, "Rocket_Boss_Off_Sub.png");
+        put(ID.EnemyRocketBossOff, "Rocket_Boss_Off_Sub.png");
         put(ID.EnemyRocketBossMissile, "Rocket_Boss.png");
         put(ID.EnemyShooter, "spaceship4sub.png");
         put(ID.EnemyShooterMover, "spaceship2_big_sub.png");

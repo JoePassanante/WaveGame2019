@@ -16,12 +16,12 @@ public class EnemyRocketBoss extends GameObject {
 	private Player player;
 	private double drawAngle = 90;
 	private int speed = 18;
-	private int health = 1000;
 	private HUD hud;
 	private GameMode mode;
 	private boolean colliding = false;
-	private int rocketTimer = 120;
-	private int difficulty = 1;
+	private int rocketTimer = 120;	private int health = 1000;
+
+    private int difficulty = 1;
 
     public EnemyRocketBoss(double x, double y, ID id, Player p, Handler handler, HUD hud, GameMode mode, int diff) {
 		super(x, y, 80, 296, id, handler);
@@ -86,7 +86,6 @@ public class EnemyRocketBoss extends GameObject {
                 }
 			}
 		}
-		hud.levelProgress = (1000-this.health)/10;
 		if(health<=0){
 			System.out.println("Removing Boss");
             getHandler().removeObject(this);
@@ -132,7 +131,7 @@ public class EnemyRocketBoss extends GameObject {
 		g.fillRect((int)getHandler().getGameDimension().getWidth() / 2 - 500, (int)getHandler().getGameDimension().getHeight() - 150, this.health, 50);
 		g.setColor(Color.WHITE);
 		g.drawRect((int)getHandler().getGameDimension().getWidth() / 2 - 500, (int)getHandler().getGameDimension().getHeight() - 150, 1000, 50);
-		
+
 		Graphics2D g2d = (Graphics2D)g;
 		//DEV TOOLS
 		/*
@@ -147,7 +146,7 @@ public class EnemyRocketBoss extends GameObject {
 		g2d.translate(Math.cos(Math.toRadians(this.drawAngle-90))*40 +this.x, Math.sin(Math.toRadians(this.drawAngle-90))*40 +this.y);
 		g2d.rotate(Math.toRadians(this.drawAngle + 90));
 
-        g2d.drawImage(getHandler().getTheme().get(ID.EnemyRocketBoss), 0, 0, 80, 296, null);
+        g2d.drawImage(getHandler().getTheme().get(inDash ? ID.EnemyRocketBoss : ID.EnemyRocketBossOff), 0, 0, 80, 296, null);
 
 		AffineTransform trans = g2d.getTransform();
 

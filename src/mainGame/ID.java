@@ -32,6 +32,7 @@ public enum ID {
     PickupScore(-1),
     PickupFreeze(-1),
     EnemyBurstWarning(-1),
+    EnemyRocketBossOff(-1),
 	Firework(-1),
 	FireworkSpark(-1),
 	CircleTrail(-1),

@@ -33,7 +33,10 @@ public class Handler extends ArrayList<GameObject> implements Animatable {
         highscore = h;
     }
 
-    ArrayList<GameObject> pickups = new ArrayList<>();
+    private ArrayList<GameObject> pickups = new ArrayList<>();
+    public ArrayList<GameObject> getPickups() {
+        return pickups;
+    }
     public int timer = 0; // freeze ability timer
 
     private Dimension gameDimension;

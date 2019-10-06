@@ -4,7 +4,6 @@ import java.awt.*;
 
 public class Waves extends GameMode {
 	private int currentLevelNum = 0;
-	protected int maxTick = 2000,currentTick = 0;
 	private Level currentLevel = null;
 	public Level getCurrentLevel() {
 	    return currentLevel;
@@ -50,6 +49,22 @@ public class Waves extends GameMode {
         return upgrades;
     }
 
+    private int lastEnemy;
+    public void setLastEnemy(int l) {
+        lastEnemy = l;
+    }
+    public int getLastEnemy() {
+        return lastEnemy;
+    }
+
+    private int lastBoss;
+    public void setLastBoss(int l) {
+        lastBoss = l;
+    }
+    public int getLastBoss() {
+        return lastBoss;
+    }
+
     private boolean africa = false;
     public void setMenuMusic(boolean a) {
         // Toggle menu theme between Space Jam and Africa
@@ -63,6 +78,9 @@ public class Waves extends GameMode {
         handler = new Handler(screenSize, player);
         hud = new HUD(this);
         menu = new Menu(this);
+
+        lastEnemy = -1;
+        lastBoss = -1;
 
         setState(menu);
 
@@ -144,8 +162,7 @@ public class Waves extends GameMode {
 	 */
 	@Override
 	public void resetMode(boolean hardReset) {
-		this.currentTick = 0;
-		this.currentLevel =  null;
+		this.currentLevel = null;
         getHandler().clearEnemies();
 		if(hardReset) {
 			this.currentLevelNum = 0;

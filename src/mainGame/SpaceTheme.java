@@ -12,6 +12,7 @@ public class SpaceTheme extends Theme {
         put(ID.EnemyBurst, "asteroid.png");
         put(ID.EnemyFast, "Rocket_BossRed.png");
         put(ID.EnemyRocketBoss, "Rocket_Boss_White.png");
+        put(ID.EnemyRocketBossOff, "Rocket_Boss_Off_White.png");
         put(ID.EnemyRocketBossMissile, "Rocket_Boss.png");
         put(ID.EnemyShooter, "spaceship1yellow.png");
         put(ID.EnemyShooterMover, "spaceship2_big.png");
