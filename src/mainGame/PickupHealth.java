@@ -1,5 +1,7 @@
 package mainGame;
 
+import java.awt.*;
+
 /**
  * TO BE IMPLEMENTED - adds health to the player when they move over it
  * 
@@ -9,8 +11,8 @@ package mainGame;
  */
 
 public class PickupHealth extends GameObject {
-    public PickupHealth(double x, double y, Handler handler) {
-		super(x, y, 30, 30, ID.PickupHealth, handler);
+    public PickupHealth(Point.Double p, Handler handler) {
+        super(p.x, p.y, 30, 30, ID.PickupHealth, handler);
 	}
 
 	public void tick() {

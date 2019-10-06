@@ -1,5 +1,7 @@
 package mainGame;
 
+import java.awt.*;
+
 /**
  *
  * @author Brandon Loehle 5/30/16
@@ -8,8 +10,8 @@ package mainGame;
  */
 
 public class PickupSize extends GameObject {
-	public PickupSize(double x, double y, Handler handler) {
-		super(x, y, 30, 30, ID.PickupSize, handler);
+	public PickupSize(Point.Double p, Handler handler) {
+		super(p.x, p.y, 30, 30, ID.PickupSize, handler);
 	}
 
     @Override

@@ -5,13 +5,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
-import java.util.function.IntConsumer;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * This class is meant to be a generic level that classes implementing gamemode can use to generate and throw away levels of different parameters.
@@ -33,37 +27,12 @@ public class Level extends GameState {
      * @param g - The game class that the gamemode is apart of.
      * @param maxTick - The time the level takes to complete, if boss level leave at -1
      */
-    public Level(Waves g, int maxTick, int c){
+    public Level(Waves g, int maxTick, int c, int l, Function<Point, GameObject> f){
         this.game = g;
         this.maxTick = maxTick;
         this.currentLevelNum = c;
-
-        if(this.currentLevelNum%5 == 0) {
-            System.out.println("New Boss Level");
-
-            enemyFactory = p -> makeRandomBoss().get();
-            enemyLimit = 1;
-        } else {
-            System.out.println("New Normal Level");
-            List<Function<Point,GameObject>> enemyList = IntStream.range(0,Math.max(5,currentLevelNum/5))
-                    .mapToObj( i -> i > 3 && Math.random() < .5
-                            ? makeRandomHardEnemy()
-                            : makeRandomEasyEnemy()
-                    ).collect(Collectors.toList());
-
-            enemyFactory = p -> randomElement(enemyList).apply(p);
-            enemyLimit = currentLevelNum;
-
-            double x = (Math.random()*(game.getHandler().getGameDimension().getWidth()-300))+150;
-            double y = (Math.random()*(game.getHandler().getGameDimension().getHeight()-300))+150;
-            switch ((int)(Math.random()*5)){
-                case 0: game.getHandler().addPickup(new PickupSize(x, y, game.getHandler())); break;
-                case 1: game.getHandler().addPickup(new PickupHealth(x, y, game.getHandler())); break;
-                case 2: game.getHandler().addPickup(new PickupLife(x, y, game.getHandler())); break;
-                case 3: game.getHandler().addPickup(new PickupScore(x, y, game.getHandler())); break;
-                case 4: game.getHandler().addPickup(new PickupFreeze(x, y, game.getHandler())); break;
-            }
-        }
+        this.enemyLimit = l;
+        this.enemyFactory = f;
 
         text = new LevelText(
                 game.getHandler().getGameDimension().getWidth() / 2 - 675,
@@ -72,47 +41,6 @@ public class Level extends GameState {
                 ID.Levels1to10Text,
                 game.getHandler()
         );
-    }
-
-    private static <T> T randomElement(List<T> list) {
-        return list.get((int)(list.size()*Math.random()));
-    }
-
-    private static <T> T randomElementExcluding(List<T> list, int exclude, IntConsumer update) {
-        int i = (int)(list.size() * Math.random());
-        if(i != exclude) {
-            update.accept(i);
-            return list.get(i);
-        }
-        return randomElementExcluding(list, exclude, update);
-    }
-
-    private Function<Point,GameObject> makeRandomEasyEnemy() {
-        return randomElementExcluding( Arrays.asList(
-                p -> new EnemyBasic(p.getX(), p.getY(), 9, 9, ID.EnemyBasic, game.getHandler()),
-                p -> new EnemyBurst(-200, 200, 15, 15, 200,
-                        new String[]{ "left", "right", "top", "bottom" }[(int)(4*Math.random())],
-                        ID.EnemyBurst, game.getHandler()),
-                p -> new EnemyFast(p.getX(), p.getY(), ID.EnemyFast, game.getHandler()),
-                p -> new EnemyShooter(p.getX(), p.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooter, game.getHandler()),
-                p -> new EnemySmart(p.getX(), p.getY(), -5, ID.EnemySmart, game.getHandler())
-        ), game.getLastEnemy(), game::setLastEnemy);
-    }
-
-    private Function<Point,GameObject> makeRandomHardEnemy() {
-        return randomElementExcluding( Arrays.asList(
-                p -> new EnemyShooterMover(p.getX(), p.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooterMover, game.getHandler()),
-                p -> new EnemyShooterSharp(p.getX(), p.getY(), 200, 200, -20 + (int)(Math.random()*5), ID.EnemyShooterSharp, game.getHandler()),
-                p -> new EnemySweep(p.getX(), p.getY(), 9, 2, ID.EnemySweep, game.getHandler())
-        ), game.getLastEnemy(), game::setLastEnemy);
-    }
-
-    private Supplier<GameObject> makeRandomBoss() {
-        return randomElementExcluding( Arrays.asList(
-                () -> new EnemyBoss(ID.EnemyBoss, game.getHandler(),currentLevelNum/10, game.getHUD()),
-                () -> new EnemyRocketBoss(100,100,ID.EnemyRocketBoss, game.getPlayer(), game.getHandler(), game.getHUD(), game,currentLevelNum/10)
-//          () -> new EnemyBoss(ID.EnemyBoss, game.getHandler(), 0, game.getHUD())
-        ), game.getLastBoss(), game::setLastBoss);
     }
 
     /**
@@ -147,22 +75,6 @@ public class Level extends GameState {
             enemyTick += Math.max( 15, 120/currentLevelNum);
             enemyNumber += 1;
         }
-        /*
-        for(int i = 0; i< enemyList.size(); i++) { //run through all the enemies we can spawn
-			//check if we should even be spawning them(max spawn?)
-			if(this.spawnTicks.get(i)==0){
-				//check if its the right tick we should be checking?
-				if(this.spawnLimits.get(i)>0){
-					//if good time, spawn 1 enemy, subtract from max spawn and reset tick counter.
-					game.getHandler().addObject(getEnemyFromID(this.enemyList.get(i), getSpawnLoc()));
-					this.spawnLimits.set(i, this.spawnLimits.get(i)-1);
-					this.spawnTicks.set(i,(this.maxTick-this.currentTick)/(this.spawnLimits.get(i)+1));
-				}
-			}else{
-				this.spawnTicks.set(i, this.spawnTicks.get(i)-1);
-			}
-		}
-		*/
 
         if(game.getHandler().stream().noneMatch(h -> h.getId().getDifficuty() > 0)) {
             levelRunning = false;

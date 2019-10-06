@@ -1,11 +1,8 @@
 package mainGame;
 
-import jdk.nashorn.internal.objects.annotations.Function;
-
 import java.awt.*;
 
 /**
- * Every object in the game extends this abstract class 
  * @author Brandon Loehle 5/30/16
  * @author Aaron Paterson 10/1/19
  */
