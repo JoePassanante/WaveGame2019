@@ -11,7 +11,7 @@ import java.awt.*;
 
 public class PickupLife extends GameObject {
 	public PickupLife(Point.Double p, Handler handler) {
-        super(p.x, p.y, 30, 30, ID.PickupLife, handler);
+        super(p.x, p.y, 30, 30, handler);
 	}
 
 	public void tick() {

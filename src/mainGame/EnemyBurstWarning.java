@@ -18,8 +18,8 @@ public class EnemyBurstWarning extends GameObject {
 	private Color color;
 	private int hasFlashed;
 
-	public EnemyBurstWarning(double x, double y, int width, int height, ID id, Handler handler) {
-		super(x, y, 16, 16, id, handler);
+	public EnemyBurstWarning(double x, double y, int width, int height, Handler handler) {
+		super(x, y, 16, 16, handler);
 		this.width = width;
 		this.height = height;
 		timer = 10;
@@ -49,7 +49,7 @@ public class EnemyBurstWarning extends GameObject {
 		if (this.hasFlashed == 5) {
 			for (int i = 0; i < getHandler().size(); i++) {
 				GameObject tempObject = getHandler().get(i);
-				if (tempObject.getId() == ID.EnemyBurstWarning) {
+				if (tempObject instanceof EnemyBurstWarning) {
                     getHandler().removeObject(tempObject);
 					i--;
 				}

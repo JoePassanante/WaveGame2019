@@ -23,8 +23,8 @@ public class EnemyRocketBoss extends GameObject {
 
     private int difficulty = 1;
 
-    public EnemyRocketBoss(double x, double y, ID id, Player p, Handler handler, HUD hud, GameMode mode, int diff) {
-		super(x, y, 80, 296, id, handler);
+    public EnemyRocketBoss(double x, double y, Player p, Handler handler, HUD hud, GameMode mode, int diff) {
+		super(x, y, 80, 296, handler);
 		this.player = p;
 		this.hud = hud;
 		this.mode = mode;
@@ -40,7 +40,7 @@ public class EnemyRocketBoss extends GameObject {
                 getHandler().addObject( new EnemyRocketBossMissile(
                     Math.cos(Math.toRadians(this.drawAngle+90))*40  + this.x,
                     Math.sin(Math.toRadians(this.drawAngle+90))*40 +this.y,
-                    ID.EnemyRocketBossMissile, getHandler(),this.drawAngle,
+                    getHandler(),this.drawAngle,
                     10,hud,player, difficulty > 2 ? 0.5 : 0
                 ) );
 			}
@@ -53,7 +53,6 @@ public class EnemyRocketBoss extends GameObject {
                 15,
                 200,
                 new String[]{ "left", "right", "top", "bottom" }[(int)(Math.random()*4)],
-                ID.EnemyBurst,
                 getHandler()
             ));
 		}
@@ -146,7 +145,7 @@ public class EnemyRocketBoss extends GameObject {
 		g2d.translate(Math.cos(Math.toRadians(this.drawAngle-90))*40 +this.x, Math.sin(Math.toRadians(this.drawAngle-90))*40 +this.y);
 		g2d.rotate(Math.toRadians(this.drawAngle + 90));
 
-        g2d.drawImage(getHandler().getTheme().get(inDash ? ID.EnemyRocketBoss : ID.EnemyRocketBossOff), 0, 0, 80, 296, null);
+        g2d.drawImage(getHandler().getTheme().get(inDash ? getClass().getSimpleName() + "On" : getClass().getSimpleName()), 0, 0, 80, 296, null);
 
 		AffineTransform trans = g2d.getTransform();
 

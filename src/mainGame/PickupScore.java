@@ -11,7 +11,7 @@ import java.awt.*;
 
 public class PickupScore extends GameObject {
 	public PickupScore(Point.Double p, Handler handler) {
-        super(p.x, p.y, 30, 30, ID.PickupScore, handler);
+        super(p.x, p.y, 30, 30, handler);
 	}
 
 	public void tick() {

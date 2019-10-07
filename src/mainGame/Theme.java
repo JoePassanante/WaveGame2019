@@ -2,9 +2,12 @@ package mainGame;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
-import java.util.EnumMap;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.stream.Stream;
 
 /**
  * Just a list of themes in the game.
@@ -12,29 +15,48 @@ import java.util.EnumMap;
  * @author Joey Germain 11/23/18
  */
 
-public class Theme extends EnumMap<ID, Image> {
+public class Theme extends HashMap<String, Image> {
     private String folder;
+    private Theme fallback;
 
-    public Theme(String f) {
-        super(ID.class);
-        folder = f;
+    public static String fileNameWithoutExtension(String name) {
+        return name.substring(0,name.lastIndexOf("."));
     }
 
-    public void put(ID id, String s) {
-        try {
-            put(id, ImageIO.read(new File("./" + folder + "/" + s)));
-        } catch (IOException ioe) {
-            System.out.println("Failed to read " + s);
-        }
+    public Theme(String fold, Theme fall) {
+        folder = fold;
+        fallback = fall;
     }
 
     public void initialize() {
-        for(ID id: ID.values()) {
-            try {
-                put( id, ImageIO.read(new File("./" + folder + "/" + id.name())));
-            } catch (IOException io) {
-                io.printStackTrace();
-            }
+        try(Stream<Path> paths = Files.walk(Paths.get("src/themes/" + folder))) {
+            paths.filter(Files::isRegularFile).forEach( p ->
+                put(fileNameWithoutExtension(p.getFileName().toString()), read(p))
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    public Image get(Class c) {
+        return get(c.getSimpleName());
+    }
+
+    @Override
+    public Image get(Object s) {
+        Image img = super.get(s);
+        if(img == null && fallback != null) {
+            img = fallback.get(s);
+        }
+        return img;
+    }
+
+    public Image read(Path p)  {
+        try {
+            return ImageIO.read(p.toFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

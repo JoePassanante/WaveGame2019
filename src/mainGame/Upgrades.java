@@ -6,14 +6,6 @@ package mainGame;
  * @author Brandon Loehle 5/30/16
  *
  */
-/**
- * 
- * @author Team B3
- * It contains all the upgrades
- * that are possibly avaiable for the player to obtain.
- * Descriptions of what the upgrades are are listed by the 
- * respective function 
- */
 public class Upgrades {
 	private Waves game;
 	private String ability = "none";
@@ -77,35 +69,34 @@ public class Upgrades {
 	}
 
 	/**
-	 * Activate the correct upgrade
+	 * Activate an upgrade
 	 * 
-	 * @param path
-	 *            is to the image of the upgrade that was pressed by the user
+	 * @param name
 	 */
-	public void activateUpgrade(String path) {
-		if (path.equals("/images/clearscreenability.png")) {
+	public void activateUpgrade(String name) {
+		if (name.equals("clearscreenability")) {
 			ability = "clearScreen";
             game.getHUD().setAbility(ability);
             game.getHUD().setAbilityUses(3);
-		} else if (path.equals("/images/decreaseplayersize.png")) {
+		} else if (name.equals("decreaseplayersize")) {
 			decreasePlayerSize();
-		} else if (path.equals("/images/extralife.png")) {
+		} else if (name.equals("extralife")) {
 			extraLife();
-		} else if (path.equals("/images/healthincrease.png")) {
+		} else if (name.equals("healthincrease")) {
 			healthIncrease();
-		} else if (path.equals("/images/healthregeneration.png")) {
+		} else if (name.equals("healthregeneration")) {
 			healthRegeneration();
-		} else if (path.equals("/images/improveddamageresistance.png")) {
+		} else if (name.equals("improveddamageresistance")) {
 			improvedDamageResistance();
-		} else if (path.equals("/images/levelskipability.png")) {
+		} else if (name.equals("levelskipability")) {
 			ability = "levelSkip";
             game.getHUD().setAbility(ability);
             game.getHUD().setAbilityUses(1);
-		} else if (path.equals("/images/freezetimeability.png")) {
+		} else if (name.equals("freezetimeability")) {
 			ability = "freezeTime";
             game.getHUD().setAbility(ability);
             game.getHUD().setAbilityUses(5);
-		} else if (path.equals("/images/speedboost.png")) {
+		} else if (name.equals("speedboost")) {
 			speedBoost();
 		}
 	}

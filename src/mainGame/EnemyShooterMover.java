@@ -17,8 +17,8 @@ public class EnemyShooterMover extends GameObject {
 	private int bulletSpeed;
 	private double velX, velY;
 
-	public EnemyShooterMover(double x, double y, int sizeX, int sizeY, int bulletSpeed, ID id, Handler handler) {
-		super(x, y, 100, 75, id, handler);
+	public EnemyShooterMover(double x, double y, int sizeX, int sizeY, int bulletSpeed, Handler handler) {
+		super(x, y, 100, 75, handler);
 
 		this.velX = 10;
 		this.velY = 10;
@@ -32,7 +32,7 @@ public class EnemyShooterMover extends GameObject {
 		this.bulletSpeed = bulletSpeed;
 
 		for (int i = 0; i < handler.size(); i++) {
-			if (handler.get(i).getId() == ID.Player)
+			if (handler.get(i) instanceof Player)
 				player = handler.get(i);
 		}
 	}
@@ -72,12 +72,12 @@ public class EnemyShooterMover extends GameObject {
 		bulletVelY = ((this.bulletSpeed / distance) * diffY);// numerator affects speed of enemy
 
         getHandler().addObject(
-            new EnemyShooterBullet(this.x -10, this.y-10, bulletVelX, bulletVelY, ID.EnemyShooterBullet, getHandler()));
+            new EnemyShooterBullet(this.x -10, this.y-10, bulletVelX, bulletVelY, getHandler()));
 		}
 		else {
 			System.err.println("player is null on shooter!");//bpm
 			for (int i = 0; i < getHandler().size(); i++) {
-				if (getHandler().get(i).getId() == ID.Player)
+				if (getHandler().get(i) instanceof Player)
 					player = getHandler().get(i);
 			}
 		}

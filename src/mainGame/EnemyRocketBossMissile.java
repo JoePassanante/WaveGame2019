@@ -15,8 +15,8 @@ public class EnemyRocketBossMissile extends GameObject {
 	private Player player;
 	private double trackSpeed;
 
-    public EnemyRocketBossMissile(double x, double y, ID id, Handler handler, double dir, double spd, HUD _hud, Player play, double track) {
-		super(x, y, 32, -64, id, handler);
+    public EnemyRocketBossMissile(double x, double y, Handler handler, double dir, double spd, HUD _hud, Player play, double track) {
+		super(x, y, 32, -64, handler);
 		AudioUtil.playClip("/gameSound/MissileSound.wav", false);
 		speed = spd;
 		direction = dir;
@@ -48,7 +48,7 @@ public class EnemyRocketBossMissile extends GameObject {
 		
 		a.translate(Math.cos(Math.toRadians(direction-90))*20 +this.x, Math.sin(Math.toRadians(direction-90))*20 +this.y);
 		a.rotate(Math.toRadians(direction - 90));
-        a.drawImage(getHandler().getTheme().get(ID.EnemyRocketBossMissile),0,64,32,-64, null);
+        a.drawImage(getHandler().getTheme().get(getClass()),0,64,32,-64, null);
         Rectangle2D rec = new Rectangle.Double(30, 0, 20,60);
 		AffineTransform trans = new AffineTransform();
 		trans.translate(Math.cos(Math.toRadians(this.direction-90))*-5 +this.x, Math.sin(Math.toRadians(this.direction-90))*-5 +this.y);

@@ -17,7 +17,7 @@ import java.util.Random;
 public class Menu extends GameState {
 	private int timer;
 	private Random r;
-	private ArrayList<Color> colorPick = new ArrayList<Color>();
+	private ArrayList<Color> colorPick = new ArrayList<>();
 	private int colorIndex;
 	private boolean help;
 	public void setHelp(boolean h) {
@@ -26,7 +26,6 @@ public class Menu extends GameState {
     public boolean getHelp() {
 	    return help;
     }
-	//private static boolean rockMusic = true; //the music that is supposed to play
     private Waves game;
 	private Theme space, water;
 
@@ -36,16 +35,19 @@ public class Menu extends GameState {
 		r = new Random();
 		addColors();
 
-        space = new SpaceTheme();
+		Theme fallback = new Theme("common", null);
+		fallback.initialize();
+
+        space = new Theme("space", fallback);
         new Thread(() -> space.initialize()).start();
 
-        water = new WaterTheme();
+        water = new Theme("water", fallback);
         new Thread(() -> water.initialize()).start();
 
         game.getHandler().setTheme(space);
 
         game.getHandler().addObject(new MenuFireworks((r.nextInt((int)game.getHandler().getGameDimension().getWidth()) - 25), 500, 50, 50, 0, -2,
-				colorPick.get(r.nextInt(6)), ID.Firework, game.getHandler()));
+				colorPick.get(r.nextInt(6)), game.getHandler()));
 	}
 
 	//using the java color picker, which colors you will add to the scene
@@ -66,7 +68,7 @@ public class Menu extends GameState {
 			game.getHandler().clear();
 			colorIndex = r.nextInt(6);
             game.getHandler().addObject(new MenuFireworks((r.nextInt((int)game.getHandler().getGameDimension().getWidth()) - 25), 1080, 100, 100, 0, -4,
-					colorPick.get(colorIndex), ID.Firework, this.game.getHandler()));
+					colorPick.get(colorIndex), this.game.getHandler()));
 			timer = 300;
 		}
         game.getHandler().tick();
@@ -75,7 +77,7 @@ public class Menu extends GameState {
 	public void render(Graphics g) {
 		if (!help) {
 			//display the background
-			g.drawImage(game.getHandler().getTheme().get(ID.Menu), 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
+			g.drawImage(game.getHandler().getTheme().get(getClass()), 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
 			//create the font objects
 			Font font = new Font("Amoebic", 1, 100); //the title
 			Font font2 = new Font("Amoebic", 1, 34); //help and quit
@@ -131,12 +133,12 @@ public class Menu extends GameState {
 			Font font2 = new Font("impact", Font.PLAIN, 30);
 			Font font3 = new Font("impact", Font.PLAIN, 30);
 			//gets images, allows them to be used on help menu
-			Image PowerCoin = game.getHandler().getTheme().get(ID.PickupScore);
-			Image PowerSlow = game.getHandler().getTheme().get(ID.PickupFreeze);
-			Image PowerHealth = game.getHandler().getTheme().get(ID.PickupHealth);
-			Image PowerLife = game.getHandler().getTheme().get(ID.PickupLife);
-			Image PowerSpeed = game.getHandler().getTheme().get(ID.PickupSize);
-			Image HUDshield1 = game.getHandler().getTheme().get(ID.Shield);
+			Image PowerCoin = game.getHandler().getTheme().get(PickupScore.class);
+			Image PowerSlow = game.getHandler().getTheme().get(PickupFreeze.class);
+			Image PowerHealth = game.getHandler().getTheme().get(PickupHealth.class);
+			Image PowerLife = game.getHandler().getTheme().get(PickupLife.class);
+			Image PowerSpeed = game.getHandler().getTheme().get(PickupSize.class);
+			Image HUDshield1 = game.getHandler().getTheme().get("shield1");
 			//Help text
 			g.setFont(font); //set the font with its parameters above 
 			g.setColor(Color.white);

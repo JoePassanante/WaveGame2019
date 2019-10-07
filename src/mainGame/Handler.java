@@ -53,7 +53,6 @@ public class Handler extends ArrayList<GameObject> implements Animatable {
             Scanner fileInput = new Scanner(inFile);
             highscore = Integer.parseInt(fileInput.next());
             fileInput.close();
-            System.out.print("success");
         } catch (FileNotFoundException fne) {
             fne.printStackTrace();
         }
@@ -67,7 +66,7 @@ public class Handler extends ArrayList<GameObject> implements Animatable {
     public void tick() {
         for (int i = 0; i < size(); i++) {
             GameObject tempObject = get(i);
-            if (timer <= 0 || tempObject.getId().getDifficuty() < 0) { // we don't want these to ever be frozen by the Screen Freeze ability
+            if (timer <= 0 || !tempObject.getClass().getName().contains("Enemy")) { // we don't want these to ever be frozen by the Screen Freeze ability
                 tempObject.tick();
             } else {
                 timer -= 1;
@@ -129,7 +128,7 @@ public class Handler extends ArrayList<GameObject> implements Animatable {
      */
     public void clearEnemies() {
         for(int i=size()-1; i>=0; i--) {
-            if(get(i).getId() != ID.Player) {
+            if(!(get(i) instanceof Player)) {
                 remove(i);
             }
         }
@@ -140,7 +139,7 @@ public class Handler extends ArrayList<GameObject> implements Animatable {
      */
     public void clearPlayer() {
         for(int i=size()-1; i>=0; i--) {
-            if(get(i).getId() == ID.Player) {
+            if(get(i) instanceof Player) {
                 remove(i);
             }
         }
@@ -156,7 +155,7 @@ public class Handler extends ArrayList<GameObject> implements Animatable {
     private void checkForBounds(GameObject i) {
         if (i.x >= gameDimension.getWidth() * 3 || i.x <= 0 - (gameDimension.getWidth() * 2) ||
             i.y >= gameDimension.getHeight() * 3 || i.y <= 0 - (gameDimension.getHeight() * 2)) { // 100% greater/smaller then game width/height.
-            System.out.println("Object out of bounds: " + i.getId());
+            System.out.println("Object out of bounds: " + i.getClass().getName());
             remove(i);
         }
     }

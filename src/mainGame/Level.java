@@ -38,7 +38,6 @@ public class Level extends GameState {
                 game.getHandler().getGameDimension().getWidth() / 2 - 675,
                 game.getHandler().getGameDimension().getHeight() / 2 - 200,
                 "Level " + currentLevelNum + (currentLevelNum%5 == 0 ? ": Boss Level!!!":""),
-                ID.Levels1to10Text,
                 game.getHandler()
         );
     }
@@ -64,7 +63,9 @@ public class Level extends GameState {
         if (game.getHUD() != null && maxTick >= 0) {
             game.getHUD().levelProgress = (int) (((double)currentTick/(double)maxTick)*100);
         }
-        if(currentTick>=maxTick && maxTick>=0) this.levelRunning = false;
+        if(currentTick>=maxTick && maxTick>=0) {
+            this.levelRunning = false;
+        }
         if(!running()) {
             game.setState(game.getCurrentLevel());
             return;
@@ -76,7 +77,7 @@ public class Level extends GameState {
             enemyNumber += 1;
         }
 
-        if(game.getHandler().stream().noneMatch(h -> h.getId().getDifficuty() > 0)) {
+        if(game.getHandler().stream().noneMatch(h -> h.getClass().getName().contains("Enemy"))) {
             levelRunning = false;
         }
     }

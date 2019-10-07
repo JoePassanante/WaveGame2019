@@ -12,8 +12,8 @@ import java.awt.Rectangle;
  */
 
 public class EnemyShooterBullet extends GameObject {
-	public EnemyShooterBullet(double x, double y, double velX, double velY, ID id, Handler handler) {
-		super(x, y, 16, 16, id, handler);
+	public EnemyShooterBullet(double x, double y, double velX, double velY, Handler handler) {
+		super(x, y, 16, 16, handler);
 		this.velX = velX;
 		this.velY = velY;
 	}
@@ -25,7 +25,7 @@ public class EnemyShooterBullet extends GameObject {
 		// if (this.y <= 0 || this.y >= Game.HEIGHT - 40) velY *= -1;
 		// if (this.x <= 0 || this.x >= Game.WIDTH - 16) velX *= -1;
 
-        getHandler().addObject(new Trail(x, y, ID.Trail, Color.yellow, (int)width/4, (int)width/4, 0.025, getHandler()));
+        getHandler().addObject(new Trail(x, y, Color.yellow, (int)width/4, (int)width/4, 0.025, getHandler()));
 
 		removeBullets();
 	}
@@ -33,7 +33,7 @@ public class EnemyShooterBullet extends GameObject {
 	private void removeBullets() {
 		for (int i = 0; i < getHandler().size(); i++) {
 			GameObject tempObject = getHandler().get(i);
-			if (tempObject.getId() == ID.EnemyShooterBullet) {
+			if (tempObject instanceof EnemyShooterBullet) {
 				//check for removal
 				if ((tempObject.getX() >= getHandler().getGameDimension().getWidth() || tempObject.getY() >= getHandler().getGameDimension().getHeight()) ||
 					(tempObject.getX() < -100 || tempObject.getY() < -100)){

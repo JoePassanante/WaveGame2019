@@ -8,7 +8,6 @@ import java.awt.*;
  */
 
 public abstract class GameObject implements Animatable {
-	protected ID id;
 	protected double x, y, width, height, velX, velY, health;
 
 	private Handler handler;
@@ -39,12 +38,6 @@ public abstract class GameObject implements Animatable {
     public double getHeight() {
         return height;
     }
-    public ID getId() {
-        return id;
-    }
-    public void setId(ID id) {
-        this.id = id;
-    }
     public double getVelX() {
         return velX;
     }
@@ -63,15 +56,14 @@ public abstract class GameObject implements Animatable {
 
     private Image img;
 
-    public GameObject(double x, double y, double w, double h, ID id, Handler hand) {
+    public GameObject(double x, double y, double w, double h, Handler hand) {
 	    this.x = x;
 	    this.y = y;
 	    this.width = w;
 	    this.height = h;
-		this.id = id;
 		this.handler = hand;
 
-        img = handler.getTheme().get(id);
+        img = handler.getTheme().get(getClass());
 	}
 
     public void drawHitBox(Graphics g) {

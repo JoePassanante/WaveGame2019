@@ -36,7 +36,7 @@ public class GameOver extends GameState {
 
 	public void render(Graphics g) {
 		//render the background image
-		g.drawImage(game.getHandler().getTheme().get(ID.Menu), 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
+		g.drawImage(game.getHandler().getTheme().get(Menu.class), 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
 		//Set up the font
 		Font font = new Font("Amoebic", 1, 100);
 		Font font2 = new Font("Amoebic", 1, 60);

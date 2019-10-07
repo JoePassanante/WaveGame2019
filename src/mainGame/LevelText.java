@@ -28,8 +28,8 @@ public class LevelText extends GameObject {
 
 	// constructor
 	// used to initialize the state of the object
-	public LevelText(double x, double y, String text, ID id, Handler h) {
-		super(x, y, 0, 0, id, h);
+	public LevelText(double x, double y, String text, Handler h) {
+		super(x, y, 0, 0, h);
 		this.text = text;
 		AffineTransform at = new AffineTransform();
 		timer = 15;

@@ -11,8 +11,6 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -23,16 +21,18 @@ import java.util.Random;
 
 public class UpgradeScreen extends GameState {
     private String text;
-	private String[] paths = { "/images/clearscreenability.png", "/images/decreaseplayersize.png", "/images/extralife.png",
-			"/images/healthincrease.png", "/images/healthregeneration.png", "/images/improveddamageresistance.png",
-			"/images/levelskipability.png", "/images/freezetimeability.png", "/images/speedboost.png" };
-	private Map<String, Image> memo = new HashMap<>();
-	Thread load= new Thread( () -> {
-        for (String s : paths) {
-            memo.put(s, getImage(s));
-        }
-    });
-	private ArrayList<String> imagePaths = new ArrayList<>();
+	private String[] abilities = {
+        "clearscreenability",
+        "decreaseplayersize",
+        "extralife",
+        "healthincrease",
+        "healthregeneration",
+        "improveddamageresistance",
+        "levelskipability",
+        "freezetimeability",
+        "speedboost"
+    };
+	private ArrayList<String> currentAbilities = new ArrayList<>();
 	private Random r = new Random();
 	private int index1, index2, index3;
 	Waves game;
@@ -43,8 +43,6 @@ public class UpgradeScreen extends GameState {
 		resetPaths();
 		setIndex();
 		text = "";
-
-		load.start();
 	}
 	//nothing needs to be in this function since it's just
 	//a screen with text
@@ -59,32 +57,29 @@ public class UpgradeScreen extends GameState {
 		g.setColor(Color.WHITE);
 		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font, text) / 2, 200);
 		// All pictures are 1721 x 174
-        if(!load.isAlive()) {
-            g.drawImage(memo.get(imagePaths.get(index1)), 100, 300, 1721, 174, null);
-            g.drawImage(memo.get(imagePaths.get(index2)), 100, 300 + (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174, null);
-            g.drawImage(memo.get(imagePaths.get(index3)), 100, 300 + 2 * (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174, null);
-        }
+        g.drawImage(game.getHandler().getTheme().get(currentAbilities.get(index1)), 100, 300, 1721, 174, null);
+        g.drawImage(game.getHandler().getTheme().get(currentAbilities.get(index2)), 100, 300 + (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174, null);
+        g.drawImage(game.getHandler().getTheme().get(currentAbilities.get(index3)), 100, 300 + 2 * (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174, null);
 	}
 
     /**
 	 * Reset the paths to each picture
 	 */
 	public void resetPaths() {
-		paths[0] = "/images/clearscreenability.png";
-		paths[1] = "/images/decreaseplayersize.png";
-		paths[2] = "/images/extralife.png";
-		paths[3] = "/images/healthincrease.png";
-		paths[4] = "/images/healthregeneration.png";
-		paths[5] = "/images/improveddamageresistance.png";
-		paths[6] = "/images/levelskipability.png";
-		paths[7] = "/images/freezetimeability.png";
-		paths[8] = "/images/speedboost.png";
-
+        abilities[0] = "clearscreenability";
+        abilities[1] = "decreaseplayersize";
+        abilities[2] = "extralife";
+        abilities[3] = "healthincrease";
+        abilities[4] = "healthregeneration";
+        abilities[5] = "improveddamageresistance";
+        abilities[6] = "levelskipability";
+        abilities[7] = "freezetimeability";
+        abilities[8] = "speedboost";
 	}
 	//generate paths for locating the image
 	public void addPaths() {
 		for (int i = 0; i < 9; i++) {
-			imagePaths.add(paths[i]);
+			currentAbilities.add(abilities[i]);
 		}
 	}
 	
@@ -155,11 +150,11 @@ public class UpgradeScreen extends GameState {
 	 */
 	public String getPath(int x) {
 		if (x == 1) {
-			return paths[index1];
+			return abilities[index1];
 		} else if (x == 2) {
-			return paths[index2];
+			return abilities[index2];
 		} else {
-			return paths[index3];
+			return abilities[index3];
 		}
 	}
 
@@ -173,11 +168,11 @@ public class UpgradeScreen extends GameState {
 	 */
 	public void removeUpgradeOption(int x) {
 		if (x == 1) {
-			paths[index1] = null;
+            abilities[index1] = null;
 		} else if (x == 2) {
-			paths[index2] = null;
+            abilities[index2] = null;
 		} else {
-			paths[index3] = null;
+            abilities[index3] = null;
 		}
 	}
 	public void resetIndexes() {

@@ -11,7 +11,7 @@ import java.awt.*;
 
 public class PickupSize extends GameObject {
 	public PickupSize(Point.Double p, Handler handler) {
-		super(p.x, p.y, 30, 30, ID.PickupSize, handler);
+		super(p.x, p.y, 30, 30, handler);
 	}
 
     @Override

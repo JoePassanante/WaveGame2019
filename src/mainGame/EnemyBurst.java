@@ -16,8 +16,8 @@ public class EnemyBurst extends GameObject {
 	private String side;
 	private Random r = new Random();
 
-	public EnemyBurst(double x, double y, double velX, double velY, int size, String side, ID id, Handler handler) {
-		super(x, y, 150, 150, id, handler);
+	public EnemyBurst(double x, double y, double velX, double velY, int size, String side, Handler handler) {
+		super(x, y, 150, 150, handler);
 		this.velX = velX*2;
 		this.velY = velY*2;
 		this.timer = 60;
@@ -25,21 +25,21 @@ public class EnemyBurst extends GameObject {
 		this.size = size;
 
 		if (this.side.equals("left")) {
-			handler.add(new EnemyBurstWarning(0, 0, 25, (int)handler.getGameDimension().getHeight(), ID.EnemyBurstWarning, handler));
+			handler.add(new EnemyBurstWarning(0, 0, 25, (int)handler.getGameDimension().getHeight(), handler));
 			setPos();
 			setVel();
 		} else if (this.side.equals("right")) {
-			handler.add(new EnemyBurstWarning(handler.getGameDimension().getWidth() - 25, 0, 25, (int)handler.getGameDimension().getHeight(), ID.EnemyBurstWarning, handler));
+			handler.add(new EnemyBurstWarning(handler.getGameDimension().getWidth() - 25, 0, 25, (int)handler.getGameDimension().getHeight(), handler));
 			setPos();
 			setVel();
 
 		} else if (this.side.equals("top")) {
-			handler.add(new EnemyBurstWarning(0, 0, (int)handler.getGameDimension().getWidth(), 25, ID.EnemyBurstWarning, handler));
+			handler.add(new EnemyBurstWarning(0, 0, (int)handler.getGameDimension().getWidth(), 25, handler));
 			setPos();
 			setVel();
 
 		} else if (this.side.equals("bottom")) {
-			handler.add(new EnemyBurstWarning(0, handler.getGameDimension().getHeight() - 25, (int)handler.getGameDimension().getWidth(), 25, ID.EnemyBurstWarning, handler));
+			handler.add(new EnemyBurstWarning(0, handler.getGameDimension().getHeight() - 25, (int)handler.getGameDimension().getWidth(), 25, handler));
 			setPos();
 			setVel();
 		}

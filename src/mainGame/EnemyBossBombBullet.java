@@ -19,8 +19,8 @@ public class EnemyBossBombBullet extends GameObject {
 
 	// constructor
 	// used to initialize the state of the object
-	public EnemyBossBombBullet(double x, double y, ID id, Handler handler, int velX, int velY) {
-		super(x, y, 16, 16, id, handler);
+	public EnemyBossBombBullet(double x, double y, Handler handler, int velX, int velY) {
+		super(x, y, 16, 16, handler);
 		this.velX = velX;
 		this. velY = velY;
 	}
@@ -34,7 +34,7 @@ public class EnemyBossBombBullet extends GameObject {
 		if (this.y >= getHandler().getGameDimension().getHeight() || this.y < 0 || this.x > getHandler().getGameDimension().getHeight()  || this.x < 0) {
             getHandler().removeObject(this);}
 
-        getHandler().addObject(new Trail(x, y, ID.Trail, Color.PINK,(int)width,(int)height, 0.025, this.getHandler()));
+        getHandler().addObject(new Trail(x, y, Color.PINK,(int)width,(int)height, 0.025, this.getHandler()));
 
 	}
 	

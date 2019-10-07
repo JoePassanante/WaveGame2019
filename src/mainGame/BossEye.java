@@ -5,9 +5,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.net.URL;
 import java.util.Random;
 
 /**
@@ -30,9 +27,9 @@ public class BossEye extends GameObject {
 	private double[] speedTypes = { -5, -6, -7, -8, -9 };
 	private GameObject player;
 
-	public BossEye(double x, double y, ID id, Handler handler, int placement) {
-		super(x, y, 0, 0, id, handler);
-		this.img = getHandler().getTheme().get(ID.BossEye);
+	public BossEye(double x, double y, Handler handler, int placement) {
+		super(x, y, 0, 0, handler);
+		this.img = getHandler().getTheme().get(getClass());
         this.width = img.getWidth(null);
         this.height = img.getHeight(null);
 		this.velX = 0;
@@ -49,7 +46,7 @@ public class BossEye extends GameObject {
 			} else {
 				tempCounter++;
 				for (int i = 0; i < getHandler().size(); i++) {
-					if (getHandler().get(i).getId() == ID.Player)
+					if (getHandler().get(i) instanceof Player)
 						this.player = getHandler().get(i);
 				}
 			}

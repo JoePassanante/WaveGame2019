@@ -10,66 +10,43 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Waves extends GameMode {
-	private int currentLevelNum = 0;
+	private int currentLevelNum = 1;
 	private Level currentLevel = null;
+    private boolean paused = false;
+    private Handler handler;
+    private HUD hud;
+    private Player player;
+    private GameState upgradeScreen;
+    private GameState menu;
+    private GameState gameOver;
+    private Upgrades upgrades;
+
 	public Level getCurrentLevel() {
 	    return currentLevel;
     }
-
-    private boolean paused = false;
     public void setPaused(boolean p) {
         paused = p;
     }
-
-    private Handler handler;
     public Handler getHandler() {
         return handler;
     }
-
-    private HUD hud;
     public HUD getHUD() {
         return hud;
     }
-
-    private Player player;
     public Player getPlayer() {
         return player;
     }
-
-    private GameState upgradeScreen;
     public GameState getUpgradeScreen() {
         return upgradeScreen;
     }
-
-    private GameState menu;
     public GameState getMenu() {
         return menu;
     }
-
-    private GameState gameOver;
     public GameState getGameOver() {
         return gameOver;
     }
-
-    private Upgrades upgrades;
     public Upgrades getUpgrades() {
         return upgrades;
-    }
-
-    private int lastEnemy;
-    public void setLastEnemy(int l) {
-        lastEnemy = l;
-    }
-    public int getLastEnemy() {
-        return lastEnemy;
-    }
-
-    private int lastBoss;
-    public void setLastBoss(int l) {
-        lastBoss = l;
-    }
-    public int getLastBoss() {
-        return lastBoss;
     }
 
     private boolean africa = false;
@@ -96,7 +73,7 @@ public class Waves extends GameMode {
             if(source.size() == 0) {
                 return null;
             }
-            if(source.size() == 1) {
+            else if(source.size() == 1) {
                 return source.get(0);
             }
             int l = lastIndex;
@@ -109,38 +86,35 @@ public class Waves extends GameMode {
     }
 
     private RandomDifferentElement<Function<Point, GameObject>> randomEasyEnemy = new RandomDifferentElement<>(
-        p -> new EnemyBasic(p.getX(), p.getY(), 9, 9, ID.EnemyBasic, getHandler()),
+        p -> new EnemyBasic(p.getX(), p.getY(), 9, 9, getHandler()),
         p -> new EnemyBurst(-200, 200, 15, 15, 200,
-                new String[]{ "left", "right", "top", "bottom" }[(int)(4*Math.random())],
-                ID.EnemyBurst, getHandler()),
-        p -> new EnemyFast(p.getX(), p.getY(), ID.EnemyFast, getHandler()),
-        p -> new EnemyShooter(p.getX(), p.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooter, getHandler()),
-        p -> new EnemySmart(p.getX(), p.getY(), -5, ID.EnemySmart, getHandler())
+            new String[]{ "left", "right", "top", "bottom" }[(int)(4*Math.random())],
+            getHandler()),
+        p -> new EnemyFast(p.getX(), p.getY(), getHandler()),
+        p -> new EnemyShooter(p.getX(), p.getY(), 100, 100, -20 + (int)(Math.random()*5), getHandler()),
+        p -> new EnemySmart(p.getX(), p.getY(), -5, getHandler())
     );
 
     private RandomDifferentElement<Function<Point, GameObject>> randomHardEnemy = new RandomDifferentElement<>(
-        p -> new EnemyShooterMover(p.getX(), p.getY(), 100, 100, -20 + (int)(Math.random()*5), ID.EnemyShooterMover, getHandler()),
-        p -> new EnemyShooterSharp(p.getX(), p.getY(), 200, 200, -20 + (int)(Math.random()*5), ID.EnemyShooterSharp, getHandler()),
-        p -> new EnemySweep(p.getX(), p.getY(), 9, 2, ID.EnemySweep, getHandler())
+        p -> new EnemyShooterMover(p.getX(), p.getY(), 100, 100, -20 + (int)(Math.random()*5), getHandler()),
+        p -> new EnemyShooterSharp(p.getX(), p.getY(), 200, 200, -20 + (int)(Math.random()*5), getHandler()),
+        p -> new EnemySweep(p.getX(), p.getY(), 9, 2, getHandler())
     );
 
     private RandomDifferentElement<Supplier<GameObject>> randomBoss = new RandomDifferentElement<>(
-        () -> new EnemyBoss(ID.EnemyBoss, getHandler(),currentLevelNum/10, getHUD()),
-        () -> new EnemyRocketBoss(100,100,ID.EnemyRocketBoss, getPlayer(), getHandler(), getHUD(), this,currentLevelNum/10)
-//              () -> new BossEye(0, 0, ID.BossEye, getHandler(), 0)
+        () -> new EnemyBoss(getHandler(),currentLevelNum/10, getHUD()),
+        () -> new EnemyRocketBoss(100,100, getPlayer(), getHandler(), getHUD(), this,currentLevelNum/10)
+//      () -> new BossEye(0, 0, ID.BossEye, getHandler(), 0)
     );
 
     public Waves(Dimension screenSize) {
         handler = new Handler(screenSize, player);
-        hud = new HUD(this);
         menu = new Menu(this);
-
-        lastEnemy = -1;
-        lastBoss = -1;
+        hud = new HUD(this);
 
         setState(menu);
 
-        player = new Player(screenSize.getWidth() / 2 - 32, screenSize.getHeight() / 2 - 32, ID.Player, this);
+        player = new Player(screenSize.getWidth() / 2 - 32, screenSize.getHeight() / 2 - 32, this);
         upgradeScreen = new UpgradeScreen(this);
         upgrades = new Upgrades(this);
         gameOver = new GameOver(this);
@@ -165,21 +139,20 @@ public class Waves extends GameMode {
         if (this.paused) {return;}
 
 		if(currentLevel==null || !currentLevel.running()) {
-			currentLevelNum += 1;
-			getHUD().setLevel(this.currentLevelNum);
             getHandler().clearEnemies();
             getHandler().clearPickups();
+            getHUD().setLevel(this.currentLevelNum);
 
-            if (currentLevelNum > 1 && currentLevelNum%5 == 1) { // upgrade after every boss
+            if (currentLevelNum > 1 && currentLevelNum%5 == 1 && getState() != upgradeScreen) { // upgrade after every boss
                 setState(upgradeScreen);
             }
             else if(this.currentLevelNum%5 == 0) {
                 System.out.println("New Boss Level");
-
                 currentLevel = new Level( this,60*(20), currentLevelNum, 1,  p -> randomBoss.next().get());
-            } else {
+                currentLevelNum += 1;
+            }
+            else {
                 System.out.println("New Normal Level");
-
                 RandomDifferentElement<Function<Point,GameObject>> randomEnemy = new RandomDifferentElement<>(
                     IntStream.rangeClosed(0, Math.min(5,currentLevelNum/5))
                         .mapToObj( i -> i > 3 && Math.random() > .5
@@ -190,33 +163,34 @@ public class Waves extends GameMode {
                 );
 
                 currentLevel = new Level( this,60*(20), currentLevelNum, currentLevelNum,  p -> randomEnemy.next().apply(p));
+                currentLevelNum += 1;
 
                 Point.Double pd = new Point.Double(
-                        (Math.random()*(getHandler().getGameDimension().getWidth()-300))+150,
-                        (Math.random()*(getHandler().getGameDimension().getHeight()-300))+150
+                    (Math.random()*(getHandler().getGameDimension().getWidth()-300))+150,
+                    (Math.random()*(getHandler().getGameDimension().getHeight()-300))+150
                 );
 
-
-                getHandler().addPickup( new RandomDifferentElement<BiFunction<Point.Double,Handler,GameObject>>(
-                                PickupFreeze::new,
-                                PickupHealth::new,
-                                PickupLife::new,
-                                PickupScore::new,
-                                PickupSize::new
-                        ).next().apply(pd, getHandler())
+                getHandler().addPickup(
+                    new RandomDifferentElement<BiFunction<Point.Double,Handler,GameObject>>(
+                        PickupFreeze::new,
+                        PickupHealth::new,
+                        PickupLife::new,
+                        PickupScore::new,
+                        PickupSize::new
+                    ).next().apply(pd, getHandler())
                 );
             }
 		}
 
 		getState().tick();
-        if (getState() == menu) {// user is on menu, update the menu items
+        if (getState() == menu) { // user is on menu, update the menu items
             if (this.gameCurrentClip != GAME_AUDIO.Menu) {
                 this.gameCurrentClip = GAME_AUDIO.Menu;
                 AudioUtil.closeGameClip();
                 AudioUtil.playMenuClip(true, false);
             }
         }
-        if (getState() == currentLevel) {// game is running
+        if (getState() == currentLevel) { // game is running
             if (this.gameCurrentClip != GAME_AUDIO.Game) {
                 this.gameCurrentClip = GAME_AUDIO.Game;
                 AudioUtil.closeMenuClip();
@@ -232,8 +206,10 @@ public class Waves extends GameMode {
 	 */
 	@Override
 	public void render(Graphics g) {
-	    if(getHandler().getTheme().get(ID.Waves) != null) {
-            g.drawImage(getHandler().getTheme().get(ID.Waves), 0, 0, (int) getHandler().getGameDimension().getWidth(), (int) getHandler().getGameDimension().getHeight(), null);
+	    Image img = getHandler().getTheme().get(getClass());
+
+        if(img != null) {
+            g.drawImage(img, 0, 0, (int) getHandler().getGameDimension().getWidth(), (int) getHandler().getGameDimension().getHeight(), null);
         }
 
         getState().render(g);
@@ -250,7 +226,7 @@ public class Waves extends GameMode {
 		this.currentLevel = null;
         getHandler().clearEnemies();
 		if(hardReset) {
-			this.currentLevelNum = 0;
+			this.currentLevelNum = 1;
 			getPlayer().setWidth(32);
 			getPlayer().setHeight(32);
 			getHUD().setExtraLives(0);

@@ -7,7 +7,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Random;
 
 /**
  * Player object class w/ collision
@@ -18,15 +17,13 @@ import java.util.Random;
  */
 
 public class Player extends GameObject {
-
-	Random r = new Random();
-	private Waves game;
+    private Waves game;
 	private double damage;
 	public static int playerSpeed = 10;
 	public static Color playerColor = Color.WHITE;
 
-	public Player(double x, double y, ID id, Waves waves) {
-		super(x, y, 32, 32, id, waves.getHandler());
+	public Player(double x, double y, Waves waves) {
+		super(x, y, 32, 32, waves.getHandler());
 		game = waves;
 		this.damage = 2;
 		//Player Width and Height change the size of the image, use the same number for both for scaling
@@ -38,7 +35,7 @@ public class Player extends GameObject {
 		this.y += velY;
 		x = Client.clamp(x, 0, game.getHandler().getGameDimension().getWidth()  - width);
 		y = Client.clamp(y, 0, game.getHandler().getGameDimension().getHeight() - height);
-        game.getHandler().addObject(new Trail(x, y, ID.Trail, playerColor, (int)width, (int)height, 0.05, game.getHandler()));
+        game.getHandler().addObject(new Trail(x, y, playerColor, (int)width, (int)height, 0.05, game.getHandler()));
 		playerColor = Color.white; //player trail code
 		collision();
 		checkIfDead();
@@ -82,7 +79,7 @@ public class Player extends GameObject {
 		for (int i = 0; i < game.getHandler().size(); i++) {
             GameObject tempObject = game.getHandler().get(i);
 
-            if (tempObject.getId().getDifficuty() > 0) {//tempObject is an enemy
+            if (tempObject.getClass().getName().contains("Enemy")) {//tempObject is an enemy
                 // collision code
                 if (getBounds().intersects(tempObject.getBounds())) {//Player, Enemy Collision
                     AudioUtil.playClip("../gameSound/explosion.wav", false);
@@ -91,7 +88,7 @@ public class Player extends GameObject {
                     game.getHUD().updateScoreColor(Color.red);
                 }
             }
-            if (tempObject.getId() == ID.EnemyBoss) {
+            if (tempObject instanceof EnemyBoss) {
                 //Gives players safety window to move from boss restricted region
                 if (this.y <= 138 && Math.hypot(tempObject.getVelX(),tempObject.getVelY()) < 1E-6 ) {
                     AudioUtil.playClip("../gameSound/damaged.wav", false);
@@ -105,11 +102,11 @@ public class Player extends GameObject {
             //if player collides with powerup, trigger what that powerup does, remove the powerup and play the collision sound
             if(getBounds().intersects(game.getHandler().getPickups().get(i).getBounds())) {
                 GameObject tempObject = game.getHandler().getPickups().remove(i);
-                if (tempObject.getId() == ID.PickupHealth) {
+                if (tempObject instanceof PickupHealth) {
                     game.getHUD().restoreHealth();
                     AudioUtil.playClip("../gameSound/powerup.wav", false);
                 }
-                if (tempObject.getId() == ID.PickupSize) {
+                if (tempObject instanceof PickupSize) {
                     if (width > 3) {
                         width /= 1.2;
                         height /= 1.2;
@@ -119,17 +116,17 @@ public class Player extends GameObject {
                     AudioUtil.playClip("../gameSound/powerup.wav", false);
                 }
 
-                if (tempObject.getId() == ID.PickupLife) {
+                if (tempObject instanceof PickupLife) {
                     game.getHUD().setExtraLives(game.getHUD().getExtraLives() + 1);
                     AudioUtil.playClip("../gameSound/1up.wav", false);
                 }
 
-                if (tempObject.getId() == ID.PickupScore) {
+                if (tempObject instanceof PickupScore) {
                     game.getHUD().setScore(game.getHUD().getScore() + 1000);
                     AudioUtil.playClip("../gameSound/coin.wav", false);
                 }
 
-                if (tempObject.getId() == ID.PickupFreeze) {
+                if (tempObject instanceof PickupFreeze) {
                     AudioUtil.playClip("../gameSound/freeze1.wav", false);
                     game.getHandler().timer = 900;
                 }

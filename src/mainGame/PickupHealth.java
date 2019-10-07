@@ -12,7 +12,7 @@ import java.awt.*;
 
 public class PickupHealth extends GameObject {
     public PickupHealth(Point.Double p, Handler handler) {
-        super(p.x, p.y, 30, 30, ID.PickupHealth, handler);
+        super(p.x, p.y, 30, 30, handler);
 	}
 
 	public void tick() {

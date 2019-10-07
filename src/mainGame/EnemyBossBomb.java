@@ -8,8 +8,8 @@ public class EnemyBossBomb extends GameObject {
 	private int shots;
 	// constructor
 	// used to initialize the state of the object
-	public EnemyBossBomb(double x, double y, ID id, Handler handler, int shots) {
-		super(x, y, 32, 32, id, handler);
+	public EnemyBossBomb(double x, double y, Handler handler, int shots) {
+		super(x, y, 32, 32, handler);
 		this.explodeHeight = (int) (Math.random()*handler.getGameDimension().getHeight());
 		velY = 5;
 		this.shots = shots;
@@ -25,7 +25,6 @@ public class EnemyBossBomb extends GameObject {
                 getHandler().addObject( new EnemyBossBombBullet(
                     (int) this.x,
                     (int) this.y,
-                    ID.EnemyBossBombBullet,
                     getHandler(),
                     (int)(16*Math.cos(Math.toRadians(360.0*i/shots))),
                     (int)(16*Math.sin(Math.toRadians(360.0*i/shots)))

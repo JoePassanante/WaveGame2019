@@ -16,12 +16,12 @@ public class EnemySmart extends GameObject {
 	private GameObject player;
 	private int speed;
 
-    public EnemySmart(double x, double y, int speed, ID id, Handler handler) {
-		super(x, y, 150, 75, id, handler);
+    public EnemySmart(double x, double y, int speed, Handler handler) {
+		super(x, y, 150, 75, handler);
 		this.speed = speed;
 
 		for (int i = 0; i < handler.size(); i++) {
-			if (handler.get(i).getId() == ID.Player)
+			if (handler.get(i) instanceof Player)
 				player = handler.get(i);
 		}
 

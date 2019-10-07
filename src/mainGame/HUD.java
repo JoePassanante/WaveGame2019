@@ -48,11 +48,11 @@ public class HUD implements Animatable {
 	public HUD(Waves waves) {
 	    game = waves;
 
-        HUDshield1 = getImage("/images/shield1.png");
-        HUDshield2 = getImage("/images/shield2.png");
-        HUDshield3 = getImage("/images/shield3.png");
-        HUDshield4 = getImage("/images/shield4.png");
-        HUDshield5 = getImage("/images/shield5.png");
+        HUDshield1 = game.getHandler().getTheme().get("shield1");
+        HUDshield2 = game.getHandler().getTheme().get("shield2");
+        HUDshield3 = game.getHandler().getTheme().get("shield3");
+        HUDshield4 = game.getHandler().getTheme().get("shield4");
+        HUDshield5 = game.getHandler().getTheme().get("shield5");
     }
 
 	//game uses tick method to check amount of health player has and update health bar display. Also updates score using this method
@@ -205,16 +205,5 @@ public class HUD implements Animatable {
 
     public boolean getRegen() {
         return regen;
-    }
-    //need this to have images work on HUD
-    public Image getImage(String path) {
-        Image image = null;
-        try {
-            URL imageURL = Client.class.getResource(path);
-            image = Toolkit.getDefaultToolkit().getImage(imageURL);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return image;
     }
 }

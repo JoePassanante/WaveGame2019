@@ -24,8 +24,8 @@ public class Trail extends GameObject{
 	private Color color;
 	private double life;	//life = 0.01 -> 0.1
 	
-	public Trail(double x, double y, ID id, Color color, int width, int height, double life, Handler handler) {
-		super(x, y, width, height, id, handler);
+	public Trail(double x, double y, Color color, int width, int height, double life, Handler handler) {
+		super(x, y, width, height, handler);
 		this.color = color;
 		this.width = width;
 		this.height = height;

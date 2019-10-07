@@ -27,12 +27,11 @@ public class MenuFireworks extends GameObject {
 	 * @param velX Velocity X.
 	 * @param velY Velocity Y.
 	 * @param color Fill Color. 
-	 * @param id entity ID.
 	 * @param handler handler object.
 	 */
-	public MenuFireworks(double x, double y, int sizeX, int sizeY, double velX, double velY, Color color, ID id,
+	public MenuFireworks(double x, double y, int sizeX, int sizeY, double velX, double velY, Color color,
 			Handler handler) {
-		super(x, y, sizeX, sizeY, id, handler);
+		super(x, y, sizeX, sizeY, handler);
 		this.velX = velX;
 		this.velY = velY;
 		r = new Random();
@@ -55,7 +54,7 @@ public class MenuFireworks extends GameObject {
 		if (this.y <= 100) {// once it gets this high
 			for (int i = 0; i < getHandler().size(); i++) {
 				GameObject tempObject = getHandler().get(i);
-				if (tempObject.id == ID.Firework) {// find the firework
+				if (tempObject instanceof MenuFireworks) {// find the firework
 					sparks(tempObject);// create sparks
                     getHandler().removeObject(tempObject);// delete big circle
 				}
@@ -70,7 +69,7 @@ public class MenuFireworks extends GameObject {
 		for (int ii = 0; ii < 3; ii++) {
 		    for(int i=-5; i<=5; i++) {
                 getHandler().addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), i,
-                        this.color, ID.FireworkSpark, getHandler()));
+                        this.color, getHandler()));
             }
 		}
 	}
