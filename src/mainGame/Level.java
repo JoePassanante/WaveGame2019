@@ -51,7 +51,7 @@ public class Level extends GameState {
             Rectangle bounds = new Rectangle(game.getHandler().getGameDimension());
             if(!bounds.contains(game.getHandler().get(i).getBounds())) {
                 game.getHandler().remove(game.getHandler().get(i));
-                enemyNumber -= 1;
+                //enemyNumber -= 1;
             }
         }
         game.getHandler().tick(); // handler ticked to update entities.
