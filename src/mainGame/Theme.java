@@ -38,8 +38,8 @@ public class Theme extends HashMap<String, Image> {
         }
     }
 
-    public Image get(Class c) {
-        return get(c.getSimpleName());
+    public Image get(Animatable a) {
+        return get(a.getClass().getSimpleName());
     }
 
     @Override

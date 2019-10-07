@@ -35,7 +35,7 @@ public class Player extends GameObject {
 		this.y += velY;
 		x = Client.clamp(x, 0, game.getHandler().getGameDimension().getWidth()  - width);
 		y = Client.clamp(y, 0, game.getHandler().getGameDimension().getHeight() - height);
-        game.getHandler().addObject(new Trail(x, y, playerColor, (int)width, (int)height, 0.05, game.getHandler()));
+        game.getHandler().add(new Trail(x, y, playerColor, (int)width, (int)height, 0.05, game.getHandler()));
 		playerColor = Color.white; //player trail code
 		collision();
 		checkIfDead();

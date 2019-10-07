@@ -63,7 +63,7 @@ public abstract class GameObject implements Animatable {
 	    this.height = h;
 		this.handler = hand;
 
-        img = handler.getTheme().get(getClass());
+        img = handler.getTheme().get(this);
 	}
 
     public void drawHitBox(Graphics g) {

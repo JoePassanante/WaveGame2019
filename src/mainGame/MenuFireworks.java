@@ -54,7 +54,7 @@ public class MenuFireworks extends GameObject {
 		this.y += velY;
 		if (this.y <= 100 && spark) {// once it gets this high
             sparks();// create sparks
-            getHandler().removeObject(this);
+            getHandler().remove(this);
 		}
 	}
 	/**
@@ -63,7 +63,7 @@ public class MenuFireworks extends GameObject {
 	public void sparks() {
 		for (int ii = 0; ii < 3; ii++) {
 		    for(int i=-5; i<=5; i++) {
-                getHandler().addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), i,
+                getHandler().add(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), i,
                     this.color, getHandler(), false));
             }
 		}

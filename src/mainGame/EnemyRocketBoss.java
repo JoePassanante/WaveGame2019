@@ -37,7 +37,7 @@ public class EnemyRocketBoss extends GameObject {
 			rocketTimer--;
 			if (rocketTimer < 0) {
 				rocketTimer = 120;
-                getHandler().addObject( new EnemyRocketBossMissile(
+                getHandler().add( new EnemyRocketBossMissile(
                     Math.cos(Math.toRadians(this.drawAngle+90))*40  + this.x,
                     Math.sin(Math.toRadians(this.drawAngle+90))*40 +this.y,
                     getHandler(),this.drawAngle,
@@ -46,7 +46,7 @@ public class EnemyRocketBoss extends GameObject {
 			}
 		}
 		if(this.health%150 == 0){
-            getHandler().addObject( new EnemyBurst(
+            getHandler().add( new EnemyBurst(
                 -200,
                 200,
                 15,
@@ -87,7 +87,7 @@ public class EnemyRocketBoss extends GameObject {
 		}
 		if(health<=0){
 			System.out.println("Removing Boss");
-            getHandler().removeObject(this);
+            getHandler().remove(this);
 		}
 	}
     public static double GetAngleOfLineBetweenTwoPoints(Point.Double p1, Point.Double p2)

@@ -39,10 +39,10 @@ public class Menu extends GameState {
 		fallback.initialize();
 
         space = new Theme("space", fallback);
-        new Thread(() -> space.initialize()).start();
-
         water = new Theme("water", fallback);
-        new Thread(() -> water.initialize()).start();
+
+        space.initialize();
+        water.initialize();
 
         game.getHandler().setTheme(space);
 	}
@@ -64,7 +64,7 @@ public class Menu extends GameState {
 		if (timer <= 0) {
 			game.getHandler().clear();
 			colorIndex = r.nextInt(6);
-            game.getHandler().addObject(new MenuFireworks((r.nextInt((int)game.getHandler().getGameDimension().getWidth()) - 25), 1080, 100, 100, 0, -4,
+            game.getHandler().add(new MenuFireworks((r.nextInt((int)game.getHandler().getGameDimension().getWidth()) - 25), 1080, 100, 100, 0, -4,
 					colorPick.get(colorIndex), this.game.getHandler(), true));
 			timer = 300;
 		}
@@ -74,7 +74,7 @@ public class Menu extends GameState {
 	public void render(Graphics g) {
 		if (!help) {
 			//display the background
-			g.drawImage(game.getHandler().getTheme().get(getClass()), 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
+			g.drawImage(game.getHandler().getTheme().get(this), 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
 			//create the font objects
 			Font font = new Font("Amoebic", 1, 100); //the title
 			Font font2 = new Font("Amoebic", 1, 34); //help and quit
@@ -180,7 +180,7 @@ public class Menu extends GameState {
             if (mouseOver(e.getX(), e.getY(), 700, 300, 470, 250)) {
                 game.getHandler().clear();
                 game.setState(game.getCurrentLevel());
-                game.getHandler().addObject(game.getPlayer());
+                game.getHandler().add(game.getPlayer());
             }
             // Help Button
             else if (mouseOver(e.getX(), e.getY(), 230, 360, 260, 200)) {

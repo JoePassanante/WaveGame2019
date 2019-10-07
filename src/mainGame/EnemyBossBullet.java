@@ -27,9 +27,9 @@ public class EnemyBossBullet extends GameObject {
 		this.y += velY;
 
 		if (this.y >= getHandler().getGameDimension().getHeight())
-            getHandler().removeObject(this);
+            getHandler().remove(this);
 
-        getHandler().addObject(new Trail(x, y, Color.red,(int)width,(int)height, 0.025, getHandler()));
+        getHandler().add(new Trail(x, y, Color.red,(int)width,(int)height, 0.025, getHandler()));
 	}
 	
     @Override

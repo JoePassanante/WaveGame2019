@@ -71,7 +71,7 @@ public class EnemyShooterMover extends GameObject {
 		bulletVelX = ((this.bulletSpeed / distance) * diffX); // numerator affects speed of enemy
 		bulletVelY = ((this.bulletSpeed / distance) * diffY);// numerator affects speed of enemy
 
-        getHandler().addObject(
+        getHandler().add(
             new EnemyShooterBullet(this.x -10, this.y-10, bulletVelX, bulletVelY, getHandler()));
 		}
 		else {
@@ -88,7 +88,7 @@ public class EnemyShooterMover extends GameObject {
 		this.height*=.95;
 
 		if (width <= 1 || height <= 1) {
-            getHandler().removeObject(this);
+            getHandler().remove(this);
 		}
 	}
 }

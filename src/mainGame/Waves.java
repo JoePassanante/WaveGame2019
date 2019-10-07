@@ -208,7 +208,7 @@ public class Waves extends GameMode {
 	 */
 	@Override
 	public void render(Graphics g) {
-	    Image img = getHandler().getTheme().get(getClass());
+	    Image img = getHandler().getTheme().get(this);
 
         if(img != null) {
             g.drawImage(img, 0, 0, (int) getHandler().getGameDimension().getWidth(), (int) getHandler().getGameDimension().getHeight(), null);

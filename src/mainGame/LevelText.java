@@ -68,6 +68,6 @@ public class LevelText extends GameObject {
 	@Override
 	public Rectangle getBounds() {
 		// TODO Auto-generated method stub
-		return null;
+		return new Rectangle((int)x, (int)y,0,0);
 	}
 }

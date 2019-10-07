@@ -30,10 +30,10 @@ public class EnemyRocketBossMissile extends GameObject {
 		this.y += Math.sin(Math.toRadians(direction))*speed;
 
 		if (this.y <= 0 || this.y >= getHandler().getGameDimension().getHeight() - 40) {
-            getHandler().removeObject(this);
+            getHandler().remove(this);
 		}
 		if (this.x <= 0 || this.x >= getHandler().getGameDimension().getWidth() - 16) {
-            getHandler().removeObject(this);
+            getHandler().remove(this);
 		}
 		double angle = EnemyRocketBoss.GetAngleOfLineBetweenTwoPoints(new Point.Double(Math.cos(Math.toRadians(direction-90))*5 +this.x, Math.sin(Math.toRadians(direction-90))*5 +this.y), new Point.Double(player.x,player.y));
 		

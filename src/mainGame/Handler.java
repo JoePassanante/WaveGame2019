@@ -107,14 +107,6 @@ public class Handler extends ArrayList<GameObject> implements Animatable {
         timer = 1000;
     }
 
-    public void addObject(GameObject object) {
-        this.add(object);
-    }
-
-    public void removeObject(GameObject object) {
-        this.remove(object);
-    }
-
     public void addPickup(GameObject object) {
         this.pickups.add(object);
     }

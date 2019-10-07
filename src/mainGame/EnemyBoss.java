@@ -50,7 +50,7 @@ public class EnemyBoss extends GameObject {
 				velX = 8;
 			spawn = r.nextInt(5);
 			if (spawn == 0) {
-				getHandler().addObject(
+				getHandler().add(
 						new EnemyBossBullet((int) this.x + 48, (int) this.y + 80, getHandler()));
 				this.health -= 3;
 			}
@@ -63,7 +63,7 @@ public class EnemyBoss extends GameObject {
 				//resets the bomb timer
 				bombTimer = 120;
 				//calls calls the EnemyBossBomb class
-				getHandler().addObject(
+				getHandler().remove(
 						new EnemyBossBomb((int) this.x + 48, (int) this.y + 80, getHandler(),difficulty > 1 ? ( difficulty > 2 ? 16 : 8 ) : 4));
 			}
 		}
@@ -72,8 +72,8 @@ public class EnemyBoss extends GameObject {
 		// if (this.y <= 0 || this.y >= Game.HEIGHT - 40) velY *= -1;
 		if (this.x <= 0 || this.x >= getHandler().getGameDimension().getWidth() - 96) {
 			velX *= -1;
-			getHandler().addObject(new EnemyBossBullet((int) this.x, (int) this.y + 80, getHandler()));
-			getHandler().addObject(new EnemyBossBullet((int) this.x + 96, (int) this.y + 80, getHandler()));
+			getHandler().add(new EnemyBossBullet((int) this.x, (int) this.y + 80, getHandler()));
+			getHandler().add(new EnemyBossBullet((int) this.x + 96, (int) this.y + 80, getHandler()));
 		}
 
 		// handler.addObject(new Trail(x, y, ID.Trail, Color.red, 96, 96, 0.025,
@@ -81,7 +81,7 @@ public class EnemyBoss extends GameObject {
 		hud.levelProgress = (int)(1000-this.health)/10;
 		if (this.health <= 0) {
 			System.out.println("Removing Boss");
-			getHandler().removeObject(this);
+			getHandler().remove(this);
 		}
 	}
 
@@ -106,7 +106,7 @@ public class EnemyBoss extends GameObject {
 	// allows for grey line to be drawn, as well as first bullet shot
 	public void drawFirstBullet() {
 		if (timer2 == 1) {
-            getHandler().addObject(new EnemyBossBullet((int) this.x + 48, (int) this.y + 96, getHandler()));
+            getHandler().add(new EnemyBossBullet((int) this.x + 48, (int) this.y + 96, getHandler()));
         }
 	}
 }

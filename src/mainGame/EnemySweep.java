@@ -42,12 +42,12 @@ public class EnemySweep extends GameObject {
 			velX *= -1;
 		//check for removal once bottom of screen is hit. 
 		if (this.y <= 0 || this.y >= getHandler().getGameDimension().getWidth() - 43){
-            getHandler().removeObject(this);
+            getHandler().remove(this);
 			return;
 		}
 		
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.cyan, 16, 16, 0.025, this.handler));
-        getHandler().addObject(new Trail(x, y, random, (int)width, (int)height, 0.025, getHandler()));
+        getHandler().add(new Trail(x, y, random, (int)width, (int)height, 0.025, getHandler()));
 	}
 
 	public void render(Graphics g) {

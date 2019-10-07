@@ -20,9 +20,9 @@ public class EnemyBossBomb extends GameObject {
 	public void tick() {
 		this.y += velY;
 		if (y>explodeHeight) {
-            getHandler().removeObject(this);
+            getHandler().remove(this);
 			for (int i = 0; i < shots; i++) {
-                getHandler().addObject( new EnemyBossBombBullet(
+                getHandler().add( new EnemyBossBombBullet(
                     (int) this.x,
                     (int) this.y,
                     getHandler(),

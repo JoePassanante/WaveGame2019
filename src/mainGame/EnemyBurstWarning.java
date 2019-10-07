@@ -50,7 +50,7 @@ public class EnemyBurstWarning extends GameObject {
 			for (int i = 0; i < getHandler().size(); i++) {
 				GameObject tempObject = getHandler().get(i);
 				if (tempObject instanceof EnemyBurstWarning) {
-                    getHandler().removeObject(tempObject);
+                    getHandler().remove(tempObject);
 					i--;
 				}
 			}

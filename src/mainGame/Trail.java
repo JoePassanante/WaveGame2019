@@ -38,7 +38,7 @@ public class Trail extends GameObject{
 			alpha = (float) (alpha - (life - 0.001));
 		}
 		else{
-            getHandler().removeObject(this);
+            getHandler().remove(this);
 		}
 	}
 

@@ -47,8 +47,8 @@ public class EnemyBurst extends GameObject {
 
 	public void tick() {
 		//check for removal
-		if (this.y <= -getHandler().getGameDimension().getHeight() || this.y >= getHandler().getGameDimension().getHeight()*2){ getHandler().removeObject(this); return;}
-		if (this.x <= -getHandler().getGameDimension().getWidth() || this.x >= getHandler().getGameDimension().getWidth()*2){ getHandler().removeObject(this); return;}
+		if (this.y <= -getHandler().getGameDimension().getHeight() || this.y >= getHandler().getGameDimension().getHeight()*2){ getHandler().remove(this); return;}
+		if (this.x <= -getHandler().getGameDimension().getWidth() || this.x >= getHandler().getGameDimension().getWidth()*2){ getHandler().remove(this); return;}
 
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.orange, this.size, this.size, 0.025, this.handler));
 

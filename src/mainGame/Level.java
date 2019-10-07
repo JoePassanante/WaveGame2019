@@ -1,8 +1,6 @@
 package mainGame;
 
-import java.awt.Graphics;
-import java.awt.Dimension;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.function.Function;
@@ -49,6 +47,13 @@ public class Level extends GameState {
      * This ensures that the enemies are evenly spawned throughout the level.
      */
     public void tick(){
+        for(int i = game.getHandler().size()-1; i>=0; i -= 1) {
+            Rectangle bounds = new Rectangle(game.getHandler().getGameDimension());
+            if(!bounds.contains(game.getHandler().get(i).getBounds())) {
+                game.getHandler().remove(game.getHandler().get(i));
+                enemyNumber -= 1;
+            }
+        }
         game.getHandler().tick(); // handler ticked to update entities.
 
         currentTick += 1;

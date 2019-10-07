@@ -74,12 +74,12 @@ public class EnemyShooterSharp extends GameObject {
 			velY = Math.sin(dir)*speed;
 			//supposed to shoot where they're going, not 100% accurate in terms of time yet though
 
-            getHandler().addObject(
+            getHandler().add(
 					new EnemyShooterBullet(this.x -10, this.y-10, bulletVelX, bulletVelY, getHandler()));
 		bulletVelX = -((this.bulletSpeed / distance) * diffX); // numerator affects speed of enemy
 		bulletVelY = -((this.bulletSpeed / distance) * diffY);// numerator affects speed of enemy}
 
-            getHandler().addObject(
+            getHandler().add(
 				new EnemyShooterBullet(this.x -10, this.y-10, bulletVelX, bulletVelY, getHandler()));
 		}else {
 			System.err.println("player is null on shooter!");//bpm
@@ -95,7 +95,7 @@ public class EnemyShooterSharp extends GameObject {
 		height*=.95;
 
 		if (width <= 1 || height <= 1) {
-            getHandler().removeObject(this);
+            getHandler().remove(this);
 		}
 	}
 	
