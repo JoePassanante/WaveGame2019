@@ -18,6 +18,7 @@ public class MenuFireworks extends GameObject {
 	private int max = 5;
 	private int min = -5;
 	private Color color;
+	private boolean spark;
 	/**
 	 * 
 	 * @param x Position of Fire Work on X-Axis (double).
@@ -30,13 +31,13 @@ public class MenuFireworks extends GameObject {
 	 * @param handler handler object.
 	 */
 	public MenuFireworks(double x, double y, int sizeX, int sizeY, double velX, double velY, Color color,
-			Handler handler) {
+			Handler handler, boolean s) {
 		super(x, y, sizeX, sizeY, handler);
 		this.velX = velX;
 		this.velY = velY;
 		r = new Random();
 		this.color = color;
-
+		this.spark = s;
 	}
 	//render the circle object
 	public void render(Graphics g) {
@@ -51,25 +52,19 @@ public class MenuFireworks extends GameObject {
 	public void tick() {
 		this.x += velX;
 		this.y += velY;
-		if (this.y <= 100) {// once it gets this high
-			for (int i = 0; i < getHandler().size(); i++) {
-				GameObject tempObject = getHandler().get(i);
-				if (tempObject instanceof MenuFireworks) {// find the firework
-					sparks(tempObject);// create sparks
-                    getHandler().removeObject(tempObject);// delete big circle
-				}
-			}
+		if (this.y <= 100 && spark) {// once it gets this high
+            sparks();// create sparks
+            getHandler().removeObject(this);
 		}
 	}
 	/**
 	 * This function is what shows the "sparks," the smaller circles
-	 * @param tempObject
 	 */
-	public void sparks(GameObject tempObject) {
+	public void sparks() {
 		for (int ii = 0; ii < 3; ii++) {
 		    for(int i=-5; i<=5; i++) {
                 getHandler().addObject(new MenuFireworks(this.x, this.y, 20, 20, (r.nextInt((max - min) + 1) + min), i,
-                        this.color, getHandler()));
+                    this.color, getHandler(), false));
             }
 		}
 	}

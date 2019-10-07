@@ -45,9 +45,6 @@ public class Menu extends GameState {
         new Thread(() -> water.initialize()).start();
 
         game.getHandler().setTheme(space);
-
-        game.getHandler().addObject(new MenuFireworks((r.nextInt((int)game.getHandler().getGameDimension().getWidth()) - 25), 500, 50, 50, 0, -2,
-				colorPick.get(r.nextInt(6)), game.getHandler()));
 	}
 
 	//using the java color picker, which colors you will add to the scene
@@ -68,7 +65,7 @@ public class Menu extends GameState {
 			game.getHandler().clear();
 			colorIndex = r.nextInt(6);
             game.getHandler().addObject(new MenuFireworks((r.nextInt((int)game.getHandler().getGameDimension().getWidth()) - 25), 1080, 100, 100, 0, -4,
-					colorPick.get(colorIndex), this.game.getHandler()));
+					colorPick.get(colorIndex), this.game.getHandler(), true));
 			timer = 300;
 		}
         game.getHandler().tick();
@@ -173,6 +170,8 @@ public class Menu extends GameState {
 			g.drawRect(910, 300, 150, 64); //ugly rectangle box
 			g.drawString("Back", 955, 340); //make it the back button
 		}
+
+		game.getHandler().render(g);
 	}
 
     public void mousePressed(MouseEvent e) {

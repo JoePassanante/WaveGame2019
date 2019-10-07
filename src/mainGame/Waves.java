@@ -163,22 +163,24 @@ public class Waves extends GameMode {
                 );
 
                 currentLevel = new Level( this,60*(20), currentLevelNum, currentLevelNum,  p -> randomEnemy.next().apply(p));
-                currentLevelNum += 1;
 
                 Point.Double pd = new Point.Double(
                     (Math.random()*(getHandler().getGameDimension().getWidth()-300))+150,
                     (Math.random()*(getHandler().getGameDimension().getHeight()-300))+150
                 );
 
-                getHandler().addPickup(
-                    new RandomDifferentElement<BiFunction<Point.Double,Handler,GameObject>>(
-                        PickupFreeze::new,
-                        PickupHealth::new,
-                        PickupLife::new,
-                        PickupScore::new,
-                        PickupSize::new
-                    ).next().apply(pd, getHandler())
-                );
+                if(currentLevelNum > 1) {
+                    getHandler().addPickup(
+                        new RandomDifferentElement<BiFunction<Point.Double, Handler, GameObject>>(
+                            PickupFreeze::new,
+                            PickupHealth::new,
+                            PickupLife::new,
+                            PickupScore::new,
+                            PickupSize::new
+                        ).next().apply(pd, getHandler())
+                    );
+                }
+                currentLevelNum += 1;
             }
 		}
 
