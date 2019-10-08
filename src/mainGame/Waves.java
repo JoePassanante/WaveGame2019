@@ -1,12 +1,9 @@
 package mainGame;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Waves extends GameMode {
@@ -58,54 +55,24 @@ public class Waves extends GameMode {
         AudioUtil.playMenuClip(true, africa);
     }
 
-    private static class RandomDifferentElement<T> {
-        private java.util.List<T> source;
-        private int lastIndex;
-        public RandomDifferentElement(List<T> s) {
-            source = s;
-            lastIndex = -1;
-        }
-        @SafeVarargs
-        public RandomDifferentElement(T... s) {
-            this(Arrays.asList(s));
-        }
-        public T next() {
-            if(source.size() == 0) {
-                return null;
-            }
-            else if(source.size() == 1) {
-                return source.get(0);
-            }
-            int l = lastIndex;
-            while(l == lastIndex) {
-                l = (int)(source.size()*Math.random());
-            }
-            lastIndex = l;
-            return source.get(l);
-        }
-    }
-
-    private RandomDifferentElement<Function<Point, GameObject>> randomEasyEnemy = new RandomDifferentElement<>(
-        p -> new EnemyBasic(p.getX(), p.getY(), 9, 9, getHandler()),
-        p -> new EnemyBurst(-200, 200, 15, 15, 200,
-            new String[]{ "left", "right", "top", "bottom" }[(int)(4*Math.random())],
-            getHandler()),
-        p -> new EnemyFast(p.getX(), p.getY(), getHandler()),
-        p -> new EnemyShooter(p.getX(), p.getY(), 100, 100, -20 + (int)(Math.random()*5), getHandler()),
-        p -> new EnemySmart(p.getX(), p.getY(), -5, getHandler())
-    );
-
-    private RandomDifferentElement<Function<Point, GameObject>> randomHardEnemy = new RandomDifferentElement<>(
-        p -> new EnemyShooterMover(p.getX(), p.getY(), 100, 100, -20 + (int)(Math.random()*5), getHandler()),
-        p -> new EnemyShooterSharp(p.getX(), p.getY(), 200, 200, -20 + (int)(Math.random()*5), getHandler()),
-        p -> new EnemySweep(p.getX(), p.getY(), 9, 2, getHandler())
-    );
-
-    private RandomDifferentElement<Supplier<GameObject>> randomBoss = new RandomDifferentElement<>(
-        () -> new EnemyBoss(getHandler(),currentLevelNum/10, getHUD()),
-        () -> new EnemyRocketBoss(100,100, getPlayer(), getHandler(), getHUD(), this,currentLevelNum/10)
-//      () -> new BossEye(0, 0, ID.BossEye, getHandler(), 0)
-    );
+    private RandomDifferentElement<BiFunction<Point.Double, Handler, GameObject>>
+        randomEasyEnemy = new RandomDifferentElement<>(
+            EnemyBasic::new,
+            EnemyBurst::new,
+            EnemyFast::new,
+            EnemyShooter::new,
+            EnemySmart::new
+        ),
+        randomHardEnemy = new RandomDifferentElement<>(
+            EnemyShooterMover::new,
+            EnemyShooterSharp::new,
+            EnemySweep::new
+        ),
+        randomBoss = new RandomDifferentElement<>(
+            (p,h) -> new EnemyBoss(h,currentLevelNum/10, getHUD()),
+            (p,h) -> new EnemyRocketBoss(100,100, getPlayer(), h, getHUD(), this,currentLevelNum/10)
+//          (p,h) -> new BossEye(0, 0, ID.BossEye, h, 0)
+        );
 
     public Waves(Dimension screenSize) {
         handler = new Handler(screenSize, player);
@@ -148,21 +115,26 @@ public class Waves extends GameMode {
             }
             else if(this.currentLevelNum%5 == 0) {
                 System.out.println("New Boss Level");
-                currentLevel = new Level( this,60*(20), currentLevelNum, 1,  p -> randomBoss.next().get());
+                currentLevel = new Level( this,60*(20), currentLevelNum, 1,  randomBoss.get());
                 currentLevelNum += 1;
             }
             else {
                 System.out.println("New Normal Level");
-                RandomDifferentElement<Function<Point,GameObject>> randomEnemy = new RandomDifferentElement<>(
-                    IntStream.rangeClosed(0, Math.min(5,currentLevelNum/5))
-                        .mapToObj( i -> i > 3 && Math.random() > .5
-                            ? randomHardEnemy.next()
-                            : randomEasyEnemy.next()
-                        )
-                        .collect(Collectors.toList())
-                );
+                BiFunction<Point.Double, Handler, GameObject>[] enemyArray = IntStream
+                    .rangeClosed(0, Math.min(5,currentLevelNum/5))
+                    .mapToObj( i -> i > 3 && Math.random() > .5 ? randomHardEnemy : randomEasyEnemy)
+                    .map(RandomDifferentElement::get)
+                    .<BiFunction<Point.Double, Handler, GameObject>>toArray(BiFunction[]::new);
 
-                currentLevel = new Level( this,60*(20), currentLevelNum, currentLevelNum,  p -> randomEnemy.next().apply(p));
+                Arrays.stream(enemyArray)
+                    .map(e -> e.apply(new Point2D.Double(0,0),getHandler()))
+                    .map(e -> e.getClass().getSimpleName())
+                    .forEach(System.out::println);
+
+                RandomDifferentElement<BiFunction<Point.Double, Handler, GameObject>> enemyFactory = new RandomDifferentElement<>(enemyArray);
+
+                currentLevel = new Level( this,60*(20), currentLevelNum, currentLevelNum, (p,f) -> enemyFactory.get().apply(p,f));
+                //currentLevel = new Level( this,60*(20), currentLevelNum, currentLevelNum, EnemyShooterSharp::new);
 
                 Point.Double pd = new Point.Double(
                     (Math.random()*(getHandler().getGameDimension().getWidth()-300))+150,
@@ -177,11 +149,12 @@ public class Waves extends GameMode {
                             PickupLife::new,
                             PickupScore::new,
                             PickupSize::new
-                        ).next().apply(pd, getHandler())
+                        ).get().apply(pd, getHandler())
                     );
                 }
                 currentLevelNum += 1;
             }
+            hud.setLevel(currentLevelNum);
 		}
 
 		getState().tick();

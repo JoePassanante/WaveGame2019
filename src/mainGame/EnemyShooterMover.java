@@ -1,6 +1,6 @@
 package mainGame;
 
-import java.awt.Rectangle;
+import java.awt.*;
 
 /**
  * A type of enemy in the game
@@ -17,8 +17,8 @@ public class EnemyShooterMover extends GameObject {
 	private int bulletSpeed;
 	private double velX, velY;
 
-	public EnemyShooterMover(double x, double y, int sizeX, int sizeY, int bulletSpeed, Handler handler) {
-		super(x, y, 100, 75, handler);
+	public EnemyShooterMover(Point.Double point, Handler handler) {
+		super(point.x, point.y, 100, 75, handler);
 
 		this.velX = 10;
 		this.velY = 10;
@@ -29,7 +29,7 @@ public class EnemyShooterMover extends GameObject {
 			velY*=-1;
 		}
 		this.timer = 60;
-		this.bulletSpeed = bulletSpeed;
+        this.bulletSpeed = -20 + (int)(Math.random()*5);
 
 		for (int i = 0; i < handler.size(); i++) {
 			if (handler.get(i) instanceof Player)

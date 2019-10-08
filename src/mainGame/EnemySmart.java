@@ -1,9 +1,6 @@
 package mainGame;
 
-
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 
 /**
  * A type of enemy in the game
@@ -14,11 +11,9 @@ import java.awt.Rectangle;
 
 public class EnemySmart extends GameObject {
 	private GameObject player;
-	private int speed;
 
-    public EnemySmart(double x, double y, int speed, Handler handler) {
-		super(x, y, 150, 75, handler);
-		this.speed = speed;
+    public EnemySmart(Point.Double point, Handler handler) {
+		super(point.x, point.y, 150, 75, handler);
 
 		for (int i = 0; i < handler.size(); i++) {
 			if (handler.get(i) instanceof Player)
@@ -30,37 +25,17 @@ public class EnemySmart extends GameObject {
 	public void tick() {
 		this.x += velX;
 		this.y += velY;
-		////////////////////////////// pythagorean theorem
-		////////////////////////////// below//////////////////////////////////////////////////
-		/*
-		double diffX = this.x - player.getX() - 16;
-		double diffY = this.y - player.getY() - 16;
-		double distance = Math.sqrt(((this.x - player.getX()) * (this.x - player.getX()))
-				+ ((this.y - player.getY()) * (this.y - player.getY())));
-		*/
-		
-		////////////////////////////// pythagorean theorem
-		////////////////////////////// above//////////////////////////////////////////////////
-		//velX = ((this.speed / distance) * diffX); // numerator affects speed of enemy
-		//velY = ((this.speed / distance) * diffY);// numerator affects speed of enemy
-
-		// if (this.y <= 0 || this.y >= Game.HEIGHT - 40) velY *= -1;
-		// if (this.x <= 0 || this.x >= Game.WIDTH - 16) velX *= -1;
 
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.green, 16, 16, 0.025, this.handler));
+        Dimension bounds = getHandler().getGameDimension();
+        double
+            diffX = player.getX() - x,
+            diffY = player.getY() - y,
+            distance = Math.hypot(diffX, diffY),
+            sides = Math.hypot(bounds.width,bounds.height)/4,
+            boost = 5.0 / Math.exp(distance/sides) + 1.0;
 
-        double dir = pointDirection(
-            new Point.Double(this.x,this.y),
-            new Point.Double(player.x, player.y)
-        );
-		velX = Math.cos(dir)*speed;
-		velY = Math.sin(dir)*speed;
+		velX = boost * diffX / distance;
+		velY = boost * diffY / distance;
 	}
-
-	public static double pointDirection(Point.Double p1, Point.Double p2)
-    {
-        double xDiff = p1.x - p2.x;
-        double yDiff = p1.y - p2.y;
-        return (Math.atan2(yDiff, xDiff));
-    }
 }

@@ -3,7 +3,7 @@ package mainGame;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 /**
  * This class is meant to be a generic level that classes implementing gamemode can use to generate and throw away levels of different parameters.
@@ -12,7 +12,7 @@ import java.util.function.Function;
 public class Level extends GameState {
     private boolean levelRunning = true;
     private int maxTick;
-    private Function<Point, GameObject> enemyFactory;
+    private BiFunction<Point.Double, Handler, GameObject> enemyFactory;
     private int enemyNumber;
     private int enemyLimit;
     private int enemyTick;
@@ -25,7 +25,7 @@ public class Level extends GameState {
      * @param g - The game class that the gamemode is apart of.
      * @param maxTick - The time the level takes to complete, if boss level leave at -1
      */
-    public Level(Waves g, int maxTick, int c, int l, Function<Point, GameObject> f){
+    public Level(Waves g, int maxTick, int c, int l, BiFunction<Point.Double, Handler, GameObject> f){
         this.game = g;
         this.maxTick = maxTick;
         this.currentLevelNum = c;
@@ -79,7 +79,7 @@ public class Level extends GameState {
         }
 
         if (enemyTick <= currentTick && enemyNumber < enemyLimit) {
-            game.getHandler().add(enemyFactory.apply(getSpawnLoc()));
+            game.getHandler().add(enemyFactory.apply(getSpawnLoc(),game.getHandler()));
             enemyTick += Math.max( 15, 120/currentLevelNum);
             enemyNumber += 1;
         }
@@ -88,9 +88,9 @@ public class Level extends GameState {
             levelRunning = false;
         }
     }
-    private Point getSpawnLoc(){
+    private Point.Double getSpawnLoc(){
         Dimension dim = game.getHandler().getGameDimension();
-        return new Point((int)((Math.random()+1)*dim.width/3),(int)((Math.random()+1)*dim.width/3));
+        return new Point.Double((int)((Math.random()+1)*dim.width/3),(int)((Math.random()+1)*dim.width/3));
     }
     /**
      * render anything that is specific to this level(not static content for the gamemode itself.

@@ -11,9 +11,9 @@ import java.awt.*;
  */
 
 public class EnemyFast extends GameObject {
-	public EnemyFast(double x, double y, Handler handler) {
-		super(x, y, 32, 64, handler);
-		velX = 2*(Math.random()-Math.random());
+	public EnemyFast(Point.Double point, Handler handler) {
+		super(point.x, point.y, 32, 64, handler);
+		velX = 1 - 2*Math.random();
 		velY = -12;
 	}
 
@@ -39,12 +39,11 @@ public class EnemyFast extends GameObject {
 
 	@Override
     public void render(Graphics g) {
-        Graphics2D a = (Graphics2D) g;
         if (velY > 0) {
-            a.drawImage(getHandler().getTheme().get(getClass()), (int)x, (int)y+64,(int)width,(int)-height, null);
+            g.drawImage(getHandler().getTheme().get(this), (int)x, (int)y+64,(int)width,(int)-height, null);
         }
         else {
-            a.drawImage(getHandler().getTheme().get(getClass()), (int)x, (int)y,(int)width,(int)height, null);
+            g.drawImage(getHandler().getTheme().get(this), (int)x, (int)y,(int)width,(int)height, null);
         }
     }
  }

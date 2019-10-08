@@ -1,7 +1,6 @@
 package mainGame;
 
-
-import java.awt.Rectangle;
+import java.awt.*;
 
 /**
  * A type of enemy in the game
@@ -13,16 +12,14 @@ import java.awt.Rectangle;
 public class EnemyShooter extends GameObject {
 	private int timer;
 	private GameObject player;
-	private double bulletVelX;
-	private double bulletVelY;
 	private int bulletSpeed;
 
-    public EnemyShooter(double x, double y, int sizeX, int sizeY, int bulletSpeed, Handler handler) {
-		super(x, y, 100, 75, handler);
+    public EnemyShooter(Point.Double point, Handler handler) {
+		super(point.x, point.y, 100, 75, handler);
 		this.velX = 0;
 		this.velY = 0;
 		this.timer = 60;
-		this.bulletSpeed = bulletSpeed;
+		this.bulletSpeed = (int)(Math.random()*30);
 
 		for (int i = 0; i < handler.size(); i++) {
 			if (handler.get(i) instanceof Player)
@@ -34,10 +31,18 @@ public class EnemyShooter extends GameObject {
 		this.x += velX;
 		this.y += velY;
 
-		if (this.y <= 0 || this.y >= getHandler().getGameDimension().getHeight() - 40)
-			velY *= -1;
-		if (this.x <= 0 || this.x >= getHandler().getGameDimension().getWidth() - 16)
-			velX *= -1;
+		if (this.y <= 0) {
+            velY = Math.abs(velY);
+        }
+        if (getHandler().getGameDimension().getHeight() - 40 <= this.y) {
+            velY = -Math.abs(velY);
+        }
+		if (this.x <= 0) {
+            velX = Math.abs(velX);
+        }
+        if(getHandler().getGameDimension().getWidth() - 16 <= this.x) {
+            velX = -Math.abs(velX);
+        }
 
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.yellow, this.sizeX, this.sizeY, 0.025, this.handler));
 		
@@ -53,29 +58,18 @@ public class EnemyShooter extends GameObject {
 
 	public void shoot() {
 		if (player != null) {
-		double diffX = this.x - player.getX() - 16;
-            double diffY = this.y - player.getY() - 16;
-            double distance = Math.sqrt(((this.x - player.getX()) * (this.x - player.getX()))
-                    + ((this.y - player.getY()) * (this.y - player.getY())));
-            ////////////////////////////// pythagorean theorem
-            ////////////////////////////// above//////////////////////////////////////////////////
-            bulletVelX = ((this.bulletSpeed / distance) * diffX); // numerator affects speed of enemy
-            bulletVelY = ((this.bulletSpeed / distance) * diffY);// numerator affects speed of enemy
+            double
+                diffX = player.getX() - x,
+                diffY = player.getY() - y,
+                scale = bulletSpeed / Math.hypot(diffX, diffY);
 
             getHandler().add( new EnemyShooterBullet(
-                this.x -10,
+                this.x,
                 this.y-10,
-                bulletVelX,
-                bulletVelY,
+                diffX * scale,
+                diffY * scale,
                 getHandler()
             ) );
-		}
-		else {
-			System.err.println("player is null on shooter!");//bpm
-			for (int i = 0; i < getHandler().size(); i++) {
-				if (getHandler().get(i) instanceof Player)
-					player = getHandler().get(i);
-			}
 		}
 	}
 

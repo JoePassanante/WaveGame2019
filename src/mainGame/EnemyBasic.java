@@ -1,5 +1,7 @@
 package mainGame;
 
+import java.awt.*;
+
 /**
  * A type of enemy in the game
  * 
@@ -8,9 +10,12 @@ package mainGame;
  */
 
 public class EnemyBasic extends GameObject {
-	public EnemyBasic(double x, double y, double velX, double velY, Handler handler) {
-		super(x, y, 125, 60, handler);
-		if (Math.random() > .5) {
+	public EnemyBasic(Point.Double point, Handler handler) {
+		super(point.x, point.y, 125, 60, handler);
+        int velX = 9;
+        int velY = 9;
+
+        if (Math.random() > .5) {
 			velX *= -1;
 		}
 		if (Math.random() > .5) {

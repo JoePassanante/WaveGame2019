@@ -1,9 +1,7 @@
 package mainGame;
 
-import java.awt.Color;
+import java.awt.*;
 
-import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.util.Random;
 
 
@@ -20,10 +18,10 @@ public class EnemySweep extends GameObject {
 
 	private Color random = colors[index.nextInt(8)];
 	
-	public EnemySweep(double x, double y, double velX, double velY, Handler handler) {
-		super(x, y, 16, 16, handler);
-		this.velX = velX;
-		this.velY = velY;
+	public EnemySweep(Point.Double point, Handler handler) {
+		super(point.x, point.y, 16, 16, handler);
+		this.velX =  9;
+		this.velY = 2;
 		if (Math.random() > .5) {
 			this.velX*=-1;
 		}

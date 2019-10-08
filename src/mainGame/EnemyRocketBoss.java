@@ -20,6 +20,7 @@ public class EnemyRocketBoss extends GameObject {
 	private GameMode mode;
 	private boolean colliding = false;
 	private int rocketTimer = 120;	private int health = 1000;
+	private Path2D bounds;
 
     private int difficulty = 1;
 
@@ -33,6 +34,10 @@ public class EnemyRocketBoss extends GameObject {
 
 	@Override
 	public void tick() {
+        if(colliding) {
+            hud.health = hud.health - 1;
+        }
+
 		if (difficulty > 1){
 			rocketTimer--;
 			if (rocketTimer < 0) {
@@ -47,12 +52,7 @@ public class EnemyRocketBoss extends GameObject {
 		}
 		if(this.health%150 == 0){
             getHandler().add( new EnemyBurst(
-                -200,
-                200,
-                15,
-                15,
-                200,
-                new String[]{ "left", "right", "top", "bottom" }[(int)(Math.random()*4)],
+                new Point.Double(-200,-200),
                 getHandler()
             ));
 		}
@@ -85,6 +85,7 @@ public class EnemyRocketBoss extends GameObject {
                 }
 			}
 		}
+
 		if(health<=0){
 			System.out.println("Removing Boss");
             getHandler().remove(this);
@@ -150,24 +151,12 @@ public class EnemyRocketBoss extends GameObject {
 		AffineTransform trans = g2d.getTransform();
 
         Rectangle2D rec = new Rectangle.Double(30, 0, 20,inDash ?  230 : 180);
-		Path2D bounds = new Path2D.Double(rec,trans);
-		
-	    g2d.setTransform(old);
-	    
-	    Rectangle2D playerBounds = new Rectangle2D.Double(player.x,player.y,player.getWidth(),player.getHeight());
-		//g2d.fill(playerBounds);
-	    //g2d.fill(bounds);
-		
-		if(bounds.intersects(playerBounds)){
-	    	hud.health = hud.health - 1;
-	    	colliding = true;
-	    }else {
-	    	colliding = false;
-	    }
-	    //g2d.setColor(Color.YELLOW);
+        colliding = new Path2D.Double(rec,trans).intersects(player.getBounds());
+
+        g2d.setTransform(old);
+
+        //g2d.setColor(Color.YELLOW);
 	    //g2d.drawRect((int)this.dash_x-5,(int)this.dash_y-5,10,10);
-	    
-	    
 	}
 	//Unlike the other enemies, this boss will handle collisions internally with the player. This allows us to have an accurate hitbox
 	//Despite being angled.
