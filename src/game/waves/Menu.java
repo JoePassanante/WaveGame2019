@@ -3,6 +3,9 @@ package game.waves;
 import game.GameState;
 import game.MenuFireworks;
 import game.Theme;
+import game.GameState;
+import game.MenuFireworks;
+import game.Theme;
 import game.pickup.*;
 
 import java.awt.*;
@@ -89,10 +92,16 @@ public class Menu extends GameState {
 			g.drawString("Loehle's Sandbox", 500, 100);
 			//Waves button, the start game button
 			g.setColor(Color.white);
-			g.drawRect(700, 300, 470, 250); //changes the rectangle size drawn
+			g.drawRect(602, 300, 281, 250); //changes the rectangle size drawn
 			g.setFont(font3);
 			g.setColor(Color.white);
-			g.drawString("Waves", 730, 465);//move the text down and center it inside the rectangle            
+			g.drawString("One", 602, 465);//move the text down and center it inside the rectangle
+			//Waves button two, the start game button for two players
+			g.setColor(Color.white);
+			g.drawRect(1052, 300, 281, 250); //changes the rectangle size drawn
+			g.setFont(font3);
+			g.setColor(Color.white);
+			g.drawString("Two", 1052, 465);//move the text down and center it inside the rectangle
 			//Help button
 			g.setColor(Color.white);
 			g.drawRect(230, 360, 260, 200);
@@ -180,8 +189,14 @@ public class Menu extends GameState {
 
     public void mousePressed(MouseEvent e) {
         if (!getHelp()) {
-            // Waves Button
-            if (mouseOver(e.getX(), e.getY(), 700, 300, 470, 250)) {
+            // Waves One Button
+            if (mouseOver(e.getX(), e.getY(), 602, 300, 281, 250)) {
+                game.getHandler().clear();
+                game.setState(game.getCurrentLevel());
+                game.getHandler().add(game.getPlayer());
+            }
+         // Waves Two Button
+            if (mouseOver(e.getX(), e.getY(), 1052, 300, 281, 250)) {
                 game.getHandler().clear();
                 game.setState(game.getCurrentLevel());
             }
