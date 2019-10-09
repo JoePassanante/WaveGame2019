@@ -2,7 +2,6 @@ package game.enemy;
 
 import game.GameObject;
 import game.waves.Handler;
-import game.Player;
 
 import java.awt.*;
 
@@ -43,18 +42,17 @@ public class EnemyShooterMover extends GameObject.Bouncing {
 
 	public void shoot() {
 		if (player != null) {
-			
-		double diffX = getX() - player.getX();
-		double diffY = getY() - player.getY();
-		double distance = Math.hypot(diffX, diffY);
-		double bulletVelX = diffX * bulletSpeed / distance; // numerator affects speed of enemy
-		double bulletVelY = diffY * bulletSpeed / distance; // numerator affects speed of enemy
+            double
+                diffX = getX() - player.getX(),
+                diffY = getY() - player.getY(),
+                distance = Math.hypot(diffX, diffY),
+                bulletVelX = diffX * bulletSpeed / distance,
+                bulletVelY = diffY * bulletSpeed / distance;
 
-        getHandler().add(
-            new EnemyShooterBullet(getX() -10, getY()-10, bulletVelX, bulletVelY, getHandler()));
+            getHandler().add(new EnemyShooterBullet(getX(), getY()-10, bulletVelX, bulletVelY, getHandler()));
 		}
 		else {
-			System.err.println("player is null on shooter!");//bpm
+			System.err.println("player is null on shooter!");
 			for (int i = 0; i < getHandler().getPlayers().size(); i++) {
                 player = getHandler().getPlayers().get(i);
 			}

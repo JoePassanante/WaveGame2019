@@ -37,7 +37,7 @@ public class EnemyBurst extends GameObject.Disappearing {
         start = getBounds().getLocation();
 	}
 
-	boolean warned = false;
+	private boolean warned = false;
 	public void tick() {
         if(!getHandler().contains(warning)) {
             if(!warned) {

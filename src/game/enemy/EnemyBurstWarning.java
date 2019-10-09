@@ -18,7 +18,6 @@ public class EnemyBurstWarning extends GameObject {
 	private int height;
 	private int timer;
 	private Color color;
-	private int hasFlashed;
 
 	public EnemyBurstWarning(double x, double y, int width, int height, Handler handler) {
 		super(x, y, 16, 16, handler);
@@ -26,28 +25,26 @@ public class EnemyBurstWarning extends GameObject {
 		this.height = height;
 		this.timer = 10;
 		this.color = Color.red;
-		this.hasFlashed = 0;
-
 	}
 
 	@Override
 	public void tick() {
 	    super.tick();
-        if (this.hasFlashed == 5) {
+        timer += 1;
+        if (this.timer >= 60) {
             getHandler().remove(this);
         }
 	}
 
 	@Override
 	public void render(Graphics g) {
-        timer -= 1;
-        if (timer == 5) {
+        if ((timer/5) % 2 == 0) {
             this.color = Color.black;
-        } else if (timer == 0) {
-            this.color = Color.red;
-            this.hasFlashed += 1;
-            timer = 10;
         }
+        else {
+            this.color = Color.red;
+        }
+
         g.setColor(this.color);
 		g.fillRect((int) getX(), (int) getY(), this.width, this.height);
 	}

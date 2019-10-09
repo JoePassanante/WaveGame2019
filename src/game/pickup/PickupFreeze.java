@@ -17,6 +17,8 @@ public class PickupFreeze extends GameObject {
 		super(p.x, p.y, 30, 30, handler);
 	}
 
+	@Override
 	public void tick() {
+	    super.tick();
 	}
 }

@@ -1,5 +1,6 @@
 package game;
 
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public class RandomDifferentElement<T> implements Supplier<T> {
@@ -26,5 +27,9 @@ public class RandomDifferentElement<T> implements Supplier<T> {
         }
         lastIndex = l;
         return source[l];
+    }
+
+    public static <T,U,R> BiFunction<T,U,R> reduce(Supplier<BiFunction<T,U,R>> s) {
+        return (t,u) -> s.get().apply(t,u);
     }
 }

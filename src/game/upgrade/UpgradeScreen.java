@@ -1,20 +1,15 @@
 package game.upgrade;
 
-import game.Client;
 import game.GameState;
-import game.Player;
 import game.waves.Waves;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -40,7 +35,7 @@ public class UpgradeScreen extends GameState {
 	private ArrayList<String> currentAbilities = new ArrayList<>();
 	private Random r = new Random();
 	private int index1, index2, index3;
-	Waves game;
+	private Waves game;
 
 	public UpgradeScreen(Waves waves) {
 	    game = waves;
@@ -51,6 +46,7 @@ public class UpgradeScreen extends GameState {
 	}
 	//nothing needs to be in this function since it's just
 	//a screen with text
+    @Override
 	public void tick() {
 
 	}
@@ -126,17 +122,7 @@ public class UpgradeScreen extends GameState {
 			index3 = getIndex(8);
 		}
 	}
-	//get the Image
-	public Image getImage(String path) {
-		Image image = null;
-		try {
-			URL imageURL = Client.class.getResource(path);
-			image = Toolkit.getDefaultToolkit().getImage(imageURL);
-		} catch (Exception e) {
-			System.err.println(e.getMessage() + " path:"+path);
-		}
-		return image;
-	}
+
 	public int getTextWidth(Font font, String text) {
 		AffineTransform at = new AffineTransform();
 		FontRenderContext frc = new FontRenderContext(at, true, true);

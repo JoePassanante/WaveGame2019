@@ -30,6 +30,14 @@ public class Handler extends ArrayList<GameObject> implements Animatable {
         return theme;
     }
 
+    private int level = 0;
+    public void setLevel(int l) {
+        level = l;
+    }
+    public int getLevel() {
+        return level;
+    }
+
     private int highscore = 0;
     public int getHighScore() {
         return highscore;

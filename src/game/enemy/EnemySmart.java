@@ -2,7 +2,6 @@ package game.enemy;
 
 import game.GameObject;
 import game.waves.Handler;
-import game.Player;
 
 import java.awt.*;
 

@@ -1,7 +1,6 @@
 package game.waves;
 
 import game.Animatable;
-import game.Client;
 import game.GameObject;
 
 import java.awt.Color;

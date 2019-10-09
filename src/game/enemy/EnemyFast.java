@@ -1,6 +1,5 @@
 package game.enemy;
 
-
 import game.GameObject;
 import game.waves.Handler;
 

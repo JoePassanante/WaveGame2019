@@ -1,7 +1,6 @@
 package game.enemy;
 
 import game.*;
-import game.waves.HUD;
 import game.waves.Handler;
 import game.Player;
 
@@ -16,16 +15,14 @@ import java.awt.geom.Rectangle2D;
 public class EnemyRocketBossMissile extends GameObject.Disappearing {
 	private double direction;
 	private double speed;
-	private HUD hud;
 	private Player player;
 	private double trackSpeed;
 
-    public EnemyRocketBossMissile(double x, double y, Handler handler, double dir, double spd, HUD _hud, Player play, double track) {
+    public EnemyRocketBossMissile(double x, double y, Handler handler, double dir, double spd, Player play, double track) {
 		super(x, y, 32, -64, handler);
 		AudioUtil.playClip("/sound/MissileSound.wav", false);
 		speed = spd;
 		direction = dir;
-		hud = _hud;
 		player = play;
 		trackSpeed = track;
 	}
@@ -47,7 +44,7 @@ public class EnemyRocketBossMissile extends GameObject.Disappearing {
 		
 		a.translate(Math.cos(Math.toRadians(direction-90))*20 + getX(), Math.sin(Math.toRadians(direction-90))*20 + getY());
 		a.rotate(Math.toRadians(direction - 90));
-        a.drawImage(getHandler().getTheme().get(getClass()),0,64,32,-64, null);
+        a.drawImage(getHandler().getTheme().get(this),0,64,32,-64, null);
         Rectangle2D rec = new Rectangle.Double(30, 0, 20,60);
 		AffineTransform trans = new AffineTransform();
 		trans.translate(Math.cos(Math.toRadians(this.direction-90))*-5 + getX(), Math.sin(Math.toRadians(this.direction-90))*-5 + getY());
@@ -58,11 +55,7 @@ public class EnemyRocketBossMissile extends GameObject.Disappearing {
 	    a.setTransform(old);
 	    
 	    Rectangle2D playerBounds = new Rectangle2D.Double(player.getX(),player.getY(),player.getWidth(),player.getHeight());
-		
-		if(bounds.intersects(playerBounds)){
-	    	hud.health = hud.health - 1;
-	    }
-		
+
 		a.setTransform(old);
 		//a.fill(bounds);
 	}

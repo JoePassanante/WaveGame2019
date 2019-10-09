@@ -5,10 +5,9 @@ import game.waves.Handler;
 import game.Trail;
 
 import java.awt.*;
-import java.util.Random;
 
 /**
- * The bullets that the first boss shoots
+ * The bullets that EnemyBoss shoots
  * 
  * @author Brandon Loehle 5/30/16
  * @author David Nguyen 12/13/17

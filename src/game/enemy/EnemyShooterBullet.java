@@ -9,8 +9,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 /**
- * A type of enemy in the game
- * 
+ *
  * @author Brandon Loehle 5/30/16
  *
  */

@@ -1,7 +1,6 @@
 package game.enemy;
 
 import game.*;
-import game.waves.HUD;
 import game.waves.Handler;
 import game.Player;
 
@@ -21,20 +20,17 @@ public class EnemyRocketBoss extends GameObject {
 	private Player player;
 	private double drawAngle = 90;
 	private int speed = 18;
-	private HUD hud;
-	private GameMode mode;
 	private boolean colliding = false;
 	private int rocketTimer = 120;	private int health = 1000;
 	private Path2D bounds;
 
     private int difficulty = 1;
 
-    public EnemyRocketBoss(double x, double y, Player p, Handler handler, HUD hud, GameMode mode, int diff) {
-		super(x, y, 80, 296, handler);
-		this.player = p;
-		this.hud = hud;
-		this.mode = mode;
-		difficulty = diff;
+    public EnemyRocketBoss(Point.Double p, Handler handler) {
+		super(p.getX(), p.getY(), 80, 296, handler);
+		difficulty = handler.getLevel()/10;
+		player = handler.getPlayers().get(0);
+		setHealth(1000);
 	}
 
 	@Override
@@ -42,7 +38,7 @@ public class EnemyRocketBoss extends GameObject {
         super.tick();
 
         if(colliding) {
-            hud.health = hud.health - 1;
+            setHealth(getHealth()-1);
         }
 
 		if (difficulty > 1){
@@ -53,7 +49,7 @@ public class EnemyRocketBoss extends GameObject {
                     Math.cos(Math.toRadians(this.drawAngle+90))*40 + getX(),
                     Math.sin(Math.toRadians(this.drawAngle+90))*40 + getY(),
                     getHandler(),this.drawAngle,
-                    10,hud,player, difficulty > 2 ? 0.5 : 0
+                    10, player, difficulty > 2 ? 0.5 : 0
                 ) );
 			}
 		}

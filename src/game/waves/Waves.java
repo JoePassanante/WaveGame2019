@@ -7,10 +7,7 @@ import game.upgrade.UpgradeScreen;
 import game.upgrade.Upgrades;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
-import java.util.Arrays;
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 public class Waves extends GameMode {
@@ -76,8 +73,8 @@ public class Waves extends GameMode {
             EnemySweep::new
         ),
         randomBoss = new RandomDifferentElement<>(
-            (p,h) -> new EnemyBoss(h,currentLevelNum/10, getHUD()),
-            (p,h) -> new EnemyRocketBoss(100,100, getPlayer(), h, getHUD(), this,currentLevelNum/10)
+            EnemyBoss::new,
+            EnemyRocketBoss::new
 //          (p,h) -> new BossEye(0, 0, ID.BossEye, h, 0)
         );
 
@@ -116,37 +113,36 @@ public class Waves extends GameMode {
             getHandler().getPickups().clear();
             getHUD().setLevel(this.currentLevelNum);
             hud.setLevel(currentLevelNum);
+            handler.setLevel(currentLevelNum);
 
             if (currentLevelNum > 1 && currentLevelNum%5 == 1 && getState() != upgradeScreen) { // upgrade after every boss
+                resetMode(false);
                 setState(upgradeScreen);
             }
             else if(this.currentLevelNum%5 == 0) {
                 System.out.println("New Boss Level");
-                currentLevel = new Level( this,60*(20), currentLevelNum, 1,  randomBoss.get());
+                currentLevel = new Level( this,-1, currentLevelNum, 1,  randomBoss.get());
                 currentLevelNum += 1;
             }
             else {
                 System.out.println("New Normal Level");
-                BiFunction<Point.Double, Handler, GameObject>[] enemyArray = IntStream
-                    .rangeClosed(0, Math.min(5,currentLevelNum/5))
-                    .mapToObj( i -> i > 3 && Math.random() > .5 ? randomHardEnemy : randomEasyEnemy)
-                    .map(RandomDifferentElement::get)
-                    .<BiFunction<Point.Double, Handler, GameObject>>toArray(BiFunction[]::new);
-
-                Arrays.stream(enemyArray)
-                    .map(e -> e.apply(new Point2D.Double(0,0),getHandler()))
-                    .map(e -> e.getClass().getSimpleName())
-                    .forEach(System.out::println);
-
-                RandomDifferentElement<BiFunction<Point.Double, Handler, GameObject>> enemyFactory = new RandomDifferentElement<>(enemyArray);
-                currentLevel = new Level( this,60*(20), currentLevelNum, currentLevelNum, (p,f) -> enemyFactory.get().apply(p,f));
-                //you can test specific enemies like this:
-                //currentLevel = new Level( this,60*(20), currentLevelNum, currentLevelNum, EnemyBurst::new);
 
                 Point.Double pd = new Point.Double(
-                    (Math.random()*(getHandler().getGameDimension().getWidth()-300))+150,
-                    (Math.random()*(getHandler().getGameDimension().getHeight()-300))+150
+                        (Math.random()+1)/3*getHandler().getGameDimension().getWidth(),
+                        (Math.random()+1)/3*getHandler().getGameDimension().getHeight()
                 );
+
+                BiFunction<Point.Double, Handler, GameObject>[] enemyArray = IntStream
+                    .rangeClosed(0, Math.min(5, currentLevelNum/5))
+                    .mapToObj( i -> i > 3 && Math.random() > .5 ? randomHardEnemy : randomEasyEnemy)
+                    .map(RandomDifferentElement::get)
+                    .peek(e -> System.out.println(e.apply(pd, getHandler()).getClass().getSimpleName()))
+                    .<BiFunction<Point.Double, Handler, GameObject>>toArray(BiFunction[]::new);
+
+                RandomDifferentElement<BiFunction<Point.Double, Handler, GameObject>> enemyFactory = new RandomDifferentElement<>(enemyArray);
+                currentLevel = new Level( this,60*(20), currentLevelNum, currentLevelNum, RandomDifferentElement.reduce(enemyFactory));
+                //you can test specific enemies like this:
+                //currentLevel = new Level( this,1200, currentLevelNum, currentLevelNum, EnemyBurst::new);
 
                 if(currentLevelNum > 1) {
                     getHandler().getPickups().add(

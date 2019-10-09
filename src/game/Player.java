@@ -89,7 +89,7 @@ public class Player extends GameObject.Stopping {
             }
             if (tempObject instanceof EnemyBoss) {
                 //Gives players safety window to move from boss restricted region
-                if (getY() <= 138 && Math.hypot(tempObject.getVelX(),tempObject.getVelY()) < 1E-6 ) {
+                if (getY() <= 138 && Math.abs(tempObject.getVelX()) == 8) {
                     AudioUtil.playClip("../sound/damaged.wav", false);
                     game.getHUD().health -= 2;
                     game.getHUD().updateScoreColor(Color.red);

@@ -1,7 +1,10 @@
 package game.upgrade;
 
-import game.Player;
+import game.enemy.EnemyBurst;
+import game.enemy.EnemyBurstWarning;
 import game.waves.Waves;
+
+import java.awt.geom.Point2D;
 
 /**
  * The upgrades that a user can have (they modify the game for the user)
@@ -19,6 +22,7 @@ public class Upgrades {
 	//Remove all enemies on the screen
 	public void clearScreenAbility() {
 		game.getHandler().clear();
+		game.getHandler().add(new EnemyBurst(game.getCurrentLevel().getSpawnLoc(), game.getHandler()));
 		game.getHUD().setAbilityUses(game.getHUD().getAbilityUses() - 1);
 		if (game.getHUD().getAbilityUses() == 0) {
 			ability = "";

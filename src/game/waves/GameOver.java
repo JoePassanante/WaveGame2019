@@ -37,7 +37,7 @@ public class GameOver extends GameState {
 
 	public void render(Graphics g) {
 		//render the background image
-		g.drawImage(game.getHandler().getTheme().get(Menu.class), 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
+		g.drawImage(game.getHandler().getTheme().get(game.getMenu()), 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
 		//Set up the font
 		Font font = new Font("Amoebic", 1, 100);
 		Font font2 = new Font("Amoebic", 1, 60);
@@ -68,7 +68,7 @@ public class GameOver extends GameState {
 			g.setColor(Color.white);
 		}
 		catch (IOException e) {
-			System.out.println(e);
+		    e.printStackTrace();
 			System.exit(1);
 		}
 
@@ -81,7 +81,7 @@ public class GameOver extends GameState {
 	}
 
     //This really isn't "flashing" so much as it's changing the color of the text to black then white
-	public void flash() {
+	private void flash() {
 		timer--;
 		if (timer == 45) {
 			this.retryColor = Color.black;
@@ -100,11 +100,10 @@ public class GameOver extends GameState {
 	 *            the String of text
 	 * @return width in pixels of text
 	 */
-	public int getTextWidth(Font font, String text) {
+	private int getTextWidth(Font font, String text) {
 		AffineTransform at = new AffineTransform();
 		FontRenderContext frc = new FontRenderContext(at, true, true);
-		int textWidth = (int) (font.getStringBounds(text, frc).getWidth());
-		return textWidth;
+		return (int) (font.getStringBounds(text, frc).getWidth());
 	}
 
     @Override

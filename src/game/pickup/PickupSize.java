@@ -19,6 +19,6 @@ public class PickupSize extends GameObject {
 
     @Override
     public void tick() {
-
+        super.tick();
     }
 }

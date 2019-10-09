@@ -21,6 +21,7 @@ public class Level extends GameState {
     private int currentTick;
     private LevelText text;
     private int currentLevelNum;
+    private double bossMaxHealth;
 
     private Waves game;
     /**
@@ -64,20 +65,26 @@ public class Level extends GameState {
         //after 3 seconds, remove the level text
         if(currentTick == 1) {
             game.getHandler().getPlayers().add(game.getPlayer());
-        }
-        if(this.currentTick == 2) {
             game.getHandler().add(text);
         }
         else if(this.currentTick>=100){
             game.getHandler().remove(text);
         }
 
-        if (game.getHUD() != null && maxTick >= 0) {
-            game.getHUD().levelProgress = (int) (((double)currentTick/(double)maxTick)*100);
+        if(game.getHUD() != null) {
+            if (maxTick >= 0) {
+                game.getHUD().levelProgress = (int) (100.0 * currentTick / maxTick);
+            }
+            else {
+                bossMaxHealth = Math.max(bossMaxHealth, game.getHandler().get(0).getHealth());
+                game.getHUD().levelProgress = (int) (bossMaxHealth - game.getHandler().get(0).getHealth()) / 10;
+            }
         }
-        if(currentTick>=maxTick && maxTick>=0) {
+
+        if(currentTick >= maxTick && maxTick >= 0) {
             this.levelRunning = false;
         }
+
         if(!running()) {
             game.getHandler().clear();
             game.getHandler().getPlayers().clear();
@@ -95,14 +102,11 @@ public class Level extends GameState {
             levelRunning = false;
         }
     }
-    private Point.Double getSpawnLoc(){
+    public Point.Double getSpawnLoc() {
         Dimension dim = game.getHandler().getGameDimension();
-        return new Point.Double((int)((Math.random()+1)*dim.width/3),(int)((Math.random()+1)*dim.height/3));
+        return new Point.Double(dim.width*(Math.random()+1)/3, dim.height*(Math.random()+1)/3);
     }
-    /**
-     * render anything that is specific to this level(not static content for the gamemode itself.
-     * @param g Passed by parent (IE gamemode).
-     */
+
     public void render(Graphics g){
         game.getHandler().render(g);
     }
