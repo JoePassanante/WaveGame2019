@@ -59,6 +59,9 @@ public class Level extends GameState {
             }
         }
         */
+        changeDir(wasd, game.getPlayer());
+        changeDir(arrows, game.getPlayer());
+
         game.getHandler().tick(); // handler ticked to update entities.
 
         currentTick += 1;
@@ -124,16 +127,18 @@ public class Level extends GameState {
 
     }
 
-    private boolean[] keyDown = new boolean[4];
+    private boolean[]
+        wasd = new boolean[4],
+        arrows = new boolean[4];
 
-    private void changeDir() {
-        int x = Boolean.compare(keyDown[3], keyDown[1]);
-        int y = Boolean.compare(keyDown[2], keyDown[0]);
+    private void changeDir(boolean[] keys, Player p) {
+        int x = Boolean.compare(keys[3], keys[1]);
+        int y = Boolean.compare(keys[2], keys[0]);
 
         double h = Math.max( Math.hypot(x, y), 1);
 
-        game.getPlayer().setVelX(10*x/h);
-        game.getPlayer().setVelY(10*y/h);
+        p.setVelX(10 * x/h);
+        p.setVelY(10 * y/h);
     }
 
     @Override
@@ -158,27 +163,18 @@ public class Level extends GameState {
             game.setState(game.getMenu());
             game.resetMode();
         }
-        // if the w key is pressed, the player would move up
-        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
-            //tempObject.setVelY(-(this.speed));
-            keyDown[0] = true;
-        }
-        // if the a key is pressed, the player would move left
-        if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
-            //tempObject.setVelX(-(this.speed));
-            keyDown[1] = true;
-        }
-        // if the s key is pressed, the player would move down
-        if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
-            //tempObject.setVelY(this.speed);
-            keyDown[2] = true;
-        }
-        // if the d key is pressed, the player would move right
-        if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
-            //tempObject.setVelX(this.speed);
-            keyDown[3] = true;
-        }
-        changeDir();
+
+        // keep moving or start moving if key is pressed
+        wasd[0] |= key == KeyEvent.VK_W;
+        wasd[1] |= key == KeyEvent.VK_A;
+        wasd[2] |= key == KeyEvent.VK_S;
+        wasd[3] |= key == KeyEvent.VK_D;
+
+        arrows[0] |= key == KeyEvent.VK_UP;
+        arrows[1] |= key == KeyEvent.VK_LEFT;
+        arrows[2] |= key == KeyEvent.VK_DOWN;
+        arrows[3] |= key == KeyEvent.VK_RIGHT;
+
         // if the spacebar key is pressed while having an ability, the ability would be used
         if (key == KeyEvent.VK_SPACE) {
             game.getUpgrades().useAbility();
@@ -195,17 +191,15 @@ public class Level extends GameState {
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
 
-        // key events for player 1
-        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP)
-            keyDown[0] = false;// tempObject.setVelY(0);
-        if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT)
-            keyDown[1] = false;// tempObject.setVelX(0);
-        if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN)
-            keyDown[2] = false;// tempObject.setVelY(0);
-        if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
-            keyDown[3] = false;// tempObject.setVelX(0);
-        }
+        // keep moving if key is not pressed
+        wasd[0] &= key != KeyEvent.VK_W;
+        wasd[1] &= key != KeyEvent.VK_A;
+        wasd[2] &= key != KeyEvent.VK_S;
+        wasd[3] &= key != KeyEvent.VK_D;
 
-        changeDir();
+        arrows[0] &= key != KeyEvent.VK_UP;
+        arrows[1] &= key != KeyEvent.VK_LEFT;
+        arrows[2] &= key != KeyEvent.VK_DOWN;
+        arrows[3] &= key != KeyEvent.VK_RIGHT;
     }
 }
