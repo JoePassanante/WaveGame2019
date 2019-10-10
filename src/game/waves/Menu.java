@@ -193,7 +193,6 @@ public class Menu extends GameState {
             if (mouseOver(e.getX(), e.getY(), 602, 300, 281, 250)) {
                 game.getHandler().clear();
                 game.setState(game.getCurrentLevel());
-                game.getHandler().add(game.getPlayer());
             }
          // Waves Two Button
             if (mouseOver(e.getX(), e.getY(), 1052, 300, 281, 250)) {
