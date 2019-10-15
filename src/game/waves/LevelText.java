@@ -8,7 +8,6 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
-import java.util.Random;
 
 /**
  * This is the text you see before each set of 10 levels
@@ -19,13 +18,11 @@ import java.util.Random;
  */
 
 public class LevelText extends GameObject {
-	
 	// instances
 	private String text;
 	private int timer;
 	private Color[] color = { Color.WHITE, Color.RED, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.ORANGE,
 			Color.PINK, Color.YELLOW };
-	private Random r = new Random();
 	private int index;
 
 	// constructor
@@ -55,7 +52,7 @@ public class LevelText extends GameObject {
 		
 		// Controls color switch
 		if (timer == 0) {
-			index = r.nextInt(9);// get a new random color
+			index = getHandler().getRandom().nextInt(9);// get a new random color
 			timer = 15;
 		}
 	}

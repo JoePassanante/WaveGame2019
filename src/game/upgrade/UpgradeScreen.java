@@ -11,7 +11,6 @@ import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * After completing a boss, this screen appears. The upgrade stays effective the
@@ -33,7 +32,6 @@ public class UpgradeScreen extends GameState {
         "speedboost"
     };
 	private ArrayList<String> currentAbilities = new ArrayList<>();
-	private Random r = new Random();
 	private int index1, index2, index3;
 	private Waves game;
 
@@ -85,7 +83,7 @@ public class UpgradeScreen extends GameState {
 	}
 	
 	public int getIndex(int maxIndex) {
-		int index = r.nextInt(maxIndex);
+		int index = game.getHandler().getRandom().nextInt(maxIndex);
 		if (index == 1 && game.getPlayer().getHeight() <= 3) {
 			return getIndex(maxIndex);
 		}

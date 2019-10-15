@@ -1,6 +1,7 @@
 package game.waves;
 
 import game.*;
+import util.Random;
 
 import java.awt.*;
 import java.io.File;
@@ -52,12 +53,18 @@ public class Handler extends ArrayList<GameObject> implements Animatable {
     }
     public int timer = 0; // freeze ability timer
 
+    private Random pseudoRandom;
+    public Random getRandom() {
+        return pseudoRandom;
+    }
+
     private Dimension gameDimension;
     public Dimension getGameDimension() {
         return gameDimension;
     }
 
-    public Handler(Dimension gd) {
+    public Handler(Random pr, Dimension gd) {
+        pseudoRandom = pr;
         gameDimension = gd;
         players = new ArrayList<>();
 

@@ -13,6 +13,7 @@ import java.util.stream.Stream;
  * Just a list of themes in the game.
  *
  * @author Joey Germain 11/23/18
+ * @author Aaron Paterson 9/23/18
  */
 
 public class Theme extends HashMap<String, Image> {

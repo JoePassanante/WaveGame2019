@@ -6,8 +6,6 @@ import game.Trail;
 
 import java.awt.*;
 
-import java.util.Random;
-
 /**
  *
  * @author Brandon Loehle 5/30/16
@@ -16,9 +14,8 @@ import java.util.Random;
 
 public class EnemySweep extends GameObject.Bouncing {
 	private Color[] colors= {Color.red, Color.blue, Color.green, Color.cyan, Color.magenta, Color.orange, Color.yellow, Color.pink};
-	private Random index = new Random();
 
-	private Color random = colors[index.nextInt(8)];
+	private Color random = colors[getHandler().getRandom().nextInt(8)];
 	
 	public EnemySweep(Point.Double point, Handler handler) {
 		super(point.x, point.y, 16, 16, handler);

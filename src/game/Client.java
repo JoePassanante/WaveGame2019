@@ -1,6 +1,7 @@
 package game;
 
 import game.waves.Waves;
+import util.Random;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,8 +23,9 @@ import java.awt.image.BufferStrategy;
 public class Client extends JFrame implements Runnable, Animatable {
     private static final long serialVersionUID = 1L;
 
-    public static boolean devMode = false; // true - enable cheats and debug info | false - do not
+    public static boolean devMode = true; // true - enable cheats and debug info | false - do not
 
+    private Random pseudoRandom;
 	private Dimension gameSize;
     private GameMode currentGame;
 
@@ -32,8 +34,9 @@ public class Client extends JFrame implements Runnable, Animatable {
 	 */
 	public Client() {
         super("Wave Game");
+        pseudoRandom = new Random();
         gameSize = new Dimension(1920,1080); // Toolkit.getDefaultToolkit().getScreenSize();
-        currentGame = new Waves(gameSize);
+        currentGame = new Waves(pseudoRandom, gameSize);
 		addKeyListener(currentGame);
 		addMouseListener(currentGame);
 		AudioUtil.closeGameClip();

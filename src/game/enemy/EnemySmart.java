@@ -13,7 +13,6 @@ import java.awt.*;
  */
 
 public class EnemySmart extends GameObject {
-
     public EnemySmart(Point.Double point, Handler handler) {
 		super(point.x, point.y, 150, 75, handler);
 	}

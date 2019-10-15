@@ -3,16 +3,12 @@ package game.waves;
 import game.GameState;
 import game.MenuFireworks;
 import game.Theme;
-import game.GameState;
-import game.MenuFireworks;
-import game.Theme;
 import game.pickup.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * The main menu
@@ -24,7 +20,6 @@ import java.util.Random;
 
 public class Menu extends GameState {
 	private int timer;
-	private Random r;
 	private ArrayList<Color> colorPick = new ArrayList<>();
 	private int colorIndex;
 	private boolean help;
@@ -40,7 +35,6 @@ public class Menu extends GameState {
 	public Menu(Waves waves) {
 	    game = waves;
 		timer = 10;
-		r = new Random();
 		addColors();
 
 		Theme fallback = new Theme("common", null);
@@ -70,8 +64,8 @@ public class Menu extends GameState {
 	public void tick() {
 		timer--;
 		if (timer <= 0) {
-			colorIndex = r.nextInt(6);
-            game.getHandler().add(new MenuFireworks((r.nextInt((int)game.getHandler().getGameDimension().getWidth()) - 25), 1080, 100, 100, 0, -4,
+			colorIndex = game.getHandler().getRandom().nextInt(6);
+            game.getHandler().add(new MenuFireworks((game.getHandler().getRandom().nextInt((int)game.getHandler().getGameDimension().getWidth()) - 25), 1080, 100, 100, 0, -4,
 					colorPick.get(colorIndex), this.game.getHandler(), true));
 			timer = 300;
 		}
@@ -239,5 +233,3 @@ public class Menu extends GameState {
 
     }
 }
-
-

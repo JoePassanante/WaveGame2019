@@ -8,7 +8,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.util.Random;
 
 /**
  * The last boss in the game, shown in a 3x3 grid of 9 instances of BossEye
@@ -19,7 +18,6 @@ import java.util.Random;
 
 public class BossEye extends GameObject {
 	private Image img;
-	private Random r = new Random();;
 	private float alpha = 0;
 	private double life = 0.005;
 	private int tempCounter = 0;
@@ -38,7 +36,7 @@ public class BossEye extends GameObject {
         setHeight(img.getHeight(null));
 		setVelX(0);
 		setVelY(0);
-		this.speed = speedTypes[r.nextInt(4)];
+		this.speed = speedTypes[getHandler().getRandom().nextInt(4)];
 		this.placement = placement;
 		this.timer = 400;
 	}

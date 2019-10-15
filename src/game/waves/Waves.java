@@ -5,6 +5,8 @@ import game.enemy.*;
 import game.pickup.*;
 import game.upgrade.UpgradeScreen;
 import game.upgrade.Upgrades;
+import util.Random;
+import util.RandomDifferentElement;
 
 import java.awt.*;
 import java.util.function.BiFunction;
@@ -78,10 +80,10 @@ public class Waves extends GameMode {
 //          (p,h) -> new BossEye(0, 0, ID.BossEye, h, 0)
         );
 
-    public Waves(Dimension screenSize) {
-        handler = new Handler(screenSize);
+    public Waves(Random pseudoRandom, Dimension gameDimension) {
+        handler = new Handler(pseudoRandom, gameDimension);
         menu = new Menu(this);
-        player = new Player(screenSize.getWidth() / 2 - 32, screenSize.getHeight() / 2 - 32, this);
+        player = new Player(gameDimension.getWidth() / 2 - 32, gameDimension.getHeight() / 2 - 32, this);
         hud = new HUD(this);
 
         setState(menu);

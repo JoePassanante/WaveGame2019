@@ -5,7 +5,6 @@ import game.waves.Handler;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.util.Random;
 
 /**
  * The graphics behind the menu that resemble fireworks
@@ -16,7 +15,6 @@ import java.util.Random;
  */
 
 public class MenuFireworks extends GameObject.Disappearing {
-	private Random r;
 	private int max = 5;
 	private int min = -5;
 	private Color color;
@@ -36,7 +34,6 @@ public class MenuFireworks extends GameObject.Disappearing {
 		super(x, y, sizeX, sizeY, handler);
 		setVelX(velX);
 		setVelY(velY);
-		r = new Random();
 		this.color = color;
 		this.spark = s;
 	}
@@ -66,7 +63,7 @@ public class MenuFireworks extends GameObject.Disappearing {
 	public void sparks() {
 		for (int ii = 0; ii < 3; ii++) {
 		    for(int i=-5; i<=5; i++) {
-                getHandler().add(new MenuFireworks(getX(), getY(), 20, 20, (r.nextInt((max - min) + 1) + min), i,
+                getHandler().add(new MenuFireworks(getX(), getY(), 20, 20, (getHandler().getRandom().nextInt((max - min) + 1) + min), i,
                     this.color, getHandler(), false));
             }
 		}

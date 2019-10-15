@@ -1,11 +1,9 @@
 package game.enemy;
 
 import game.GameObject;
-import game.waves.HUD;
 import game.waves.Handler;
 
 import java.awt.*;
-import java.util.Random;
 
 /**
  *
@@ -18,7 +16,6 @@ public class EnemyBoss extends GameObject.Bouncing {
 	// instances
 	private int timer = 80;
 	private int timer2 = 50;
-	Random r = new Random();
 	private int spawn;
 	private int difficulty;
 	private int bombTimer = 120;
@@ -51,7 +48,7 @@ public class EnemyBoss extends GameObject.Bouncing {
 			if (getVelX() == 0) {
                 setVelX(8);
             }
-			spawn = r.nextInt(5);
+			spawn = getHandler().getRandom().nextInt(5);
 			if (spawn == 0) {
 				getHandler().add(new EnemyBossBullet((int) getX() + 48, (int) getY() + 80, getHandler()));
 				setHealth(getHealth()-3);
