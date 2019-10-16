@@ -1,7 +1,7 @@
 package game.enemy;
 
 import game.*;
-import game.waves.Handler;
+import game.Handler;
 import game.Player;
 
 import java.awt.Color;
@@ -56,8 +56,8 @@ public class EnemyRocketBoss extends GameObject {
 		if(this.health%150 == 0){
             getHandler().add( new EnemyBurst(
                 new Point.Double(
-                    getHandler().getGameDimension().getWidth() * Math.random(),
-                    getHandler().getGameDimension().getHeight() * Math.random()
+                    getHandler().getGameDimension().getWidth() * getHandler().getRandom().random(),
+                    getHandler().getGameDimension().getHeight() * getHandler().getRandom().random()
                 ),
                 getHandler()
             ));
@@ -83,7 +83,7 @@ public class EnemyRocketBoss extends GameObject {
                     AudioUtil.playClip("/sound/MissileSound.wav", false);
                     this.drawAngle = angle;
                     this.inDash = true;
-                    cooldown = 60 - (int)(Math.random()*25); //lazy way to make cooldown shorter
+                    cooldown = 60 - (int)(getHandler().getRandom().random()*25); //lazy way to make cooldown shorter
                 }
                 else{
                     cooldown--;

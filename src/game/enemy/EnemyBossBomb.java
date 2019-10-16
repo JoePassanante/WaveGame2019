@@ -1,7 +1,7 @@
 package game.enemy;
 
 import game.GameObject;
-import game.waves.Handler;
+import game.Handler;
 
 import java.awt.*;
 
@@ -11,7 +11,7 @@ public class EnemyBossBomb extends GameObject {
 
 	public EnemyBossBomb(double x, double y, Handler handler, int shots) {
 		super(x, y, 32, 32, handler);
-		this.explodeHeight = (int) (Math.random()*handler.getGameDimension().getHeight());
+		this.explodeHeight = (int) (getHandler().getRandom().random()*handler.getGameDimension().getHeight());
 		setVelY(5);
 		this.shots = shots;
 	}

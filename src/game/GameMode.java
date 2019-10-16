@@ -1,5 +1,6 @@
 package game;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -7,7 +8,7 @@ import java.awt.event.MouseEvent;
  * @author Team B3
  * @author Aaron Paterson 9/12/19
  */
-public abstract class GameMode extends GameState {
+public class GameMode extends GameState {
     private GameState state;
     public void setState(GameState s) {
         state = s;
@@ -15,23 +16,37 @@ public abstract class GameMode extends GameState {
     public GameState getState() {
         return state;
     }
-	public abstract void resetMode(boolean hardReset);
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        state.keyPressed(e);
+    public void render(Graphics g) {
+        state.render(g);
     }
     @Override
-    public void keyReleased(KeyEvent e) {
-        state.keyReleased(e);
+    public void tick() {
+        state.tick();
     }
-
     @Override
     public void mousePressed(MouseEvent e) {
-        state.mousePressed(e);
+        if(state != null) {
+            state.mousePressed(e);
+        }
     }
     @Override
     public void mouseReleased(MouseEvent e) {
-        state.mouseReleased(e);
+        if(state != null) {
+            state.mouseReleased(e);
+        }
+    }
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if(state != null) {
+            state.keyPressed(e);
+        }
+    }
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if(state != null) {
+            state.keyReleased(e);
+        }
     }
 }

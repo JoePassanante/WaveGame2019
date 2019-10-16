@@ -3,6 +3,7 @@ package game;
 import game.waves.Waves;
 import util.Random;
 
+import game.menu.Menu;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -10,6 +11,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Main game class. This class is the driver class and it follows the Holder
@@ -20,131 +23,54 @@ import java.awt.image.BufferStrategy;
  * @author Aaron Paterson 9/9/19
  */
 
-public class Client extends JFrame implements Runnable, Animatable {
-    private static final long serialVersionUID = 1L;
+public class Client extends GameMode implements Runnable {
+    public static boolean devMode = false; // true - enable cheats and debug info | false - do not
 
-    public static boolean devMode = true; // true - enable cheats and debug info | false - do not
+    private Handler handler;
+    public Handler getHandler() {
+        return handler;
+    }
+    private List<Player> players;
+    public List<Player> getPlayers() {
+        return players;
+    }
+    private AffineTransform screenSpace; // The graphical transformation of this JFrame
 
-    private Random pseudoRandom;
-	private Dimension gameSize;
-    private GameMode currentGame;
+    private class GameWindow extends JFrame {
+        public GameWindow() {
+            super("Wave Game");
 
-	/**
-	 * Display the game window
-	 */
-	public Client() {
-        super("Wave Game");
-        pseudoRandom = new Random();
-        gameSize = new Dimension(1920,1080); // Toolkit.getDefaultToolkit().getScreenSize();
-        currentGame = new Waves(pseudoRandom, gameSize);
-		addKeyListener(currentGame);
-		addMouseListener(currentGame);
-		AudioUtil.closeGameClip();
-		AudioUtil.playMenuClip(true, false);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            // Set fullscreen
+            if (System.getProperty("os.name").toLowerCase().contains("mac")) { //If user is on macOS
+                setResizable(true);
+                try {
+                    com.apple.eawt.FullScreenUtilities.setWindowCanFullScreen(this, true);
+                    com.apple.eawt.Application.getApplication().requestToggleFullScreen(this);
+                } catch (Exception e) {
+                    System.err.println("Failed to load apple extensions package");
+                }
+            } else {
+                setResizable(devMode);
+                setUndecorated(!devMode);
+            }
 
-        setResizable(devMode);
-        // Set fullscreen
-        if (System.getProperty("os.name").toLowerCase().contains("mac")) { //If user is on macOS
-            setResizable(true);
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
+            setPreferredSize(handler.getGameDimension());
+            pack();
+            setLocationRelativeTo(null);
+            setVisible(true);
+        }
+        /**
+         * Inverts transformation of this JFrame to process mouse events in game space
+         */
+        @Override
+        protected void processMouseEvent(MouseEvent e) {
             try {
-                com.apple.eawt.FullScreenUtilities.setWindowCanFullScreen(this, true);
-                com.apple.eawt.Application.getApplication().requestToggleFullScreen(this);
-            } catch (Exception e) {
-                System.err.println("Failed to load apple extensions package");
-            }
-        } else {
-            setUndecorated(!devMode);
-        }
-        setVisible(true);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setPreferredSize(gameSize);
-        pack();
-        setLocationRelativeTo(null);
-	}
-
-	/**
-	 * Main game loop that handles ticks.
-	 * Ticks 60 times a second.
-	 */
-	public void run() {
-        requestFocus();
-
-        final long frame = 1_000_000_000 / 60; // time per ticks, here it is one billion nanoseconds per sixty ticks
-        long tick = 0, tock = System.nanoTime(), delta = 0;
-
-        while (tock >= tick) {
-            tick = tock;
-
-            while (delta >= frame) {
-            	setFocusable(true);
-                tick(); // Objects are being updated at most sixty times a second
-                delta -= frame;
-            }
-
-            if (getWidth() > 0 && getHeight() > 0) {
-                BufferStrategy bs = getBufferStrategy(); // Draw entire frame all at once
-                if (bs == null) {
-                    createBufferStrategy(3);
-                    tick = System.nanoTime();
-                }
-                else {
-                    render(bs.getDrawGraphics()); // Objects are being drawn as frequently as possible
-                    bs.show();
-                }
-            }
-
-            tock = System.nanoTime();
-            delta += tock-tick;
-        }
-	}
-	/**
-	 * Main tick function that calls it for all operating classes in the game.
-	 * Ticks classes based on current game state.
-	 */
-	public void tick() {
-        currentGame.tick();
-	}
-
-	private AffineTransform screenSpace; // The graphical transformation of this JFrame
-
-	/**
-	 * Constantly drawing to the many buffer screens of each entity requiring the
-	 * Graphics objects (entities, screens, HUD's, etc).
-	 */
-	public void render(Graphics gfx) {
-        Graphics2D g = (Graphics2D)gfx;
-        AffineTransform old = g.getTransform();
-
-        g.clearRect(0, 0, (int)gameSize.getWidth(), (int)gameSize.getHeight());
-
-        double scaleFactor = Math.min(
-                getWidth()/gameSize.getWidth(),
-                getHeight()/gameSize.getHeight()
-        );
-
-        g.translate(getWidth()/2,getHeight()/2);
-        g.scale(scaleFactor, scaleFactor);
-        g.translate(-gameSize.getWidth()/2,-gameSize.getHeight()/2);
-
-        screenSpace = g.getTransform();
-
-        currentGame.render(g);
-
-		g.dispose();
-		g.setTransform(old);
-	}
-
-    /**
-     * Inverts transformation of this JFrame to process mouse events in game space
-     */
-    @Override
-    protected void processMouseEvent(MouseEvent e) {
-        try {
-            Point2D p = new Point();
-            screenSpace.inverseTransform(e.getPoint(), p);
-            super.processMouseEvent( new MouseEvent(
+                Point2D p = new Point();
+                screenSpace.inverseTransform(e.getPoint(), p);
+                super.processMouseEvent( new MouseEvent(
                     e.getComponent(),
                     e.getID(),
                     e.getWhen(),
@@ -153,14 +79,94 @@ public class Client extends JFrame implements Runnable, Animatable {
                     (int)p.getY(),
                     e.getClickCount(),
                     e.isPopupTrigger()
-            ));
-        } catch(NoninvertibleTransformException nite) {
-            nite.printStackTrace();
+                ));
+            }
+            catch(NoninvertibleTransformException nite) {
+                nite.printStackTrace();
+            }
         }
     }
 
+    private GameWindow window;
+
+    private GameState menu;
+    private GameState waves;
+    public GameState getMenu() {
+        return menu;
+    }
+    public GameState getWaves() {
+        return waves;
+    }
+
+	public Client() {
+        handler = new Handler(new Random(), new Dimension(1920,1080));
+        screenSpace = new AffineTransform();
+        window = new GameWindow();
+        window.addMouseListener(this);
+        window.addKeyListener(this);
+        menu = new Menu(this);
+        waves = new Waves(this);
+        players = new ArrayList<>();
+        setState(menu);
+    }
+
+	public void run() {
+        window.requestFocus();
+
+        final long frame = 1_000_000_000 / 60; // time per ticks, here it is one billion nanoseconds per sixty ticks
+        long tick = 0, tock = System.nanoTime(), delta = 0;
+
+        while (tock >= tick) {
+            tick = tock;
+
+            while (delta >= frame) {
+            	window.setFocusable(true);
+                tick(); // Animatables are ticking at most sixty times a second
+                delta -= frame;
+            }
+
+            if (window.getWidth() > 0 && window.getHeight() > 0) {
+                BufferStrategy bs = window.getBufferStrategy(); // Render each Animatable then draw them all at once
+                if (bs == null) {
+                    window.createBufferStrategy(3);
+                    tick = System.nanoTime();
+                }
+                else {
+                    render(bs.getDrawGraphics()); // Frames are being drawn as frequently as possible
+                    bs.show();
+                }
+            }
+
+            tock = System.nanoTime();
+            delta += tock-tick;
+        }
+	}
+
+
+	public void render(Graphics gfx) {
+        Graphics2D g = (Graphics2D)gfx;
+        AffineTransform old = g.getTransform();
+
+        g.clearRect(0, 0, window.getWidth(), window.getHeight());
+
+        double scaleFactor = Math.min(
+            window.getWidth()/handler.getGameDimension().getWidth(),
+            window.getHeight()/handler.getGameDimension().getHeight()
+        );
+
+        g.translate(window.getWidth()/2,window.getHeight()/2);
+        g.scale(scaleFactor, scaleFactor);
+        g.translate(-handler.getGameDimension().getWidth()/2,-handler.getGameDimension().getHeight()/2);
+
+        screenSpace = g.getTransform();
+
+        super.render(g);
+
+		g.dispose();
+		g.setTransform(old);
+	}
+
 	public static void main(String[] args) {
-			AudioUtil.playGameClip(true);
-			new Client().run();
+        new Client().run();
 	}
 }

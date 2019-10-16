@@ -1,7 +1,7 @@
 package game.enemy;
 
 import game.GameObject;
-import game.waves.Handler;
+import game.Handler;
 
 import java.awt.*;
 
@@ -22,7 +22,7 @@ public class EnemyBoss extends GameObject.Bouncing {
 	// constructor
 	// used to initialize the state of the object
 	public EnemyBoss(Point.Double point, Handler handler) {
-		super(1, -120, 96, 96, handler);
+		super(1, -100, 96, 96, handler);
 		setVelX(0);
 		setVelY(2);
 		setHealth(1000); //full health is 1000

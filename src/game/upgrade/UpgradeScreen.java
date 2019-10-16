@@ -1,6 +1,7 @@
 package game.upgrade;
 
 import game.GameState;
+import game.Player;
 import game.waves.Waves;
 
 import java.awt.Color;
@@ -42,18 +43,17 @@ public class UpgradeScreen extends GameState {
 		setIndex();
 		text = "";
 	}
-	//nothing needs to be in this function since it's just
-	//a screen with text
+
     @Override
 	public void tick() {
 
 	}
-	//display text, add images to corresponding upgrade available
+
 	public void render(Graphics g) {
 		Font font = new Font("Amoebic", 1, 175);
 		text = "Select an Upgrade!";
 		g.setFont(font);
-		g.setColor(Color.WHITE);
+		g.setColor(Color.white);
 		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font, text) / 2, 200);
 		// All pictures are 1721 x 174
         g.drawImage(game.getHandler().getTheme().get(currentAbilities.get(index1)), 100, 300, 1721, 174, null);
@@ -84,7 +84,7 @@ public class UpgradeScreen extends GameState {
 	
 	public int getIndex(int maxIndex) {
 		int index = game.getHandler().getRandom().nextInt(maxIndex);
-		if (index == 1 && game.getPlayer().getHeight() <= 3) {
+		if (index == 1 && game.getHandler().getPlayers().stream().map(Player::getHeight).allMatch(h -> h <= 3)) {
 			return getIndex(maxIndex);
 		}
 		if (index == 4 && game.getHUD().getRegen()) {
@@ -93,7 +93,7 @@ public class UpgradeScreen extends GameState {
 //		if (index == 8 && Player.playerSpeed > 10) {
 //			return getIndex(maxIndex);
 //		}
-		if (index == 5 && game.getPlayer().getDamage()<= 1)
+		if (index == 5 && game.getHandler().getPlayers().stream().map(Player::getDamage).allMatch(h -> h <= 1))
 		{
 			return getIndex(maxIndex);
 		}
@@ -124,9 +124,7 @@ public class UpgradeScreen extends GameState {
 	public int getTextWidth(Font font, String text) {
 		AffineTransform at = new AffineTransform();
 		FontRenderContext frc = new FontRenderContext(at, true, true);
-		int textWidth = (int) (font.getStringBounds(text, frc).getWidth());
-		return textWidth;
-		
+		return (int) (font.getStringBounds(text, frc).getWidth());
 	}
 
 	/**
@@ -174,20 +172,17 @@ public class UpgradeScreen extends GameState {
             game.getUpgrades().activateUpgrade(getPath(1));
             //upgradeScreen.removeUpgradeOption(1);//remove that upgrade option since it was chosen
             resetIndexes();
-            game.setState(game.getCurrentLevel());
-            game.setPaused(false);
+            game.setState(null);
         } else if (mouseOver(e.getX(), e.getY(), 100, 300 + (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174)) {
             game.getUpgrades().activateUpgrade(getPath(2));
             //upgradeScreen.removeUpgradeOption(2);//remove that upgrade option since it was chosen
             resetIndexes();
-            game.setState(game.getCurrentLevel());
-            game.setPaused(false);
+            game.setState(null);
         } else if (mouseOver(e.getX(), e.getY(), 100, 300 + 2 * (60 + (int) game.getHandler().getGameDimension().getHeight() / 6), 1721, 174)) {
             game.getUpgrades().activateUpgrade(getPath(3));
             //upgradeScreen.removeUpgradeOption(3);//remove that upgrade option since it was chosen
             resetIndexes();
-            game.setState(game.getCurrentLevel());
-            game.setPaused(false);
+            game.setState(null);
         }
     }
 

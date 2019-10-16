@@ -1,6 +1,5 @@
-package game.waves;
+package game;
 
-import game.*;
 import util.Random;
 
 import java.awt.*;

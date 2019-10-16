@@ -1,7 +1,7 @@
 package game.enemy;
 
 import game.GameObject;
-import game.waves.Handler;
+import game.Handler;
 import game.Trail;
 
 import java.awt.*;
@@ -19,8 +19,8 @@ public class EnemySweep extends GameObject.Bouncing {
 	
 	public EnemySweep(Point.Double point, Handler handler) {
 		super(point.x, point.y, 16, 16, handler);
-		setVelX(10 * (Math.random() < .5 ? -1 : 1));
-		setVelY(5 * (Math.random() < .5 ? -1 : 1));
+		setVelX(10 * (getHandler().getRandom().random() < .5 ? -1 : 1));
+		setVelY(5 * (getHandler().getRandom().random() < .5 ? -1 : 1));
 	}
 
 	public void tick() {

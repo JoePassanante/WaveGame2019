@@ -1,6 +1,7 @@
-package game;
+package game.menu;
 
-import game.waves.Handler;
+import game.GameObject;
+import game.Handler;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,7 +12,7 @@ import java.awt.Rectangle;
  * 
  * @author Brandon Loehle 5/30/16
  * @author Joe Passanante 11/28/17
- *
+ * @author Aaron Paterson 9/19/19
  */
 
 public class MenuFireworks extends GameObject.Disappearing {

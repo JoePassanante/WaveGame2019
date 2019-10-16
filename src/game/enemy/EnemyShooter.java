@@ -1,7 +1,7 @@
 package game.enemy;
 
 import game.GameObject;
-import game.waves.Handler;
+import game.Handler;
 
 import java.awt.*;
 
@@ -20,7 +20,7 @@ public class EnemyShooter extends GameObject.Bouncing {
 		setVelX(0);
 		setVelY(0);
 		this.timer = 60;
-		this.bulletSpeed = 5 + Math.random()*25;
+		this.bulletSpeed = 5 + getHandler().getRandom().random()*25;
 	}
 
 	public void tick() {

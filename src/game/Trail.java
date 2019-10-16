@@ -1,7 +1,5 @@
 package game;
 
-import game.waves.Handler;
-
 import java.awt.AlphaComposite;
 
 /**

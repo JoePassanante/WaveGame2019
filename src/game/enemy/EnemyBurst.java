@@ -1,7 +1,7 @@
 package game.enemy;
 
 import game.GameObject;
-import game.waves.Handler;
+import game.Handler;
 
 import java.awt.*;
 
@@ -12,7 +12,7 @@ public class EnemyBurst extends GameObject.Disappearing {
 	public EnemyBurst(Point.Double point, Handler handler) {
 		super(point.x, point.y, 150, 150, handler);
 
-		double r = Math.random();
+		double r = getHandler().getRandom().random();
 		if(r < .25) {
             setX(-getWidth());
             setVelX(30);

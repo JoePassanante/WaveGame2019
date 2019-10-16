@@ -1,7 +1,7 @@
 package game.enemy;
 
 import game.GameObject;
-import game.waves.Handler;
+import game.Handler;
 
 import java.awt.*;
 
@@ -19,11 +19,11 @@ public class EnemyShooterMover extends GameObject.Bouncing {
 	public EnemyShooterMover(Point.Double point, Handler handler) {
 		super(point.x, point.y, 100, 75, handler);
 
-        setVelX(10 * (Math.random() < .5 ? -1 : 1));
-        setVelY(10 * (Math.random() < .5 ? -1 : 1));
+        setVelX(10 * (getHandler().getRandom().random() < .5 ? -1 : 1));
+        setVelY(10 * (getHandler().getRandom().random() < .5 ? -1 : 1));
 
 		this.timer = 60;
-        this.bulletSpeed = -20 + (int)(Math.random()*5);
+        this.bulletSpeed = -20 + (int)(getHandler().getRandom().random()*5);
 
 		for (int i = 0; i < handler.getPlayers().size(); i++) {
             player = handler.getPlayers().get(i);

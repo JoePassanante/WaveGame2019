@@ -1,5 +1,6 @@
 package game.waves;
 
+import game.Client;
 import game.GameState;
 
 import java.awt.Color;
@@ -23,61 +24,51 @@ import java.io.IOException;
 public class GameOver extends GameState {
 	private int timer;
 	private Color retryColor;
-	private String text;
 	private Waves game;
-	public GameOver(Waves waves) {
-	    game = waves;
-		timer = 90;
-		this.retryColor = Color.white;
-        //the background image is the same as the menu background S
+	private Client client;
+	private String trueHighScore;
+	public GameOver(Client c, Waves waves) {
+        client = c;
+        game = waves;
+        timer = 90;
+        this.retryColor = Color.white;
+        //This is the high score from the text file
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("src/HighScores.txt"));
+            trueHighScore = reader.readLine();
+            //draw the high score text string
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+            //the background image is the same as the menu background S
+        }
 	}
+
 	public void tick() {
 		flash();
 	}
 
 	public void render(Graphics g) {
 		//render the background image
-		g.drawImage(game.getHandler().getTheme().get(game.getMenu()), 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
-		//Set up the font
+		g.drawImage(game.getHandler().getTheme().get(this), 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
+
+        g.setColor(Color.white);
 		Font font = new Font("Amoebic", 1, 100);
-		Font font2 = new Font("Amoebic", 1, 60);
 		//Game Over Font
 		g.setFont(font);
-		g.setColor(Color.white);
-		text = "Game Over";
-		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font, text) / 2, (int)game.getHandler().getGameDimension().getHeight() / 2 - 150);
+		g.drawString("Game Over", (int)game.getHandler().getGameDimension().getWidth() / 2 - 500 / 2, (int)game.getHandler().getGameDimension().getHeight() / 2 - 150);
 		//The level the player died on
-		g.setFont(font2);
-		g.setColor(Color.white);
-		text = "Level: " + game.getHUD().getLevel();
-		g.drawString(text, 100, 500);
+
+        Font font2 = new Font("Amoebic", 1, 60);
+        g.setFont(font2);
+		g.drawString("Level: " + game.getHUD().getLevel(), 100, 500);
 		//Get the high score of the PLAYER
-		g.setFont(font2);
-		g.setColor(Color.white);
-		text = "Your Score: " + game.getHUD().getScore();
-		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font2, text) / 2, 500);
-
-		//This is the high score from the text file
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader("src/HighScores.txt"));
-			String trueHighScore =reader.readLine();
-			//draw the high score text string
-			g.setFont(font2);
-			text = "High Score:" + trueHighScore;
-			g.drawString(text, 1400, 500);
-			g.setColor(Color.white);
-		}
-		catch (IOException e) {
-		    e.printStackTrace();
-			System.exit(1);
-		}
-
+		g.drawString("Your Score: " + game.getHUD().getScore(), (int)game.getHandler().getGameDimension().getWidth() / 2 - 440 / 2, 500);
+		g.drawString("High Score:" + trueHighScore, 1400, 500);
 		//g.drawString(text, Game.WIDTH / 2 - getTextWidth(font2, text) / 2, Game.HEIGHT / 2 + 50);
 		//Text flashing
 		g.setColor(this.retryColor);
-		g.setFont(font2);
-		text = "Click anywhere to play again";
-		g.drawString(text, (int)game.getHandler().getGameDimension().getWidth() / 2 - getTextWidth(font2, text) / 2, (int)game.getHandler().getGameDimension().getHeight() / 2 + 150);
+		g.drawString("Click anywhere to play again", (int)game.getHandler().getGameDimension().getWidth() / 2 - 780 / 2, (int)game.getHandler().getGameDimension().getHeight() / 2 + 150);
 	}
 
     //This really isn't "flashing" so much as it's changing the color of the text to black then white
@@ -91,29 +82,10 @@ public class GameOver extends GameState {
 		}
 	}
 
-	/**
-	 * Function for getting the pixel width of text
-	 * 
-	 * @param font
-	 *            the Font of the test
-	 * @param text
-	 *            the String of text
-	 * @return width in pixels of text
-	 */
-	private int getTextWidth(Font font, String text) {
-		AffineTransform at = new AffineTransform();
-		FontRenderContext frc = new FontRenderContext(at, true, true);
-		return (int) (font.getStringBounds(text, frc).getWidth());
-	}
-
     @Override
     public void mousePressed(MouseEvent e) {
-        game.getHandler().clear();
         game.resetMode();
-        game.getHUD().health = 100;
-        game.getHUD().setScore(0);
-        game.getHUD().setLevel(1);
-        game.setState(game.getMenu());
+        client.setState(client.getMenu());
     }
 
     @Override

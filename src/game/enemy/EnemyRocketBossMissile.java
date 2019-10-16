@@ -1,7 +1,7 @@
 package game.enemy;
 
 import game.*;
-import game.waves.Handler;
+import game.Handler;
 import game.Player;
 
 import java.awt.Graphics;

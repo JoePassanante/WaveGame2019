@@ -1,7 +1,7 @@
 package game.enemy;
 
 import game.GameObject;
-import game.waves.Handler;
+import game.Handler;
 
 import java.awt.*;
 
@@ -15,7 +15,7 @@ import java.awt.*;
 public class EnemyFast extends GameObject.Bouncing {
 	public EnemyFast(Point.Double point, Handler handler) {
 		super(point.x, point.y, 32, 64, handler);
-		setVelX(1 - 2*Math.random());
+		setVelX(1 - 2*getHandler().getRandom().random());
 		setVelY(-12);
 	}
 

@@ -1,10 +1,9 @@
 package game.upgrade;
 
 import game.enemy.EnemyBurst;
-import game.enemy.EnemyBurstWarning;
 import game.waves.Waves;
 
-import java.awt.geom.Point2D;
+import java.awt.*;
 
 /**
  * The upgrades that a user can have (they modify the game for the user)
@@ -22,7 +21,11 @@ public class Upgrades {
 	//Remove all enemies on the screen
 	public void clearScreenAbility() {
 		game.getHandler().clear();
-		game.getHandler().add(new EnemyBurst(game.getCurrentLevel().getSpawnLoc(), game.getHandler()));
+		game.getHandler().add( new EnemyBurst( new Point.Double(
+            game.getHandler().getGameDimension().getWidth()/2,
+            game.getHandler().getGameDimension().getHeight()/2),
+                game.getHandler()
+        ));
 		game.getHUD().setAbilityUses(game.getHUD().getAbilityUses() - 1);
 		if (game.getHUD().getAbilityUses() == 0) {
 			ability = "";
@@ -30,7 +33,7 @@ public class Upgrades {
 	}
 	//Shrink the player's size
 	public void decreasePlayerSize() {
-		game.getPlayer().setPlayerSize((int) (game.getPlayer().getHeight()/1.2));
+		game.getHandler().getPlayers().forEach(p -> p.setPlayerSize((int) (p.getHeight()/1.2)));
 	}
 	//Add another life for the player
 	public void extraLife() {
@@ -46,7 +49,7 @@ public class Upgrades {
 	}
 	//The player takes less hit damage when an enemy hits them
 	public void improvedDamageResistance() {
-		game.getPlayer().setDamage(game.getPlayer().getDamage()-.25);
+		game.getHandler().getPlayers().forEach(p -> p.setDamage(p.getDamage()-.25));
 	}
 	//Skip a level (p.s set dev mode to false to test if this works)
 	public void levelSkipAbility() {

@@ -5,14 +5,15 @@ import game.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.function.BiFunction;
+import java.util.stream.Stream;
 
 /**
  * This class is meant to be a generic level that classes implementing gamemode can use to generate and throw away levels of different parameters.
  * @author Joe Passanante 11/28/17
  */
 public class Level extends GameState {
-    private boolean levelRunning = true;
     private int maxTick;
     private BiFunction<Point.Double, Handler, GameObject> enemyFactory;
     private int enemyNumber;
@@ -23,15 +24,17 @@ public class Level extends GameState {
     private int currentLevelNum;
     private double bossMaxHealth;
 
+    private Client client;
     private Waves game;
     /**
      * @param g - The game class that the gamemode is apart of.
      * @param maxTick - The time the level takes to complete, if boss level leave at -1
      */
-    public Level(Waves g, int maxTick, int c, int l, BiFunction<Point.Double, Handler, GameObject> f){
+    public Level(Client c, Waves g, int maxTick, int n, int l, BiFunction<Point.Double, Handler, GameObject> f){
+        this.client = c;
         this.game = g;
         this.maxTick = maxTick;
-        this.currentLevelNum = c;
+        this.currentLevelNum = n;
         this.enemyLimit = l;
         this.enemyFactory = f;
 
@@ -59,23 +62,37 @@ public class Level extends GameState {
             }
         }
         */
-        changeDir(wasd, game.getPlayer());
-        changeDir(arrows, game.getPlayer());
 
         game.getHandler().tick(); // handler ticked to update entities.
+        game.getHUD().tick();
 
         currentTick += 1;
         //after 3 seconds, remove the level text
         if(currentTick == 1) {
-            game.getHandler().getPlayers().add(game.getPlayer());
+            AudioUtil.closeMenuClip();
+            AudioUtil.playGameClip(true);
             game.getHandler().add(text);
         }
         else if(this.currentTick>=100){
             game.getHandler().remove(text);
         }
 
+        if(game.getHandler().getPlayers().size() == 1) {
+            boolean[] or = new boolean[4];
+            for (int b = 0; b < or.length; b += 1) {
+                or[b] = wasd[b] || arrows[b];
+            }
+            changeDir(or, game.getHandler().getPlayers().get(0));
+        }
+        else if(game.getHandler().getPlayers().size() == 2) {
+            changeDir(wasd, game.getHandler().getPlayers().get(0));
+            changeDir(arrows, game.getHandler().getPlayers().get(1));
+        }
+//        changeDir(wasd, game.getPlayer());
+//        changeDir(arrows, game.getPlayer());
+
         if(game.getHUD() != null) {
-            if (maxTick >= 0) {
+            if (0 <= maxTick) {
                 game.getHUD().levelProgress = (int) (100.0 * currentTick / maxTick);
             }
             else {
@@ -84,38 +101,44 @@ public class Level extends GameState {
             }
         }
 
-        if(currentTick >= maxTick && maxTick >= 0) {
-            this.levelRunning = false;
-        }
-
-        if(!running()) {
-            game.getHandler().clear();
-            game.getHandler().getPlayers().clear();
-            game.setState(game.getCurrentLevel());
-            return;
-        }
-
         if (enemyTick <= currentTick && enemyNumber < enemyLimit) {
             game.getHandler().add(enemyFactory.apply(getSpawnLoc(),game.getHandler()));
             enemyTick += Math.max(15, 120/currentLevelNum);
             enemyNumber += 1;
         }
 
-        if(game.getHandler().stream().noneMatch(h -> h.getClass().getName().contains("Enemy"))) {
-            levelRunning = false;
+        if(0 <= maxTick && maxTick <= currentTick || game.getHandler().stream().noneMatch(h -> h.getClass().getName().contains("Enemy"))) {
+            game.resetMode(false);
+            if(currentLevelNum > 1 && currentLevelNum%5==0) {
+                game.setState(game.getUpgradeScreen());
+            }
         }
     }
+
+    public void render(Graphics g) {
+        game.getHandler().render(g);
+        game.getHUD().render(g);
+    }
+
     public Point.Double getSpawnLoc() {
         Dimension dim = game.getHandler().getGameDimension();
-        return new Point.Double(dim.width*(Math.random()+1)/3, dim.height*(Math.random()+1)/3);
-    }
+        Point.Double loc = new Point2D.Double();
+        do {
+            loc.setLocation(
+            dim.width*(game.getHandler().getRandom().random()+1)/3,
+            dim.height*(game.getHandler().getRandom().random()+1)/3
+            );
+        }
+        while( Stream.concat(
+                game.getHandler().getPlayers().stream(),
+                game.getHandler().getPickups().stream()
+            )
+            .map((GameObject go) -> new Point2D.Double(go.getX(),go.getY()))
+            .map(loc::distance)
+            .anyMatch(d -> d < Math.hypot(dim.getWidth(),dim.getHeight())/8)
+        );
 
-    public void render(Graphics g){
-        game.getHandler().render(g);
-    }
-
-    public boolean running(){
-        return this.levelRunning;
+        return loc;
     }
 
     @Override
@@ -149,7 +172,7 @@ public class Level extends GameState {
         // if the p key is pressed, the game would paused, if the key is pressed again, it would unpaused
         if(key == KeyEvent.VK_P){
             if(Client.devMode) {
-                game.setPaused(false);
+//                game.setPaused(false);
                 AudioUtil.playClip("../sound/pause.wav", false);
                 AudioUtil.pauseGameClip();
             }
@@ -160,8 +183,7 @@ public class Level extends GameState {
             }
         }
         if (key == KeyEvent.VK_ESCAPE) {
-            game.setState(game.getMenu());
-            game.resetMode();
+            game.getHUD().setHealth(0);
         }
 
         // keep moving or start moving if key is pressed

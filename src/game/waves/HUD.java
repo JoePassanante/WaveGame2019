@@ -2,11 +2,13 @@ package game.waves;
 
 import game.Animatable;
 import game.GameObject;
+import game.Player;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.util.stream.Collectors;
 
 /**
  * The main Heads Up Display of the game
@@ -95,30 +97,27 @@ public class HUD implements Animatable {
 		g.drawString("Extra Lives: " + extraLives, 15, 125);
 		g.drawString("Level Progress: " + levelProgress + "%", 15, 175);
 		g.drawString("Health: " + (int)health + "/" + (int)healthMax, 15, 1050);
-		g.drawString("Player Size: " + String.format("%.2f",game.getPlayer().getWidth()), 15, 225);
+		g.drawString("Player Size: " + game.getHandler().getPlayers().stream().map(Player::getWidth).map(d -> String.format("%.2f",d)).collect(Collectors.joining(",")), 15, 225);
 		g.drawString("Regeneration: " + regenString, 15, 275);
 		g.drawString("High Score: " + game.getHandler().getHighScore(), 1500, 25);
 		
 		//this switch statement updates the damage resistance sprite on the HUD
 		Image shieldImg; 
-		switch ((int)((2 -game.getPlayer().getDamage())*100)){
+		switch ((int)((2 - game.getHandler().getPlayers().stream().map(Player::getDamage).mapToInt(d -> (int)(d*100)).average().orElse(0)))){
 			case 0: shieldImg =  HUDshield1;break;
 			case 25: shieldImg =  HUDshield2;break;
 			case 50: shieldImg =  HUDshield3;break;
 			case 75: shieldImg =  HUDshield4;break;
 			default: shieldImg = HUDshield5;break;
 		}
-			//prints damage resistance next to HUD along with sprite
-			g.drawImage(shieldImg, healthBarWidth+40, 1010, 40, 40, null);
-			g.drawString("" + (2 -game.getPlayer().getDamage()),healthBarWidth+100, 1040);
-
-		
+        //prints damage resistance next to HUD along with sprite
+        g.drawImage(shieldImg, healthBarWidth+40, 1010, 40, 40, null);
+        g.drawString("" + game.getHandler().getPlayers().stream().map(Player::getDamage).map(d -> 2-d).map(String::valueOf).collect(Collectors.joining(",")),healthBarWidth+100, 1040);
 		
 		//this is a tough one, can't figure out what it does
 		if(game.getHandler().getHighScore() < score){
             game.getHandler().setHighScore(score);
 		}
-		
 
 		//if the player has an ability, display that to the screen
 		if (ability.equals("freezeTime")) {//comment

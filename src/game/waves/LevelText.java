@@ -1,6 +1,7 @@
 package game.waves;
 
 import game.GameObject;
+import game.Handler;
 
 import java.awt.Color;
 import java.awt.Font;

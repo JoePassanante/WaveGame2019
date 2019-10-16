@@ -1,7 +1,7 @@
 package game.enemy;
 
 import game.GameObject;
-import game.waves.Handler;
+import game.Handler;
 import game.Trail;
 
 import java.awt.*;
@@ -17,7 +17,7 @@ import java.awt.*;
 public class EnemyBossBullet extends GameObject.Disappearing {
 	public EnemyBossBullet(double x, double y, Handler handler) {
 		super(x, y, 16, 16, handler);
-		setVelX((Math.random()*2-1)*15);
+		setVelX((getHandler().getRandom().random()*2-1)*15);
 		setVelY(30);
 	}
 
