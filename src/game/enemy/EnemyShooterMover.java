@@ -25,9 +25,7 @@ public class EnemyShooterMover extends GameObject.Bouncing {
 		this.timer = 60;
         this.bulletSpeed = -20 + (int)(getHandler().getRandom().random()*5);
 
-		for (int i = 0; i < handler.getPlayers().size(); i++) {
-            player = handler.getPlayers().get(i);
-		}
+        player = getHandler().getRandomDifferentPlayer();
 	}
 
 	public void tick() {

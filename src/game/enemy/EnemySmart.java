@@ -20,10 +20,11 @@ public class EnemySmart extends GameObject {
 	public void tick() {
         super.tick();
 
-        GameObject player = null;
-        for (int i = 0; i < getHandler().getPlayers().size(); i++) {
-            player = getHandler().getPlayers().get(i);
-        }
+        GameObject player = getHandler().getPlayers().stream()
+            .min((l,r) -> (int)(
+                    Math.hypot(getX()-l.getX(),getY()-l.getY()) -
+                            Math.hypot(getX()-r.getX(),getY()-r.getY()))
+            ).orElse(getHandler().getRandomDifferentPlayer());
         //handler.addObject(new Trail(x, y, ID.Trail, Color.green, 16, 16, 0.025, this.handler));
         Dimension bounds = getHandler().getGameDimension();
         double

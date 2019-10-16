@@ -37,10 +37,7 @@ public class EnemyShooterSharp extends GameObject.Bouncing {
 	}
 
 	public void shoot() {
-        GameObject player = null;
-        for (int i = 0; i < getHandler().getPlayers().size(); i++) {
-            player = getHandler().getPlayers().get(i);
-        }
+        GameObject player = getHandler().getRandomDifferentPlayer();
 
         double
             diffX = player.getX() - getX(),

@@ -4,6 +4,7 @@ import game.GameObject;
 import game.Handler;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 /**
  *
@@ -38,25 +39,23 @@ public class EnemyShooter extends GameObject.Bouncing {
 	}
 
 	public void shoot() {
-        GameObject player = null;
+        GameObject player = getHandler().getPlayers().stream()
+            .min((l,r) -> (int)(
+                Math.hypot(getX()-l.getX(),getY()-l.getY()) -
+                Math.hypot(getX()-r.getX(),getY()-r.getY()))
+            ).orElse(getHandler().getRandomDifferentPlayer());
 
-        for(int i = 0; i < getHandler().getPlayers().size(); i++) {
-            player = getHandler().getPlayers().get(i);
-        }
+        double
+            diffX = player.getX() - getX(),
+            diffY = player.getY() - getY(),
+            scale = bulletSpeed / Math.hypot(diffX, diffY);
 
-        if (player != null) {
-            double
-                diffX = player.getX() - getX(),
-                diffY = player.getY() - getY(),
-                scale = bulletSpeed / Math.hypot(diffX, diffY);
-
-            getHandler().add( new EnemyShooterBullet(
-                getX(),
-                getY()-10,
-                diffX * scale,
-                diffY * scale,
-                getHandler()
-            ) );
-		}
+        getHandler().add( new EnemyShooterBullet(
+            getX(),
+            getY()-10,
+            diffX * scale,
+            diffY * scale,
+            getHandler()
+        ) );
 	}
 }

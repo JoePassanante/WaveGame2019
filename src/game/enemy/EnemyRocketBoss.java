@@ -17,7 +17,6 @@ public class EnemyRocketBoss extends GameObject {
 	private double dash_x,dash_y; //current target
 	private boolean inDash = false; // in dash
 	private int cooldown = 10; // dash cooldown
-	private Player player;
 	private double drawAngle = 90;
 	private int speed = 18;
 	private boolean colliding = false;
@@ -29,7 +28,6 @@ public class EnemyRocketBoss extends GameObject {
     public EnemyRocketBoss(Point.Double p, Handler handler) {
 		super(p.getX(), p.getY(), 80, 296, handler);
 		difficulty = handler.getLevel()/10;
-		player = handler.getPlayers().get(0);
 		setHealth(1000);
 	}
 
@@ -49,7 +47,7 @@ public class EnemyRocketBoss extends GameObject {
                     Math.cos(Math.toRadians(this.drawAngle+90))*40 + getX(),
                     Math.sin(Math.toRadians(this.drawAngle+90))*40 + getY(),
                     getHandler(),this.drawAngle,
-                    10, player, difficulty > 2 ? 0.5 : 0
+                    10, getHandler().getRandomDifferentPlayer(), difficulty > 2 ? 0.5 : 0
                 ) );
 			}
 		}
@@ -71,6 +69,7 @@ public class EnemyRocketBoss extends GameObject {
 		}
 		else{
 			if (!colliding) {
+			    Player player = getHandler().getRandomDifferentPlayer();
                 this.dash_x = (player.getX()+player.getWidth()/2.0) + player.getVelX()*1.5;
                 this.dash_y = (player.getY()+player.getHeight()/2.0) + player.getVelY()*1.5;
                 double angle = EnemyRocketBoss.GetAngleOfLineBetweenTwoPoints(
@@ -150,10 +149,11 @@ public class EnemyRocketBoss extends GameObject {
 
         g2d.drawImage(getHandler().getTheme().get(inDash ? getClass().getSimpleName() + "On" : getClass().getSimpleName()), 0, 0, 80, 296, null);
 
-		AffineTransform trans = g2d.getTransform();
-
         Rectangle2D rec = new Rectangle.Double(30, 0, 20,inDash ?  230 : 180);
-        colliding = new Path2D.Double(rec,trans).intersects(player.getBounds());
+        AffineTransform trans = g2d.getTransform();
+
+        Path2D hitbox = new Path2D.Double(rec, trans);
+        colliding = getHandler().getPlayers().stream().map(Player::getBounds).anyMatch(hitbox::contains);
 
         g2d.setTransform(old);
 

@@ -21,6 +21,10 @@ public class Handler extends ArrayList<GameObject> implements Animatable {
     public ArrayList<Player> getPlayers() {
         return players;
     }
+    private Random.RandomDifferentElement<Player> randomDifferentPlayer;
+    public Player getRandomDifferentPlayer() {
+        return randomDifferentPlayer.get();
+    }
 
     private Theme theme;
     public void setTheme(Theme t) {
@@ -66,6 +70,7 @@ public class Handler extends ArrayList<GameObject> implements Animatable {
         pseudoRandom = pr;
         gameDimension = gd;
         players = new ArrayList<>();
+        randomDifferentPlayer = getRandom().new RandomDifferentElement<>(players);
 
         try {
             File inFile = new File("src/HighScores.txt");
