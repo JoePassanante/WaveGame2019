@@ -1,9 +1,7 @@
 package game.pickup;
 
-import game.GameObject;
-import game.Handler;
-
-import java.awt.*;
+import game.GameLevel;
+import game.Player;
 
 /**
  *
@@ -12,13 +10,14 @@ import java.awt.*;
  * 
  */
 
-public class PickupSize extends GameObject {
-	public PickupSize(Point.Double p, Handler handler) {
-		super(p.x, p.y, 30, 30, handler);
+public class PickupSize extends Pickup.Active {
+	public PickupSize(GameLevel l) {
+		super(l);
 	}
 
     @Override
-    public void tick() {
-        super.tick();
+    public void affect(Player player) {
+        player.setSize(.25*(player.getWidth() + player.getHeight()));
+        super.affect(player);
     }
 }

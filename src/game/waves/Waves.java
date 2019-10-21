@@ -2,159 +2,179 @@ package game.waves;
 
 import game.*;
 import game.enemy.*;
+import game.menu.Menu;
 import game.pickup.*;
-import game.upgrade.UpgradeScreen;
-import game.upgrade.Upgrades;
 import util.Random;
 
 import java.awt.*;
-import java.util.function.BiFunction;
+import java.awt.event.KeyEvent;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Waves extends GameMode {
-	private int currentLevelNum;
-    private Handler handler;
-    private Client client;
-    private HUD hud;
-    private GameState upgradeScreen;
-    private GameState gameOver;
-    private Upgrades upgrades;
+/**
+ * This class is the main level of the waves game mode.
+ * @author Joe Passanante 11/28/17
+ * @author Aaron Paterson 10/17/19
+ */
 
-    public Handler getHandler() {
-        return handler;
-    }
-    public HUD getHUD() {
-        return hud;
-    }
+public class Waves extends GameLevel {
+    private int maxTick;
+    private int currentTick;
+    private RainbowText text;
 
-    public GameState getUpgradeScreen() {
-        return upgradeScreen;
-    }
-    public GameState getGameOver() {
-        return gameOver;
-    }
-    public Upgrades getUpgrades() {
-        return upgrades;
-    }
+    private static class Spawn {
+        private Supplier<Function<GameLevel, GameObject>>
+            randomEasyEnemy,
+            randomHardEnemy,
+            randomBoss,
+            randomPickup;
 
-    private Supplier<BiFunction<Point.Double, Handler, GameObject>> randomEasyEnemy, randomHardEnemy, randomBoss, randomPickup;
-
-    public Waves(Client c) {
-        client = c;
-        handler = client.getHandler();
-
-        randomEasyEnemy = handler.getRandom().new RandomDifferentElement<>(
-            EnemyBasic::new,
-            EnemyBurst::new,
-            EnemyFast::new,
-            EnemyShooter::new,
-            EnemySmart::new
-        );
-        randomHardEnemy = handler.getRandom().new RandomDifferentElement<>(
-            EnemyShooterMover::new,
-            EnemyShooterSharp::new,
-            EnemySweep::new
-        );
-        randomBoss = handler.getRandom().new RandomDifferentElement<>(
-            EnemyBoss::new,
-            EnemyRocketBoss::new
-//          BossEye::new
-        );
-        randomPickup = handler.getRandom().new RandomDifferentElement<>(
-            PickupFreeze::new,
-            PickupHealth::new,
-            PickupLife::new,
-            PickupScore::new,
-            PickupSize::new
-        );
-
-        hud = new HUD(this);
-
-        upgradeScreen = new UpgradeScreen(this);
-        upgrades = new Upgrades(this);
-        gameOver = new GameOver(c, this);
-    }
-
-	/**
-	 * Instantiates and ticks currentLevel.
-	 */
-
-    @Override
-	public void tick() {
-        if(getState()==null) {
-            currentLevelNum += 1;
-
-            hud.setLevel(currentLevelNum);
-            handler.setLevel(currentLevelNum);
-            client.getPlayers().forEach(handler.getPlayers()::add);
-
-            if(this.currentLevelNum%5 != 0) {
-                System.out.println("New Normal Level");
-
-                setState(new Level(client, this, 60 * (20), currentLevelNum, currentLevelNum,
-                    Random.reduce(getHandler().getRandom().new RandomDifferentElement<>(IntStream
-                        .rangeClosed(0, Math.min(5, currentLevelNum / 5))
-                        .mapToObj(i -> i <= 3 || getHandler().getRandom().random() < .5 ? randomEasyEnemy : randomHardEnemy)
-                        .map(Supplier::get)
-                        .collect(Collectors.toList())
-                    ))
-                ));
-                //you can test specific enemies like this:
-                //currentLevel = new Level( this,1200, currentLevelNum, currentLevelNum, EnemyBurst::new);
-
-                if (currentLevelNum > 1) {
-                    Point.Double pick = new Point.Double(
-                            getHandler().getGameDimension().getWidth()*(getHandler().getRandom().random()+1.0/3),
-                            getHandler().getGameDimension().getHeight()*(getHandler().getRandom().random()+1.0/3)
-                    );
-                    getHandler().getPickups().add(randomPickup.get().apply(pick, getHandler()));
-                }
-            }
-            else {
-                System.out.println("New Boss Level");
-                setState(new Level(client,this,-1, currentLevelNum, 1,  randomBoss.get()));
-            }
-		}
-
-        super.tick();
-    }
-
-	/**
-	 * Renders any static images for the level.
-	 * IE Background. 
-	 */
-	@Override
-	public void render(Graphics g) {
-        Image img = getHandler().getTheme().get(this);
-        if(img != null) {
-            g.drawImage(img, 0, 0, (int) getHandler().getGameDimension().getWidth(), (int) getHandler().getGameDimension().getHeight(), null);
+        private Spawn(Random rng) {
+            randomEasyEnemy = rng.new RandomDifferentElement<>(
+                EnemyBasic::new,
+                EnemyBurst::new,
+                EnemyFast::new,
+                EnemyShooter::new,
+                EnemySmart::new
+            );
+            randomHardEnemy = rng.new RandomDifferentElement<>(
+                EnemyShooterMover::new,
+                EnemyShooterSharp::new,
+                EnemySweep::new
+            );
+            randomBoss = rng.new RandomDifferentElement<>(
+                EnemyBoss::new
+                //EnemyRocketBoss::new
+                //BossEye::new
+            );
+            randomPickup = rng.new RandomDifferentElement<>(
+                PickupFreeze::new,
+                PickupHealth::new,
+                PickupLife::new,
+                PickupScore::new,
+                PickupSize::new
+            );
         }
-        if(getState() != null) {
-            super.render(g);
-        }
-	}
+    }
+
+    private Spawn spawn;
+    private Supplier<Function<GameLevel, GameObject>> randomEnemy;
+
+    public Waves(Menu m) {
+        this(m, new Spawn(m.getRandom()), 600);
+    }
+
+    private Waves(Waves w) {
+        this(w, w.spawn, w.maxTick);
+    }
+
+    private Waves(GameLevel level, Spawn s, int m) {
+        super(level);
+        spawn = s;
+        maxTick = m;
+        currentTick = 0;
+        System.out.println("New level with:");
+        randomEnemy = getRandom().new RandomDifferentElement<>( IntStream // spawn a different enemy every time
+            .rangeClosed(0, getNumber()/5 + 1)
+            .boxed()
+            .map(i -> i < 3 || getRandom().random() < .5 ? spawn.randomEasyEnemy : spawn.randomHardEnemy)
+            .map(Supplier::get)
+            .peek(go -> System.out.println(go.apply(this).getClass().getName()))
+            .collect(Collectors.toList())
+        );
+        text = new RainbowText(
+            new Point.Double(getDimension().getWidth() / 2,  getDimension().getHeight() / 2),
+            "Level " + getNumber(),
+            this
+        );
+        currentTick = 0;
+    }
 
     /**
-	 * @param hardReset - if false only enemies are wiped. If true gamemode is completely reset. 
-	 */
-	public void resetMode(boolean hardReset) {
-        if(hardReset) {
-            currentLevelNum = 0;
-            getHandler().getPlayers().forEach(p -> p.setPlayerSize(32));
-            getHUD().resetHealth();
-            getHUD().setExtraLives(0);
-            getHUD().setLevel(0);
-            getHUD().setScore(0);
+     * Tick spawns new enemies depending on the spawn limit.
+     */
+    public void tick() {
+        super.tick();
+
+        if(currentTick == 0) {
+            add(text);
+            addAll(getPlayers());
+            if(getNumber() > 1) {
+                add(spawn.randomPickup.get().apply(this));
+            }
         }
-        setState(null);
-        getHandler().clear();
-        getHandler().getPlayers().clear();
-        getHandler().getPickups().clear();
+        else if(currentTick == 100) { // after 3 seconds, remove the level text
+            remove(text);
+        }
+        else if(currentTick >= maxTick) {
+            clear();
+            getState().pop();
+            getState().push(new Waves(this));
+            if((getNumber()+1) % 5 == 0) {
+//                getState().push(new Upgrades(this, spawn.randomPickup));
+                getState().push(new Boss(this, spawn.randomBoss));
+            }
+        }
+        else if(stream().noneMatch(Player.class::isInstance)) {
+            clear();
+            getState().pop();
+            getState().push(new GameOver(this));
+        }
+        else if(stream().filter(go -> go.getClass().getName().contains("Enemy")).count() < getPlayers().size() + getNumber()*currentTick/maxTick) {
+            add(randomEnemy.get().apply(this));
+            System.out.println("Spawning: " + get(size()-1).getClass().getName());
+        }
+
+        currentTick += 1;
     }
 
-	public void resetMode() {
-		resetMode(true);
-	}
+    public void render(Graphics g) {
+        super.render(g);
+        g.setColor(Color.white);
+
+        if(GameClient.devMode){
+            g.setFont(new Font("Amoebic", Font.BOLD, 25));
+            g.drawString("GameObjects: " + size(), getDimension().width-300, getDimension().height-200);
+//            g.drawString("Enemies: " + stream().filter(go -> go.getClass().getName().contains("Enemy")).count(), getDimension().width-300, getDimension().height-200);
+//            g.drawString("Pickups: " + stream().filter(go -> go.getClass().getName().contains("Pickup")).count(), getDimension().width-300, getDimension().height-150);
+//            g.drawString("Trails: " + stream().filter(go -> go.getClass().getName().contains("Trail")).count(), getDimension().width-300, getDimension().height-50);
+//          g.drawString("FPS: " + fps, getGameDimension().width-300, getGameDimension().height-100);
+        }
+
+        g.setFont(new Font("Amoebic", Font.BOLD, 30));
+
+        g.drawString("Score: " + getScore(), 15, 25);
+        g.drawString("Level: " + getNumber(), 15, 75);
+        g.drawString("Level Progress: " + 100*currentTick/maxTick + "%", 15, 175);
+        g.drawString("Health: " + getPlayers().stream().mapToDouble(GameObject::getHealth).mapToObj(Double::toString).collect(Collectors.joining(",")), 15, 1050);
+        g.drawString("Size: " + getPlayers().stream().mapToDouble(GameObject::getWidth).mapToObj(Double::toString).collect(Collectors.joining(",")), 15, 225);
+
+//        Image shieldImg = getTheme().get("shield" + (int)getPlayers().stream().mapToDouble(Player::getArmor).average().orElse(1.0)*5.0 + 1);
+//        g.drawImage(shieldImg, 440, 1010, 40, 40, null);
+//        g.drawString(getPlayers().stream().mapToDouble(Player::getArmor).mapToObj(Double::toString).collect(Collectors.joining(",")), 500, 1040);
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        if(GameClient.devMode || true) {
+            if (key == KeyEvent.VK_P) {
+                // game.setPaused(false);
+            }
+            if (key == KeyEvent.VK_U) {
+                getState().push(new Upgrades(this, spawn.randomPickup));
+            }
+            if (key == KeyEvent.VK_ENTER || key == KeyEvent.VK_E) {
+                currentTick = maxTick;
+            }
+        }
+        if (key == KeyEvent.VK_ESCAPE) {
+            getPlayers().clear();
+            getState().pop();
+        }
+        super.keyPressed(e);
+    }
 }

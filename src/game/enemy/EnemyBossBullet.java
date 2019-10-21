@@ -1,10 +1,12 @@
 package game.enemy;
 
+import game.GameLevel;
 import game.GameObject;
-import game.Handler;
+import game.Player;
 import game.Trail;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 /**
  * The bullets that EnemyBoss shoots
@@ -15,15 +17,20 @@ import java.awt.*;
  */
 
 public class EnemyBossBullet extends GameObject.Disappearing {
-	public EnemyBossBullet(double x, double y, Handler handler) {
-		super(x, y, 16, 16, handler);
-		setVelX((getHandler().getRandom().random()*2-1)*15);
+	public EnemyBossBullet(Point.Double point, GameLevel level) {
+		super(point, 16, 16, level);
+		setVelX((level.getRandom().random()*2-1)*15);
 		setVelY(30);
 	}
 
-	public void tick() {
+    @Override
+    public void collide(Player p) {
+        p.damage(2);
+    }
+
+    public void tick() {
 	    super.tick();
-        getHandler().add(new Trail(getX(), getY(), Color.red,(int)getWidth(),(int)getHeight(), 0.025, getHandler()));
+        getLevel().add(new Trail(new Point2D.Double(getX(), getY()), Color.red,(int)getWidth(),(int)getHeight(), 255, getLevel()));
 	}
 	
     @Override

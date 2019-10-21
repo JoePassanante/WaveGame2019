@@ -1,9 +1,11 @@
 package game.enemy;
 
+import game.GameLevel;
 import game.GameObject;
-import game.Handler;
+import game.Player;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 /**
  *
@@ -13,66 +15,70 @@ import java.awt.*;
  */
 
 public class EnemyBoss extends GameObject.Bouncing {
-	// instances
 	private int timer = 80;
 	private int timer2 = 50;
 	private int spawn;
 	private int difficulty;
 	private int bombTimer = 120;
-	// constructor
-	// used to initialize the state of the object
-	public EnemyBoss(Point.Double point, Handler handler) {
-		super(1, -100, 96, 96, handler);
+
+	public EnemyBoss(GameLevel level) {
+		super(new Point2D.Double(1, -100), 96, 96, level);
 		setVelX(0);
 		setVelY(2);
-		setHealth(1000); //full health is 1000
-		difficulty = handler.getLevel()/10;
+		setHealth(600); //full health is 1000
+		difficulty = level.getNumber()/10;
 	}
-	
-	// methods
-	// is called every frame, allows game objects to update themselves before being rendered.
-	public void tick() {
+
+    @Override
+    public void collide(Player p) {
+	    if(timer <= 0) {
+            p.damage(2);
+        }
+    }
+
+    public void tick() {
 	    super.tick();
 
 		if (timer <= 0) {
             setVelY(0);
+            getLevel().getPlayers().forEach(p -> {
+                if(p.getY() < 200) {
+                    collide(p);
+                }
+            });
         }
 		else {
             timer -= 1;
         }
 		drawFirstBullet();
 		if (timer <= 0) {
-            timer2--;
+            timer2 -= 1;
         }
 		if (timer2 <= 0) {
 			if (getVelX() == 0) {
                 setVelX(8);
             }
-			spawn = getHandler().getRandom().nextInt(5);
+			spawn = getLevel().getRandom().nextInt(5);
 			if (spawn == 0) {
-				getHandler().add(new EnemyBossBullet((int) getX() + 48, (int) getY() + 80, getHandler()));
-				setHealth(getHealth()-3);
+                getLevel().add(new EnemyBossBullet(new Point.Double(getX() + 48, getY() + 80), getLevel()));
+//				setHealth(getHealth()-3);
 			}
 		}
+
+		setHealth(getHealth()-1);
+
 		//prevents the alien boss from spawning bombs at the earlier levels
 		if (difficulty > 0) {
 			//if the timer is less than 0, trigger the bombs
-			bombTimer--;
+			bombTimer -= 1;
 			if (bombTimer < 0) {
 				//resets the bomb timer
 				bombTimer = 120;
-				//removes the EnemyBossBomb class
-				getHandler().remove(
-						new EnemyBossBomb((int) getX() + 48, (int) getY() + 80, getHandler(),difficulty > 1 ? ( difficulty > 2 ? 16 : 8 ) : 4));
 			}
 		}
 
 		// handler.addObject(new Trail(x, y, ID.Trail, Color.red, 96, 96, 0.025,
 		// this.handler));
-		if (getHealth() <= 0) {
-			System.out.println("Removing Boss");
-			getHandler().remove(this);
-		}
 	}
 
 	// cast the Graphics object passed into the rendering method to a Graphics2D object
@@ -80,22 +86,22 @@ public class EnemyBoss extends GameObject.Bouncing {
 	// onto components that are realized on various devices, as well as onto off-screen images
 	public void render(Graphics g) {
 		g.setColor(Color.LIGHT_GRAY);
-		g.drawLine(0, 138, (int)getHandler().getGameDimension().getWidth(), 138);
+		g.drawLine(0, 138, (int)getLevel().getDimension().getWidth(), 138);
         super.render(g);
 
 		// HEALTH BAR
 		g.setColor(Color.GRAY);
-		g.fillRect((int)getHandler().getGameDimension().getWidth() / 2 - 500, (int)getHandler().getGameDimension().getHeight() - 150, 1000, 50);
+		g.fillRect((int)getLevel().getDimension().getWidth() / 2 - 500, (int)getLevel().getDimension().getHeight() - 150, 1000, 50);
 		g.setColor(Color.RED);
-		g.fillRect((int)getHandler().getGameDimension().getWidth() / 2 - 500, (int)getHandler().getGameDimension().getHeight() - 150, (int)getHealth(), 50);
+		g.fillRect((int)getLevel().getDimension().getWidth() / 2 - 500, (int)getLevel().getDimension().getHeight() - 150, (int)getHealth(), 50);
 		g.setColor(Color.WHITE);
-		g.drawRect((int)getHandler().getGameDimension().getWidth() / 2 - 500, (int)getHandler().getGameDimension().getHeight() - 150, 1000, 50);
+		g.drawRect((int)getLevel().getDimension().getWidth() / 2 - 500, (int)getLevel().getDimension().getHeight() - 150, 1000, 50);
 	}
 
 	// allows for grey line to be drawn, as well as first bullet shot
 	public void drawFirstBullet() {
 		if (timer2 == 1) {
-            getHandler().add(new EnemyBossBullet((int) getX() + 48, (int) getY() + 96, getHandler()));
+            getLevel().add(new EnemyBossBullet(new Point2D.Double(getX() + 48, getY() + 96), getLevel()));
         }
 	}
 }

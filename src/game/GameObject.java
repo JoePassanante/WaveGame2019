@@ -7,12 +7,7 @@ import java.awt.*;
  * @author Aaron Paterson 10/1/19
  */
 
-public class GameObject implements Animatable {
-	private Handler handler;
-	public Handler getHandler() {
-	    return handler;
-    }
-
+public abstract class GameObject implements Animatable {
     private double x, y, width, height, velX, velY, health;
     public void setX(double x) {
         this.x = x;
@@ -38,102 +33,111 @@ public class GameObject implements Animatable {
     public double getHeight() {
         return height;
     }
-    public double getVelX() {
-        return velX;
-    }
     public void setVelX(double v) {
         this.velX = v;
-    }
-    public double getVelY() {
-        return velY;
     }
     public void setVelY(double v) {
         this.velY = v;
     }
-    public double getHealth() {
-        return this.health;
+    public double getVelX() {
+        return velX;
+    }
+    public double getVelY() {
+        return velY;
     }
     public void setHealth(double h) {
         health = h;
     }
+    public double getHealth() {
+        return this.health;
+    }
+
+    public abstract void collide(Player p); // called when a GameObject touches a Player
+
+    private GameLevel level;
+    public GameLevel getLevel() {
+        return level;
+    }
+    public void setLevel(GameLevel l) {
+        level = l;
+    }
 
     private Image img;
 
-    public GameObject(double x, double y, double w, double h, Handler hand) {
-	    this.x = x;
-	    this.y = y;
-	    this.width = w;
-	    this.height = h;
-		this.handler = hand;
-
-        img = handler.getTheme().get(this);
+    public GameObject(Point.Double loc, double w, double h, GameLevel l) {
+	    x = loc.getX();
+	    y = loc.getY();
+	    width = w;
+	    height = h;
+	    level = l;
+        img = level.getTheme().get(this);
 	}
-
-    public void drawHitBox(Graphics g) {
-	    Rectangle bounds = getBounds();
-        g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-    }
 
     @Override
     public void tick() {
         x += velX;
         y += velY;
+        if(getHealth() < 0) {
+            getLevel().remove(this);
+        }
     }
 
     public void render(Graphics g) {
-        //drawHitBox(g);
+        Rectangle bounds = getBounds();
         if(img != null) {
-            Rectangle bounds = getBounds();
             g.drawImage(img, bounds.x, bounds.y, bounds.width, bounds.height, null);
+        }
+        else {
+            g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
         }
     }
 
     public Rectangle getBounds() { // x and y are the center of a width by height hitbox
 	    return new Rectangle(
-            (int)(x-Math.abs(width/2)),
-            (int)(y-Math.abs(height/2)),
+            (int)(x - width/2),
+            (int)(y - height/2),
             (int) width,
             (int) height
         );
     }
 
-    public static class Bouncing extends GameObject {
-        public Bouncing(double x, double y, double w, double h, Handler hand) {
-            super(x, y, w, h, hand);
+    public static abstract class Stopping extends GameObject {
+        public Stopping(Point.Double p, double w, double h, GameLevel l) {
+            super(p, w, h, l);
         }
 
         @Override
         public void tick() {
             super.tick();
-            setVelX(changeSign(getVelX(), Boolean.compare(getX() < 0, getHandler().getGameDimension().getWidth() < getX())));
-            setVelY(changeSign(getVelY(), Boolean.compare(getY() < 0, getHandler().getGameDimension().getHeight() < getY())));
+            setX(clamp(getX(), 0, getLevel().getDimension().getWidth()));
+            setY(clamp(getY(), 0, getLevel().getDimension().getHeight()));
         }
     }
 
-    public static class Disappearing extends GameObject {
-        public Disappearing(double x, double y, double w, double h, Handler hand) {
-            super(x, y, w, h, hand);
+    public static abstract class Bouncing extends GameObject {
+        public Bouncing(Point.Double p, double w, double h, GameLevel l) {
+            super(p, w, h, l);
         }
 
         @Override
         public void tick() {
+            setVelX(changeSign(getVelX(), Boolean.compare(getX() < 0, getLevel().getDimension().getWidth() < getX())));
+            setVelY(changeSign(getVelY(), Boolean.compare(getY() < 0, getLevel().getDimension().getHeight() < getY())));
             super.tick();
-            if(!new Rectangle(getHandler().getGameDimension()).contains(getBounds())) {
-                getHandler().remove(this);
+        }
+    }
+
+    public static abstract class Disappearing extends GameObject {
+        public Disappearing(Point.Double p, double w, double h, GameLevel l) {
+            super(p, w, h, l);
+        }
+
+        @Override
+        public void tick() {
+            if(!new Rectangle(getLevel().getDimension()).intersects(getBounds())) {
+                getLevel().remove(this);
             }
-        }
-    }
-
-    public static class Stopping extends GameObject {
-        public Stopping(double x, double y, double w, double h, Handler hand) {
-            super(x, y, w, h, hand);
-        }
-
-        @Override
-        public void tick() {
             super.tick();
-            setX(clamp(getX(), 0, getHandler().getGameDimension().getWidth()));
-            setY(clamp(getY(), 0, getHandler().getGameDimension().getHeight()));
         }
     }
 

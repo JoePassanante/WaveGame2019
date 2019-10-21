@@ -1,7 +1,8 @@
 package game.enemy;
 
+import game.GameLevel;
 import game.GameObject;
-import game.Handler;
+import game.Player;
 
 import java.awt.*;
 
@@ -13,19 +14,26 @@ import java.awt.*;
  */
 
 public class EnemyFast extends GameObject.Bouncing {
-	public EnemyFast(Point.Double point, Handler handler) {
-		super(point.x, point.y, 32, 64, handler);
-		setVelX(1 - 2*getHandler().getRandom().random());
-		setVelY(-12);
+	public EnemyFast(GameLevel level) {
+		super(level.spawnPoint(), 32, 64, level);
+		setVelX(2*level.getRandom().random() - 1);
+		setVelY(Math.copySign(12, level.getRandom().random()));
 	}
 
-	@Override
+    @Override
+    public void collide(Player p) {
+        p.damage(2);
+    }
+
+    @Override
     public void render(Graphics g) {
-        if (getVelY() > 0) {
-            g.drawImage(getHandler().getTheme().get(this), (int)getX(), (int)getY()+64,(int)getWidth(),(int)-getHeight(), null);
-        }
-        else {
-            g.drawImage(getHandler().getTheme().get(this), (int)getX(), (int)getY(),(int)getWidth(),(int)getHeight(), null);
-        }
+        g.drawImage(
+            getLevel().getTheme().get(this),
+            (int) getX(),
+            (int) getY() + (0 < getVelY() ? 64 : 0),
+            (int) getWidth(),
+            (int) getHeight() * (0 < getVelY() ? -1 : 1),
+            null
+        );
     }
  }

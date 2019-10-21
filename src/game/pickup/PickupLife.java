@@ -1,9 +1,7 @@
 package game.pickup;
 
-import game.GameObject;
-import game.Handler;
-
-import java.awt.*;
+import game.GameLevel;
+import game.Player;
 
 /**
  *
@@ -12,13 +10,20 @@ import java.awt.*;
  * 
  */
 
-public class PickupLife extends GameObject {
-	public PickupLife(Point.Double p, Handler handler) {
-        super(p.x, p.y, 30, 30, handler);
+public class PickupLife extends Pickup.Active {
+	public PickupLife(GameLevel l) {
+        super(l);
 	}
 
-	@Override
-	public void tick() {
-	    super.tick();
-	}
+    @Override
+    public void affect(Player player) {
+        if(player.getHealth() <= 0) {
+            // TODO: fill health bar incrementally, maybe extend PickupRegen?
+            player.setHealth(player.getMaxHealth());
+            if(!player.getLevel().contains(player)) {
+                player.getLevel().add(player);
+            }
+        }
+        super.affect(player);
+    }
 }

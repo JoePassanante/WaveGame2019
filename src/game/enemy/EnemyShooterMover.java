@@ -1,9 +1,10 @@
 package game.enemy;
 
+import game.GameLevel;
 import game.GameObject;
-import game.Handler;
+import game.Player;
 
-import java.awt.*;
+import java.awt.geom.Point2D;
 
 /**
  *
@@ -13,22 +14,24 @@ import java.awt.*;
 
 public class EnemyShooterMover extends GameObject.Bouncing {
 	private int timer;
-	private GameObject player;
 	private int bulletSpeed;
 
-	public EnemyShooterMover(Point.Double point, Handler handler) {
-		super(point.x, point.y, 100, 75, handler);
+	public EnemyShooterMover(GameLevel level) {
+		super(level.spawnPoint(), 100, 75, level);
 
-        setVelX(10 * (getHandler().getRandom().random() < .5 ? -1 : 1));
-        setVelY(10 * (getHandler().getRandom().random() < .5 ? -1 : 1));
+        setVelX(10 * (level.getRandom().random() < .5 ? -1 : 1));
+        setVelY(10 * (level.getRandom().random() < .5 ? -1 : 1));
 
 		this.timer = 60;
-        this.bulletSpeed = -20 + (int)(getHandler().getRandom().random()*5);
-
-        player = getHandler().getRandomDifferentPlayer();
+        this.bulletSpeed = -20 + (int)(level.getRandom().random()*5);
 	}
 
-	public void tick() {
+    @Override
+    public void collide(Player p) {
+        p.damage(2);
+    }
+
+    public void tick() {
         super.tick();
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.yellow, this.sizeX, this.sizeY, 0.025, this.handler));
 		timer -= 1;
@@ -39,21 +42,25 @@ public class EnemyShooterMover extends GameObject.Bouncing {
 	}
 
 	public void shoot() {
-		if (player != null) {
-            double
-                diffX = getX() - player.getX(),
-                diffY = getY() - player.getY(),
-                distance = Math.hypot(diffX, diffY),
-                bulletVelX = diffX * bulletSpeed / distance,
-                bulletVelY = diffY * bulletSpeed / distance;
+        getLevel().getPlayers().stream().filter(getLevel()::contains)
+            .min((l,r) -> (int)(
+                Math.hypot(getX()-l.getX(),getY()-l.getY()) -
+                Math.hypot(getX()-r.getX(),getY()-r.getY()))
+            )
+            .ifPresent(player -> {
+                double
+                    diffX = getX() - player.getX(),
+                    diffY = getY() - player.getY(),
+                    distance = Math.hypot(diffX, diffY),
+                    bulletVelX = diffX * bulletSpeed / distance,
+                    bulletVelY = diffY * bulletSpeed / distance;
 
-            getHandler().add(new EnemyShooterBullet(getX(), getY()-10, bulletVelX, bulletVelY, getHandler()));
-		}
-		else {
-			System.err.println("player is null on shooter!");
-			for (int i = 0; i < getHandler().getPlayers().size(); i++) {
-                player = getHandler().getPlayers().get(i);
-			}
-		}
+                    getLevel().add( new EnemyShooterBullet(
+                        new Point2D.Double(getX(), getY()-10),
+                        bulletVelX,
+                        bulletVelY,
+                        getLevel()
+                    ));
+            });
 	}
 }

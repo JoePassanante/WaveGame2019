@@ -1,91 +1,144 @@
 package game.menu;
 
 import game.*;
-import game.Handler;
+import game.waves.Waves;
+import util.Random;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Stack;
 
-/**
- * The main menu
- * 
- * @author Brandon Loehle 5/30/16
- * @author Aaron Paterson 9/11/19
- *
- */
+public class Menu extends GameLevel {
+    private Theme space, water;
+    private Random.RandomDifferentElement<Color> fireworkColor;
 
-public class Menu extends GameMode {
-	private int timer;
-	private ArrayList<Color> colorPick = new ArrayList<>();
-	private int colorIndex;
-	private Handler handler;
-	public Handler getHandler(){
-	    return handler;
+    public Menu(Stack<GameState> state, Random random, Dimension dimension, Theme common) {
+        super(state, 0, 0, common, random, dimension, new ArrayList<>());
+
+        space = new Theme("space", common);
+        water = new Theme("water", common);
+        space.initialize();
+        water.initialize();
+        setTheme(space);
+
+        fireworkColor = random.new RandomDifferentElement<>(
+            Color.red,
+            Color.orange,
+            Color.yellow,
+            Color.green,
+            Color.blue
+            // Color.indigo
+            // Color.violet
+        );
     }
 
-    private GameState games;
-	private GameState help;
-    public GameState getGames() {
-        return games;
-    }
-    public GameState getHelp() {
-        return help;
-    }
-	public Menu(Client c) {
-	    handler = c.getHandler();
-	    games = new Games(this, c);
-	    help = new Help(this);
-        setState(games);
-		timer = 10;
-		addColors();
-	}
-
-	//using the java color picker, which colors you will add to the scene
-	public void addColors() {
-		colorPick.add(Color.blue);
-		colorPick.add(Color.white);
-		colorPick.add(Color.green);
-		colorPick.add(Color.red);
-		colorPick.add(Color.cyan);
-		colorPick.add(Color.magenta);
-		colorPick.add(Color.yellow);
-	}
-
-	private boolean play = false;
-	public void tick() {
-	    super.tick();
-	    if(!play) {
-	        AudioUtil.playGameClip(true);
-            AudioUtil.closeGameClip();
-            AudioUtil.playMenuClip(true, false);
-            play = true;
-        }
-		timer -= 1;
-		if (timer <= 0) {
-			colorIndex = handler.getRandom().nextInt(6);
-            handler.add( new MenuFireworks(
-                handler.getRandom().nextInt(handler.getGameDimension().width) - 25,
-                1080, 100, 100, 0, -4,
-                colorPick.get(colorIndex), handler, true
+    @Override
+    public void tick() {
+        super.tick();
+        if(size() == 0) {
+            add( new Fireworks(
+                new Point2D.Double(getRandom().nextInt(getDimension().width), getDimension().getHeight()),
+                this,
+                fireworkColor.get()
             ));
-			timer = 300;
-		}
-        handler.tick();
-	}
-
-	public void render(Graphics g) {
-	    Image img = getHandler().getTheme().get(this);
-        if(img != null) {
-            g.drawImage(img, 0, 0, (int) getHandler().getGameDimension().getWidth(), (int) getHandler().getGameDimension().getHeight(), null);
         }
-        super.render(g);
-        handler.render(g);
-	}
+    }
 
-    public void setMenuMusic(boolean a) {
-        // Toggle menu theme between Space Jam and Africa
-        // Restart menu music
-        AudioUtil.closeMenuClip();
-        AudioUtil.playMenuClip(true, a);
+    @Override
+    public void render(Graphics g) {
+        super.render(g);
+        g.setColor(Color.white);
+
+        g.setFont(new Font("Amoebic", 1, 130));
+        // Waves button, the start game button
+        g.drawRect(602, 300, 281, 250); //changes the rectangle size drawn
+        g.drawString("One", 602, 465);//move the text down and center it inside the rectangle
+        // Waves button two, the start game button for two players
+        g.drawRect(1052, 300, 281, 250); //changes the rectangle size drawn
+        g.drawString("Two", 1052, 465);//move the text down and center it inside the rectangle
+
+        g.setFont(new Font("Amoebic", 1, 100));
+        // Main Title
+        g.drawString("Loehle's Sandbox", 500, 100);
+        // Help button
+        g.drawRect(230, 360, 260, 200);
+        g.drawString("Help", 250, 500);
+        // The Quit button
+        g.drawRect(1390, 360, 260, 200);
+        g.drawString("Quit", 1400, 500);
+        // Theme buttons
+        g.drawString("Themes:", 330,710);
+        g.drawRect(400, 730, 350, 120);
+        g.drawString("Space", 430, 815);
+        g.drawRect(850, 730, 650, 120);
+        g.drawString("Underwater", 870, 825);
+
+        g.setFont(new Font("Amoebic", 1, 34));
+        // Credits to team that worked on game last editor
+        g.drawString("Credits: Team", 0, 1000);
+        int shake = getRandom().nextInt(3);
+        int blake = getRandom().nextInt(2);
+        g.translate(shake, blake);
+        g.drawString("Shakey", 233, 1000);
+        g.translate(-shake,-blake);
+        g.drawString("Blakey", 360, 1000);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // Waves One Button
+        if (mouseOver(e.getX(), e.getY(), 602, 300, 281, 250)) {
+            clear();
+            getPlayers().add( new Player(
+                new Point2D.Double(getDimension().getWidth()/2, getDimension().getHeight()/2), this
+            ));
+            getState().push(new Waves(this));
+        }
+        // Waves Two Button
+        if (mouseOver(e.getX(), e.getY(), 1052, 300, 281, 250)) {
+            clear();
+            getPlayers().add( new Player(
+                new Point.Double(getDimension().getWidth()/3, getDimension().getHeight()/2), this
+            ));
+            getPlayers().add( new Player(
+                new Point.Double(getDimension().getWidth()*2/3, getDimension().getHeight()/2), this
+            ));
+            getState().push(new Waves(this));
+        }
+        // Help Button
+        else if (mouseOver(e.getX(), e.getY(), 230, 360, 260, 200)) {
+            getState().push(new Help(this));
+        }
+        // Quit Button
+        else if (mouseOver(e.getX(), e.getY(), 1390, 360, 260, 200)) {
+            System.exit(1);
+        }
+        // Space Theme Button
+        else if (mouseOver(e.getX(), e.getY(), 400, 730, 350, 120)) {
+            setTheme(space);
+        }
+        // Underwater Theme Button
+        else if (mouseOver(e.getX(), e.getY(), 850, 730, 650, 120)) {
+            setTheme(water);
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }

@@ -20,13 +20,13 @@ public class Theme extends HashMap<String, Image> {
     private String folder;
     private Theme fallback;
 
-    public static String fileNameWithoutExtension(String name) {
-        return name.substring(0,name.lastIndexOf("."));
-    }
-
     public Theme(String fold, Theme fall) {
         folder = fold;
         fallback = fall;
+    }
+
+    public static String fileNameWithoutExtension(String name) {
+        return name.substring(0,name.lastIndexOf("."));
     }
 
     public void initialize() {

@@ -5,7 +5,6 @@ package util;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public class Random extends java.util.Random {
@@ -75,9 +74,5 @@ public class Random extends java.util.Random {
             last = l;
             return source.get(l);
         }
-    }
-
-    public static <T,U,R> BiFunction<T,U,R> reduce(Supplier<BiFunction<T,U,R>> s) {
-        return (t,u) -> s.get().apply(t,u);
     }
 }

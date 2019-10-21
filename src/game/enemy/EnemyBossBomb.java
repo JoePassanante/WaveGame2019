@@ -1,31 +1,37 @@
 package game.enemy;
 
+import game.GameLevel;
 import game.GameObject;
-import game.Handler;
+import game.Player;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 public class EnemyBossBomb extends GameObject {
 	private int explodeHeight;
 	private int shots;
 
-	public EnemyBossBomb(double x, double y, Handler handler, int shots) {
-		super(x, y, 32, 32, handler);
-		this.explodeHeight = (int) (getHandler().getRandom().random()*handler.getGameDimension().getHeight());
+	public EnemyBossBomb(Point.Double point, GameLevel level, int shots) {
+		super(point, 32, 32, level);
+		this.explodeHeight = (int) (level.getRandom().random()*level.getDimension().getHeight());
 		setVelY(5);
 		this.shots = shots;
 	}
 
-	public void tick() {
+    @Override
+    public void collide(Player p) {
+        p.damage(2);
+    }
+
+    public void tick() {
 		super.tick();
 
 		if (getY()>explodeHeight) {
-            getHandler().remove(this);
+            getLevel().remove(this);
 			for (int i = 0; i < shots; i++) {
-                getHandler().add( new EnemyBossBombBullet(
-                    (int) getX(),
-                    (int) getY(),
-                    getHandler(),
+                getLevel().add( new EnemyBossBombBullet(
+                    new Point2D.Double(getX(), getY()),
+                    getLevel(),
                     (int)(16*Math.cos(Math.toRadians(360.0*i/shots))),
                     (int)(16*Math.sin(Math.toRadians(360.0*i/shots)))
                 ));

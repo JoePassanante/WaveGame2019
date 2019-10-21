@@ -1,16 +1,15 @@
 package game.menu;
 
-import game.GameState;
+import game.GameLevel;
 import game.pickup.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-public class Help extends GameState {
-    private Menu menu;
-    public Help(Menu m) {
-        menu = m;
+public class Help extends GameLevel {
+    public Help(GameLevel g) {
+        super(g);
     }
 
     @Override
@@ -21,14 +20,14 @@ public class Help extends GameState {
     @Override
     public void render(Graphics g) {
         // Display the background
-        g.drawImage(menu.getHandler().getTheme().get(this), 0, 0, menu.getHandler().getGameDimension().width, menu.getHandler().getGameDimension().height, null);
+        g.drawImage(getTheme().get(this), 0, 0, getDimension().width, getDimension().height, null);
 
-        Image powerCoin = menu.getHandler().getTheme().get(PickupScore.class);
-        Image powerSlow = menu.getHandler().getTheme().get(PickupFreeze.class);
-        Image powerHealth = menu.getHandler().getTheme().get(PickupHealth.class);
-        Image powerLife = menu.getHandler().getTheme().get(PickupLife.class);
-        Image powerSpeed = menu.getHandler().getTheme().get(PickupSize.class);
-        Image shield1 = menu.getHandler().getTheme().get("shield1");
+        Image powerCoin = getTheme().get(PickupScore.class);
+        Image powerSlow = getTheme().get(PickupFreeze.class);
+        Image powerHealth = getTheme().get(PickupHealth.class);
+        Image powerLife = getTheme().get(PickupLife.class);
+        Image powerSpeed = getTheme().get(PickupSize.class);
+        Image shield1 = getTheme().get("shield1");
 
         g.setColor(Color.white);
 
@@ -68,7 +67,7 @@ public class Help extends GameState {
     @Override
     public void mousePressed(MouseEvent e) {
         if (mouseOver(e.getX(), e.getY(), 850, 300, 200, 64)) {
-            menu.setState(menu.getGames());
+            getState().pop();
         }
     }
 

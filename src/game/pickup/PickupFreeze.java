@@ -1,9 +1,7 @@
 package game.pickup;
 
-import game.GameObject;
-import game.Handler;
-
-import java.awt.Point;
+import game.GameLevel;
+import game.Player;
 
 /**
  *
@@ -12,13 +10,17 @@ import java.awt.Point;
  * 
  */
 
-public class PickupFreeze extends GameObject {
-	public PickupFreeze(Point.Double p, Handler handler) {
-		super(p.x, p.y, 30, 30, handler);
+public class PickupFreeze extends Pickup {
+	public PickupFreeze(GameLevel l) {
+		super(l, 900);
 	}
 
-	@Override
-	public void tick() {
-	    super.tick();
-	}
+    @Override
+    public void affect(Player player) {
+        player.getLevel().stream().filter(go -> !(go instanceof Player)).forEach(go -> {
+            go.setX(go.getX() - go.getVelX());
+            go.setY(go.getY() - go.getVelY());
+        });
+        super.affect(player);
+    }
 }

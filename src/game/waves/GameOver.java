@@ -1,18 +1,13 @@
 package game.waves;
 
-import game.Client;
-import game.GameState;
+import game.GameLevel;
+import game.GameWindow;
+import util.Random;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.AffineTransform;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * The game over screen
@@ -21,71 +16,53 @@ import java.io.IOException;
  *
  */
 
-public class GameOver extends GameState {
+public class GameOver extends GameLevel {
 	private int timer;
-	private Color retryColor;
-	private Waves game;
-	private Client client;
+	private Random.RandomDifferentElement<Color> retryColor = getRandom().new RandomDifferentElement<>(Color.black, Color.white);
 	private String trueHighScore;
-	public GameOver(Client c, Waves waves) {
-        client = c;
-        game = waves;
+	public GameOver(Waves waves) {
+        super(waves);
         timer = 90;
-        this.retryColor = Color.white;
+        new Thread( () -> {
+            try { // Saves Highscore
+                File set = new File("src/HighScores.txt");
+                BufferedWriter out = new BufferedWriter(new FileWriter(set));
+                out.write(Integer.toString(getScore()));
+                out.close();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }).start();
+
         //This is the high score from the text file
         try {
             BufferedReader reader = new BufferedReader(new FileReader("src/HighScores.txt"));
             trueHighScore = reader.readLine();
-            //draw the high score text string
         } catch (IOException e) {
             e.printStackTrace();
-            System.exit(1);
-            //the background image is the same as the menu background S
         }
 	}
 
 	public void tick() {
-		flash();
+
 	}
 
 	public void render(Graphics g) {
-		//render the background image
-		g.drawImage(game.getHandler().getTheme().get(this), 0, 0, (int)game.getHandler().getGameDimension().getWidth(), (int)game.getHandler().getGameDimension().getHeight(), null);
-
+        super.render(g);
         g.setColor(Color.white);
-		Font font = new Font("Amoebic", 1, 100);
-		//Game Over Font
-		g.setFont(font);
-		g.drawString("Game Over", (int)game.getHandler().getGameDimension().getWidth() / 2 - 500 / 2, (int)game.getHandler().getGameDimension().getHeight() / 2 - 150);
-		//The level the player died on
-
-        Font font2 = new Font("Amoebic", 1, 60);
-        g.setFont(font2);
-		g.drawString("Level: " + game.getHUD().getLevel(), 100, 500);
-		//Get the high score of the PLAYER
-		g.drawString("Your Score: " + game.getHUD().getScore(), (int)game.getHandler().getGameDimension().getWidth() / 2 - 440 / 2, 500);
-		g.drawString("High Score:" + trueHighScore, 1400, 500);
-		//g.drawString(text, Game.WIDTH / 2 - getTextWidth(font2, text) / 2, Game.HEIGHT / 2 + 50);
-		//Text flashing
-		g.setColor(this.retryColor);
-		g.drawString("Click anywhere to play again", (int)game.getHandler().getGameDimension().getWidth() / 2 - 780 / 2, (int)game.getHandler().getGameDimension().getHeight() / 2 + 150);
-	}
-
-    //This really isn't "flashing" so much as it's changing the color of the text to black then white
-	private void flash() {
-		timer--;
-		if (timer == 45) {
-			this.retryColor = Color.black;
-		} else if (timer == 0) {
-			this.retryColor = Color.white;
-			timer = 90;
-		}
+        GameWindow.drawStringCentered(g, new Font("Amoebic", Font.BOLD, 50),"Game Over", getDimension().width/2, getDimension().height/2 - 400);
+        Font f = new Font("Amoebic", Font.BOLD, 60);
+        GameWindow.drawStringCentered(g, f,"Level: " + (getNumber() - 1), getDimension().width/2, getDimension().height/2 - 200);
+        GameWindow.drawStringCentered(g, f,"Your Score: " + getScore(), getDimension().width/2, getDimension().height/2);
+        GameWindow.drawStringCentered(g, f,"High Score: " + trueHighScore, getDimension().width/2, getDimension().height/2 + 200);
+		g.setColor(retryColor.get());
+        GameWindow.drawStringCentered(g, f,"Click anywhere to return to the menu.", getDimension().width/2, getDimension().height/2 + 400);
 	}
 
     @Override
     public void mousePressed(MouseEvent e) {
-        game.resetMode();
-        client.setState(client.getMenu());
+	    getPlayers().clear();
+	    getState().pop();
     }
 
     @Override

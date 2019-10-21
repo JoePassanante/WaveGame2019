@@ -1,13 +1,15 @@
 package game.enemy;
 
+import game.GameLevel;
 import game.GameObject;
-import game.Handler;
+import game.Player;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.Point2D;
 
 /**
  * The last boss in the game, shown in a 3x3 grid of 9 instances of BossEye
@@ -17,7 +19,6 @@ import java.awt.Image;
  */
 
 public class BossEye extends GameObject {
-	private Image img;
 	private float alpha = 0;
 	private double life = 0.005;
 	private int tempCounter = 0;
@@ -29,19 +30,19 @@ public class BossEye extends GameObject {
 	private GameObject player;
 	private double health;
 
-	public BossEye(double x, double y, Handler handler, int placement) {
-		super(x, y, 0, 0, handler);
-		this.img = getHandler().getTheme().get(getClass());
-        setWidth(img.getWidth(null));
-        setHeight(img.getHeight(null));
-		setVelX(0);
-		setVelY(0);
-		this.speed = speedTypes[getHandler().getRandom().nextInt(4)];
+	public BossEye(Point2D.Double p, GameLevel level, int placement) {
+		super(p, 300, 300, level);
+		this.speed = speedTypes[getLevel().getRandom().nextInt(4)];
 		this.placement = placement;
 		this.timer = 400;
 	}
 
-	public void tick() {
+    @Override
+    public void collide(Player p) {
+        p.damage(2);
+    }
+
+    public void tick() {
 	    super.tick();
 
 		if (tempCounter == 0) {
@@ -49,8 +50,8 @@ public class BossEye extends GameObject {
 				alpha += life + 0.001;
 			} else {
 				tempCounter++;
-				for (int i = 0; i < getHandler().getPlayers().size(); i++) {
-                    this.player = getHandler().getPlayers().get(i);
+				for (int i = 0; i < getLevel().getPlayers().size(); i++) {
+                    this.player = getLevel().getPlayers().get(i);
 				}
 			}
 		} else if (tempCounter == 1) {
@@ -105,7 +106,7 @@ public class BossEye extends GameObject {
 		}
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setComposite(makeTransparent(alpha));
-		g.drawImage(img, (int) getX(), (int) getY(), null);
+		super.render(g);
 		g2d.setComposite(makeTransparent(1));
 	}
 

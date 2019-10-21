@@ -1,62 +1,56 @@
 package game.enemy;
 
 import game.*;
-import game.Handler;
-import game.Player;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
-import java.awt.geom.Rectangle2D;
 
 public class EnemyRocketBossMissile extends GameObject.Disappearing {
-	private double direction;
 	private double speed;
-	private Player player;
-	private double trackSpeed;
+	private double angle;
+	private Player target;
+	private Path2D hitbox;
 
-    public EnemyRocketBossMissile(double x, double y, Handler handler, double dir, double spd, Player play, double track) {
-		super(x, y, 32, -64, handler);
-		AudioUtil.playClip("/sound/MissileSound.wav", false);
+    public EnemyRocketBossMissile(Point.Double point, GameLevel level, double spd, Player player) {
+		super(point, 32, -64, level);
 		speed = spd;
-		direction = dir;
-		player = play;
-		trackSpeed = track;
+		target = player;
+		hitbox = new Path2D.Double(super.getBounds());
 	}
 
-	public void tick() {
-		setX(getX() + Math.cos(Math.toRadians(direction))*speed);
-		setY(getY() + Math.sin(Math.toRadians(direction))*speed);
+    @Override
+    public void collide(Player p) {
+        p.damage(1);
+    }
 
-		double angle = EnemyRocketBoss.GetAngleOfLineBetweenTwoPoints(new Point.Double(Math.cos(Math.toRadians(direction-90))*5 + getX(), Math.sin(Math.toRadians(direction-90))*5 + getY()), new Point.Double(player.getX(),player.getY()));
-		
-		this.direction = this.direction-Math.max(-trackSpeed,Math.min(EnemyRocketBoss.angleDifference(this.direction,angle),trackSpeed));
+    public void tick() {
+        super.tick();
 
+		angle = Math.atan2(target.getY()-getY(), target.getX()-getX());
+		setVelX(speed*Math.cos(angle));
+		setVelY(speed*Math.sin(angle));
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.cyan, 16, 16, 0.025, this.handler));
 	}
 
 	public void render(Graphics g) {
-		Graphics2D a = (Graphics2D) g;
-		AffineTransform old = a.getTransform();
-		
-		a.translate(Math.cos(Math.toRadians(direction-90))*20 + getX(), Math.sin(Math.toRadians(direction-90))*20 + getY());
-		a.rotate(Math.toRadians(direction - 90));
-        a.drawImage(getHandler().getTheme().get(this),0,64,32,-64, null);
-        Rectangle2D rec = new Rectangle.Double(30, 0, 20,60);
-		AffineTransform trans = new AffineTransform();
-		trans.translate(Math.cos(Math.toRadians(this.direction-90))*-5 + getX(), Math.sin(Math.toRadians(this.direction-90))*-5 + getY());
-		trans.rotate(Math.toRadians(this.direction - 90));
-		
-		Path2D bounds = new Path2D.Double(rec,trans);
-		
-	    a.setTransform(old);
-	    
-	    Rectangle2D playerBounds = new Rectangle2D.Double(player.getX(),player.getY(),player.getWidth(),player.getHeight());
+		Graphics2D g2d = (Graphics2D) g;
+        AffineTransform old = g2d.getTransform();
 
-		a.setTransform(old);
+        AffineTransform at = AffineTransform.getRotateInstance(angle, getX(), getY());
+        g2d.transform(at);
+        g2d.drawImage(getLevel().getTheme().get(this), 0, 0, (int)getWidth(), (int)getHeight(), null);
+
+        hitbox = new Path2D.Double(super.getBounds(), at);
+        g2d.setColor(Color.YELLOW);
+        g2d.draw(hitbox);
+
+        g2d.setTransform(old);
 		//a.fill(bounds);
 	}
+
+	@Override
+    public Rectangle getBounds() {
+        return new Rectangle(getLevel().getDimension());
+    }
 }

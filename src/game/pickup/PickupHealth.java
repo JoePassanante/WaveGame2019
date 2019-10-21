@@ -1,9 +1,7 @@
 package game.pickup;
 
-import game.GameObject;
-import game.Handler;
-
-import java.awt.*;
+import game.GameLevel;
+import game.Player;
 
 /**
  *
@@ -12,13 +10,14 @@ import java.awt.*;
  * 
  */
 
-public class PickupHealth extends GameObject {
-    public PickupHealth(Point.Double p, Handler handler) {
-        super(p.x, p.y, 30, 30, handler);
+public class PickupHealth extends Pickup {
+    public PickupHealth(GameLevel l) {
+        super(l);
 	}
 
-	@Override
-	public void tick() {
-        super.tick();
-	}
+    @Override
+    public void affect(Player player) {
+        player.setHealth(player.getMaxHealth());
+        super.affect(player);
+    }
 }

@@ -1,12 +1,12 @@
 package game.enemy;
 
+import game.GameLevel;
 import game.GameObject;
-import game.Handler;
+import game.Player;
 import game.Trail;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
+import java.awt.geom.Point2D;
 
 /**
  *
@@ -15,19 +15,21 @@ import java.awt.Rectangle;
  */
 
 public class EnemyShooterBullet extends GameObject.Disappearing {
-	public EnemyShooterBullet(double x, double y, double velX, double velY, Handler handler) {
-		super(x, y, 16, 16, handler);
+    @Override
+    public void collide(Player p) {
+        p.damage(1);
+    }
+
+    public EnemyShooterBullet(Point2D.Double loc, double velX, double velY, GameLevel level) {
+		super(loc, 16, 16, level);
 		setVelX(velX);
 		setVelY(velY);
 	}
 
 	public void tick() {
-	    super.tick();
+        getLevel().add(new Trail(new Point.Double(getX(), getY()), Color.yellow, (int)getWidth()/4, (int)getHeight()/4, 255, getLevel()));
 
-		// if (this.y <= 0 || this.y >= Game.HEIGHT - 40) velY *= -1;
-		// if (this.x <= 0 || this.x >= Game.WIDTH - 16) velX *= -1;
-
-        getHandler().add(new Trail(getX(), getY(), Color.yellow, (int)getWidth()/4, (int)getHeight()/4, 0.025, getHandler()));
+        super.tick();
 	}
 
 	public void render(Graphics g) {

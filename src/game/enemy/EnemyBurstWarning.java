@@ -1,10 +1,12 @@
 package game.enemy;
 
+import game.GameLevel;
 import game.GameObject;
-import game.Handler;
+import game.Player;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.geom.Point2D;
 
 /**
  * A warning that is displayed before EnemyBurst comes across the screen
@@ -14,17 +16,18 @@ import java.awt.Graphics;
  */
 
 public class EnemyBurstWarning extends GameObject {
-	private int width;
-	private int height;
 	private int timer;
 	private Color color;
 
-	public EnemyBurstWarning(double x, double y, int width, int height, Handler handler) {
-		super(x, y, 16, 16, handler);
-		this.width = width;
-		this.height = height;
-		this.timer = 10;
-		this.color = Color.red;
+    @Override
+    public void collide(Player p) {
+
+    }
+
+    public EnemyBurstWarning(Point2D.Double loc, double width, double height, GameLevel level) {
+		super(loc, width, height, level);
+		timer = 10;
+		color = Color.red;
 	}
 
 	@Override
@@ -32,7 +35,7 @@ public class EnemyBurstWarning extends GameObject {
 	    super.tick();
         timer += 1;
         if (this.timer >= 60) {
-            getHandler().remove(this);
+            getLevel().remove(this);
         }
 	}
 
@@ -46,6 +49,6 @@ public class EnemyBurstWarning extends GameObject {
         }
 
         g.setColor(this.color);
-		g.fillRect((int) getX(), (int) getY(), this.width, this.height);
+		g.fillRect((int) getX(), (int) getY(), (int) getWidth(), (int) getHeight());
 	}
 }

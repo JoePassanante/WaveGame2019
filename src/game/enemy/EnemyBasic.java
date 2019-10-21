@@ -1,9 +1,8 @@
 package game.enemy;
 
+import game.GameLevel;
 import game.GameObject;
-import game.Handler;
-
-import java.awt.*;
+import game.Player;
 
 /**
  *
@@ -12,9 +11,14 @@ import java.awt.*;
  */
 
 public class EnemyBasic extends GameObject.Bouncing {
-	public EnemyBasic(Point.Double point, Handler handler) {
-		super(point.x, point.y, 125, 60, handler);
-		setVelX(10 * (getHandler().getRandom().random() < .5 ? -1 : 1));
-		setVelY(10 * (getHandler().getRandom().random() < .5 ? -1 : 1));
+	public EnemyBasic(GameLevel level) {
+		super(level.spawnPoint(), 125, 60, level);
+		setVelX(10 * (level.getRandom().random() < .5 ? -1 : 1));
+		setVelY(10 * (level.getRandom().random() < .5 ? -1 : 1));
 	}
+
+    @Override
+    public void collide(Player p) {
+        p.damage(2);
+    }
 }
