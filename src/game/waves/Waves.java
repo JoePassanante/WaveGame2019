@@ -8,6 +8,7 @@ import util.Random;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.Collections;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class Waves extends GameLevel {
     private RainbowText text;
 
     private static class Spawn {
-        private Supplier<Function<GameLevel, GameObject>>
+        private Supplier<Function<GameLevel, GameEntity>>
             randomEasyEnemy,
             randomHardEnemy,
             randomBoss,
@@ -60,7 +61,7 @@ public class Waves extends GameLevel {
     }
 
     private Spawn spawn;
-    private Supplier<Function<GameLevel, GameObject>> randomEnemy;
+    private Supplier<Function<GameLevel, GameEntity>> randomEnemy;
 
     public Waves(Menu m) {
         this(m, new Spawn(m.getRandom()), 600);
@@ -85,11 +86,10 @@ public class Waves extends GameLevel {
             .collect(Collectors.toList())
         );
         text = new RainbowText(
-            new Point.Double(getDimension().getWidth() / 2,  getDimension().getHeight() / 2),
+            getDimension().getWidth() / 2,  getDimension().getHeight() / 2,
             "Level " + getNumber(),
             this
         );
-        currentTick = 0;
     }
 
     /**
@@ -99,32 +99,36 @@ public class Waves extends GameLevel {
         super.tick();
 
         if(currentTick == 0) {
-            add(text);
-            addAll(getPlayers());
+            getEntities().add(text);
+            getEntities().addAll(getPlayers());
             if(getNumber() > 1) {
-                add(spawn.randomPickup.get().apply(this));
+                getEntities().add(spawn.randomPickup.get().apply(this));
             }
         }
-        else if(currentTick == 100) { // after 3 seconds, remove the level text
-            remove(text);
-        }
-        else if(currentTick >= maxTick) {
-            clear();
-            getState().pop();
-            getState().push(new Waves(this));
-            if((getNumber()+1) % 5 == 0) {
-//                getState().push(new Upgrades(this, spawn.randomPickup));
-                getState().push(new Boss(this, spawn.randomBoss));
-            }
-        }
-        else if(stream().noneMatch(Player.class::isInstance)) {
-            clear();
+        else if(Collections.disjoint(getEntities(), getPlayers())) {
+            getEntities().clear();
             getState().pop();
             getState().push(new GameOver(this));
         }
-        else if(stream().filter(go -> go.getClass().getName().contains("Enemy")).count() < getPlayers().size() + getNumber()*currentTick/maxTick) {
-            add(randomEnemy.get().apply(this));
-            System.out.println("Spawning: " + get(size()-1).getClass().getName());
+        else if(currentTick >= maxTick) {
+            getEntities().clear();
+            getState().pop();
+            getState().push(new Waves(this));
+            if (getNumber() % 5 == 4) {
+                getState().push(new Upgrades(this, spawn.randomPickup));
+                getState().push(new Boss(this, spawn.randomBoss));
+            }
+        }
+        else if(
+            getEntities().size() <
+            getPlayers().size() +
+            getEntities().stream().filter(Trail.class::isInstance).count() +
+            getNumber()*currentTick/maxTick +
+            1
+        ) {
+            GameEntity ge = randomEnemy.get().apply(this);
+            System.out.println("Spawning: " + ge.getClass().getName());
+            getEntities().add(ge);
         }
 
         currentTick += 1;
@@ -136,7 +140,7 @@ public class Waves extends GameLevel {
 
         if(GameClient.devMode){
             g.setFont(new Font("Amoebic", Font.BOLD, 25));
-            g.drawString("GameObjects: " + size(), getDimension().width-300, getDimension().height-200);
+            g.drawString("Entities: " + getEntities().size(), getDimension().width-300, getDimension().height-200);
 //            g.drawString("Enemies: " + stream().filter(go -> go.getClass().getName().contains("Enemy")).count(), getDimension().width-300, getDimension().height-200);
 //            g.drawString("Pickups: " + stream().filter(go -> go.getClass().getName().contains("Pickup")).count(), getDimension().width-300, getDimension().height-150);
 //            g.drawString("Trails: " + stream().filter(go -> go.getClass().getName().contains("Trail")).count(), getDimension().width-300, getDimension().height-50);
@@ -148,8 +152,8 @@ public class Waves extends GameLevel {
         g.drawString("Score: " + getScore(), 15, 25);
         g.drawString("Level: " + getNumber(), 15, 75);
         g.drawString("Level Progress: " + 100*currentTick/maxTick + "%", 15, 175);
-        g.drawString("Health: " + getPlayers().stream().mapToDouble(GameObject::getHealth).mapToObj(Double::toString).collect(Collectors.joining(",")), 15, 1050);
-        g.drawString("Size: " + getPlayers().stream().mapToDouble(GameObject::getWidth).mapToObj(Double::toString).collect(Collectors.joining(",")), 15, 225);
+        g.drawString("Health: " + getPlayers().stream().mapToDouble(GameEntity::getHealth).mapToObj(Double::toString).collect(Collectors.joining(",")), 15, 1050);
+        g.drawString("Size: " + getPlayers().stream().mapToDouble(GameEntity::getWidth).mapToObj(Double::toString).collect(Collectors.joining(",")), 15, 225);
 
 //        Image shieldImg = getTheme().get("shield" + (int)getPlayers().stream().mapToDouble(Player::getArmor).average().orElse(1.0)*5.0 + 1);
 //        g.drawImage(shieldImg, 440, 1010, 40, 40, null);
@@ -160,18 +164,19 @@ public class Waves extends GameLevel {
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
 
-        if(GameClient.devMode || true) {
-            if (key == KeyEvent.VK_P) {
-                // game.setPaused(false);
-            }
+        if(GameClient.devMode) {
             if (key == KeyEvent.VK_U) {
                 getState().push(new Upgrades(this, spawn.randomPickup));
             }
-            if (key == KeyEvent.VK_ENTER || key == KeyEvent.VK_E) {
+            else if (key == KeyEvent.VK_ENTER || key == KeyEvent.VK_E) {
                 currentTick = maxTick;
             }
+//          else if(key == KeyEvent.VK_P) {
+            // game.setPaused(false);
+//           }
         }
         if (key == KeyEvent.VK_ESCAPE) {
+            getEntities().clear();
             getPlayers().clear();
             getState().pop();
         }

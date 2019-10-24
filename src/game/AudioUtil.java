@@ -6,7 +6,6 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 
 public class AudioUtil {
-
     private static Clip gameClip, menuClip, clip;
     private static boolean paused = false;
 
@@ -15,9 +14,13 @@ public class AudioUtil {
 			if (clip != null && clip.isRunning()) {
 				return;
 			}
-			AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(AudioUtil.class.getResource(path).toURI()));
-	        clip = AudioSystem.getClip();
-			clip.open(inputStream);
+                AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(AudioUtil.class.getResource(path).toURI()));
+
+            AudioSystem.getClip().open(inputStream);
+            AudioSystem.getClip().loop(Clip.LOOP_CONTINUOUSLY);
+            AudioSystem.getClip().isActive();
+            AudioSystem.getClip().getControl(FloatControl.Type.VOLUME);
+
 			((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(5f);
 	        if (repeat) {
 	        		clip.loop(Clip.LOOP_CONTINUOUSLY);
@@ -44,7 +47,7 @@ public class AudioUtil {
 			closeMenuClip();
 
 			// If africa mode is enabled, use the africa clip for the menu
-			String clip = africa ? "../sound/africa.wav" : "../sound/spacejam.wav";
+			String clip = africa ? "../sound/Menu.wav" : "../sound/Menu.wav";
 
 			AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(AudioUtil.class.getResource(clip).toURI()));
 	        menuClip = AudioSystem.getClip();
@@ -70,7 +73,7 @@ public class AudioUtil {
 	public static void playGameClip(boolean repeat) {
 		try {
 			closeGameClip();
-			AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(AudioUtil.class.getResource("../sound/battle.wav").toURI()));
+			AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(AudioUtil.class.getResource("../sound/Waves.wav").toURI()));
 	        gameClip = AudioSystem.getClip();
 			gameClip.open(inputStream);
 			((FloatControl) gameClip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(-8f);

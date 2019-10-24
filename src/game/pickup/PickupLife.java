@@ -20,8 +20,8 @@ public class PickupLife extends Pickup.Active {
         if(player.getHealth() <= 0) {
             // TODO: fill health bar incrementally, maybe extend PickupRegen?
             player.setHealth(player.getMaxHealth());
-            if(!player.getLevel().contains(player)) {
-                player.getLevel().add(player);
+            if(!player.getLevel().getEntities().contains(player)) {
+                player.getLevel().getEntities().add(player);
             }
         }
         super.affect(player);

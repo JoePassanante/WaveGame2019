@@ -12,15 +12,24 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
-public class EnemyRocketBoss extends GameObject {
-	private Path2D hitbox;
+public class EnemyRocketBoss extends GameEntity {
+    private Path2D hitbox;
 	private double angle;
 	private double dash;
 
+    private static class EnemyRocketBossOn extends EnemyRocketBoss {
+        public EnemyRocketBossOn(GameLevel level) {
+            super(level);
+        }
+    }
+
+    EnemyRocketBossOn on;
+
     public EnemyRocketBoss(GameLevel level) {
-		super(level.spawnPoint(), 80, 296, level);
+		super(level.getDimension().getWidth()/2, level.getDimension().getHeight()/2, 80, 296, level);
 		setHealth(1000);
 		hitbox = new Path2D.Double(super.getBounds());
+		on = new EnemyRocketBossOn(level);
 	}
 
     @Override
@@ -33,44 +42,38 @@ public class EnemyRocketBoss extends GameObject {
 	public void tick() {
         super.tick();
 
-        Player target = getLevel().getPlayers().stream().filter(getLevel()::contains)
-            .min((l,r) -> (int)(
-                    Math.hypot(getX()-l.getX(),getY()-l.getY()) -
-                    Math.hypot(getX()-r.getX(),getY()-r.getY()))
-            ).orElse(null);
+        Point2D.Double target = getLevel().targetPoint();
 
-        if (target != null) {
-            dash -= 1;
-            if (dash > 0) {
-                double speed = getHealth() / 100;
-                setVelX(speed * Math.cos(angle));
-                setVelY(speed * Math.sin(angle));
-            }
-            else if (dash > -60) {
-                angle = Math.atan2(target.getY()-getY(),target.getX()-getX());
-            }
-            else {
-                dash = 60;
-            }
+        dash -= 1;
+        if (dash > 0) {
+            double speed = getHealth() / 100;
+            setVelX(speed * Math.cos(angle));
+            setVelY(speed * Math.sin(angle));
+        }
+        else if (dash > -60) {
+            angle = Math.atan2(target.getY()-getPosY(),target.getX()-getPosX());
+        }
+        else {
+            dash = 60;
+        }
 
-            if (getHealth() % 100 == 0 && getLevel().getNumber() > 10) {
-                getLevel().add(new EnemyRocketBossMissile(
-                    new Point2D.Double(getX(), getY()),
-                    getLevel(),
-                    10,
-                    target
-                ));
-            }
+        if (getHealth() % 100 == 0 && getLevel().getNumber() > 10) {
+            getLevel().getEntities().add( new EnemyRocketBossMissile(
+                new Point2D.Double(getPosX(), getPosY()),
+                getLevel(),
+                10,
+                target
+            ));
         }
 
         if (getHealth() % 150 == 0) {
-            getLevel().add(new EnemyBurst(getLevel()));
+            getLevel().getEntities().add(new EnemyBurst(getLevel()));
         }
         setHealth(getHealth() - 1);
 
         if (getHealth() <= 0) {
             System.out.println("Removing Boss");
-            getLevel().remove(this);
+            getLevel().getEntities().remove(this);
         }
     }
 
@@ -95,9 +98,9 @@ public class EnemyRocketBoss extends GameObject {
 		//Draw Rocket
 		AffineTransform old = g2d.getTransform();
 
-		AffineTransform at = AffineTransform.getRotateInstance(angle, getX(), getY());
+		AffineTransform at = AffineTransform.getRotateInstance(angle, getPosX(), getPosY());
 		g2d.setTransform(at);
-        g2d.drawImage(getLevel().getTheme().get(dash > 0 ? getClass().getSimpleName() + "On" : getClass().getSimpleName()), 0, 0, (int)getWidth(), (int)getHeight(), null);
+		super.render(g, new Rectangle(0,0,(int)getWidth(),(int)getHeight()));
 
         hitbox = new Path2D.Double(super.getBounds(), at);
         g2d.setColor(Color.YELLOW);

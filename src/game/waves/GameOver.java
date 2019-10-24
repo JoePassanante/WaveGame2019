@@ -17,12 +17,10 @@ import java.io.*;
  */
 
 public class GameOver extends GameLevel {
-	private int timer;
 	private Random.RandomDifferentElement<Color> retryColor = getRandom().new RandomDifferentElement<>(Color.black, Color.white);
 	private String trueHighScore;
 	public GameOver(Waves waves) {
         super(waves);
-        timer = 90;
         new Thread( () -> {
             try { // Saves Highscore
                 File set = new File("src/HighScores.txt");

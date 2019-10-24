@@ -1,14 +1,13 @@
 package game.enemy;
 
+import game.GameEntity;
 import game.GameLevel;
-import game.GameObject;
 import game.Player;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.geom.Point2D;
 
 /**
@@ -18,7 +17,7 @@ import java.awt.geom.Point2D;
  *
  */
 
-public class BossEye extends GameObject {
+public class BossEye extends GameEntity {
 	private float alpha = 0;
 	private double life = 0.005;
 	private int tempCounter = 0;
@@ -27,11 +26,11 @@ public class BossEye extends GameObject {
 	private int placement;// where they are in the 3x3 grid of eyes
 	private double speed;
 	private double[] speedTypes = { -5, -6, -7, -8, -9 };
-	private GameObject player;
+	private GameEntity player;
 	private double health;
 
-	public BossEye(Point2D.Double p, GameLevel level, int placement) {
-		super(p, 300, 300, level);
+	public BossEye(double x, double y, GameLevel level, int placement) {
+		super(x, y, 300, 300, level);
 		this.speed = speedTypes[getLevel().getRandom().nextInt(4)];
 		this.placement = placement;
 		this.timer = 400;
@@ -91,9 +90,10 @@ public class BossEye extends GameObject {
 
 	public void attackPlayer() {
 		if (player != null) {
-            double diffX = getX() - player.getX();
-			double diffY = getY() - player.getY();
-			double distance = Math.hypot(diffX,diffY);
+            double
+                diffX = getPosX() - player.getPosX(),
+			    diffY = getPosY() - player.getPosY(),
+			    distance = Math.hypot(diffX,diffY);
 			setVelX(diffX * speed / distance);
 			setVelY(diffY * speed / distance);
 		}

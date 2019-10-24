@@ -1,25 +1,25 @@
 package game.waves;
 
+import game.GameEntity;
 import game.GameLevel;
-import game.GameObject;
 
-import java.awt.geom.Point2D;
+import java.util.Collections;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Boss extends GameLevel {
     private int currentTick;
-    private GameObject enemy, text;
-    public Boss(GameLevel g, Supplier<Function<GameLevel, GameObject>> boss) {
+    private GameEntity enemy, text;
+    public Boss(GameLevel g, Supplier<Function<GameLevel, GameEntity>> boss) {
         super(g);
         enemy = boss.get().apply(this);
         text = new RainbowText(
-            new Point2D.Double(getDimension().getWidth()/2, getDimension().getHeight()/2),
+            getDimension().getWidth()/2, getDimension().getHeight()/2,
             "Level " + getNumber() + ": Boss Level!!!",
             this
         );
-        addAll(getPlayers());
-        add(enemy);
+        getEntities().addAll(getPlayers());
+        getEntities().add(enemy);
     }
 
     @Override
@@ -27,12 +27,12 @@ public class Boss extends GameLevel {
         super.tick();
 
         if(currentTick == 0) {
-            add(text);
+            getEntities().add(text);
         }
         else if(currentTick == 200) {
-            remove(text);
+            getEntities().remove(text);
         }
-        else if(!contains(enemy)) {
+        else if(!getEntities().contains(enemy) || Collections.disjoint(getEntities(), getPlayers())) {
             getState().pop();
         }
 

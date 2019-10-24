@@ -1,36 +1,37 @@
 package game;
 
 import util.Random;
-
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Stack;
 
-public class GameLevel extends GameState  {
-    private int number;
-    private int score;
-    private Theme theme;
+public class GameLevel extends Performer implements MouseListener, KeyListener {
+    private ArrayList<GameEntity> entities;
+    private Stack<GameLevel> state;
     private Random random;
     private Dimension dimension;
-    private List<Player> players;
+    private Theme theme;
+    private ArrayList<Player> players;
+    private int number;
+    private int score;
+
     public void setScore(int s) {
         score = s;
     }
     public void setTheme(Theme t) {
         theme = t;
-        img = t.get(this);
+        refer(t.get(this));
     }
-    public int getNumber() {
-        return number;
-    }
-    public int getScore() {
-        return score;
-    }
-    public Theme getTheme() {
-        return theme;
+    public ArrayList<GameEntity> getEntities() {
+        return entities;
+    };
+    public Stack<GameLevel> getState() {
+        return state;
     }
     public Random getRandom() {
         return random;
@@ -38,33 +39,63 @@ public class GameLevel extends GameState  {
     public Dimension getDimension() {
         return dimension;
     }
-    public List<Player> getPlayers() {
+    public Theme getTheme() {
+        return theme;
+    }
+    public ArrayList<Player> getPlayers() {
         return players;
     }
-
-    private Image img;
-
-    public GameLevel(GameLevel g) {
-        this(g.getState(), g.getNumber() + 1, g.getScore(), g.getTheme(), g.getRandom(), g.getDimension(), g.getPlayers());
-        addAll(g);
-        forEach(f -> f.setLevel(this));
-        if(img == null) {
-            img = getTheme().get(g);
-        }
+    public int getNumber() {
+        return number;
+    }
+    public int getScore() {
+        return score;
     }
 
-    public GameLevel(Stack<GameState> s, int n, int c, Theme t, Random r, Dimension d, List<Player> p) {
-        super(s);
-        number = n;
-        score = c;
-        theme = t;
+    public GameLevel(GameLevel gl) {
+        this(
+            gl.getEntities(),
+            gl.getState(),
+            gl.getRandom(),
+            gl.getDimension(),
+            gl.getTheme(),
+            gl.getPlayers(),
+            gl.getNumber() + 1,
+            gl.getScore() + gl.getNumber()*100
+        );
+        entities.forEach(e -> e.setLevel(this));
+        players.forEach(p -> p.setLevel(this));
+    }
+
+    public GameLevel(ArrayList<GameEntity> e, Stack<GameLevel> s, Random r, Dimension d, Theme t, ArrayList<Player> p, int n, int c) {
+        entities = e;
+        state = s;
         random = r;
         dimension = d;
+        setTheme(t);
         players = p;
-        img = getTheme().get(this);
+        number = n;
+        score = c;
         wasd = new boolean[4];
         arrows = new boolean[4];
     }
+
+    // Unused input events
+    @Override public final void keyTyped(KeyEvent e) { }
+    @Override public final void mouseClicked(MouseEvent e) { }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // TODO: press animation
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        // TODO: release animation
+    }
+
+    @Override public final void mouseEntered(MouseEvent e) { }
+    @Override public final void mouseExited(MouseEvent e) { }
 
     public Point.Double spawnPoint() { // TODO: avoid spawning on top of players
         Point.Double loc = new Point2D.Double();
@@ -77,9 +108,16 @@ public class GameLevel extends GameState  {
         return loc;
     }
 
+    public Point.Double targetPoint() {
+        return players.stream().filter(entities::contains)
+            .min((l,r) -> (int) Math.hypot(l.getPosX() - r.getPosX(), l.getPosY() - r.getPosY()))
+            .map(p -> new Point.Double(p.getPosX(), p.getPosY()))
+            .orElse(new Point.Double(getDimension().getWidth()/2,getDimension().getHeight()/2));
+    }
+
     private boolean[] wasd, arrows;
 
-    private void changeDir(boolean[] keys, GameObject p) {
+    private void changeDir(boolean[] keys, Player p) {
         p.setLevel(this); // TODO: add proper initialize() method
         int x = Boolean.compare(keys[3], keys[1]);
         int y = Boolean.compare(keys[2], keys[0]);
@@ -89,7 +127,6 @@ public class GameLevel extends GameState  {
         p.setVelY(10 * y/h);
     }
 
-    @Override
     public void tick() {
         if(players.size() == 1) {
             boolean[] or = new boolean[4];
@@ -103,35 +140,26 @@ public class GameLevel extends GameState  {
             changeDir(arrows, players.get(1));
         }
 
-        for(int i = size()-1; i >= 0; i -= 1) {
-            get(i).tick();
+        for(int i = entities.size()-1; i >= 0; i -= 1) {
+            entities.get(i).tick();
         }
+    }
+
+    @Override
+    public Rectangle getBounds() {
+        return new Rectangle(dimension);
     }
 
     @Override
     public void render(Graphics g) {
-        if(img != null) {
-            Dimension dim = getDimension();
-            g.drawImage(img, 0, 0, dim.width, dim.height, null);
-        }
-        forEach(go -> go.render(g));
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
+        super.render(g);
+        entities.forEach(go -> go.render(g));
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
+        int key = e.getKeyCode(); // start moving if key is pressed
 
-        // start moving if key is pressed
         wasd[0] |= key == KeyEvent.VK_W;
         wasd[1] |= key == KeyEvent.VK_A;
         wasd[2] |= key == KeyEvent.VK_S;
@@ -145,9 +173,8 @@ public class GameLevel extends GameState  {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        int key = e.getKeyCode();
+        int key = e.getKeyCode(); // stop moving if key is released
 
-        // stop moving if key is pressed
         wasd[0] &= key != KeyEvent.VK_W;
         wasd[1] &= key != KeyEvent.VK_A;
         wasd[2] &= key != KeyEvent.VK_S;

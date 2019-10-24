@@ -1,46 +1,40 @@
 package game.menu;
 
 import game.*;
+import game.waves.RainbowText;
 import game.waves.Waves;
 import util.Random;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Stack;
 
 public class Menu extends GameLevel {
     private Theme space, water;
     private Random.RandomDifferentElement<Color> fireworkColor;
 
-    public Menu(Stack<GameState> state, Random random, Dimension dimension, Theme common) {
-        super(state, 0, 0, common, random, dimension, new ArrayList<>());
+    public Menu(GameLevel g) {
+        super(g);
 
-        space = new Theme("space", common);
-        water = new Theme("water", common);
+        space = new Theme("space", getTheme());
+        water = new Theme("water", getTheme());
+
         space.initialize();
+        System.out.println("Loaded " + space.size() + " files for space theme.");
         water.initialize();
+        System.out.println("Loaded " + getTheme().size() + " files for water theme");
+
         setTheme(space);
 
-        fireworkColor = random.new RandomDifferentElement<>(
-            Color.red,
-            Color.orange,
-            Color.yellow,
-            Color.green,
-            Color.blue
-            // Color.indigo
-            // Color.violet
-        );
+        fireworkColor = getRandom().new RandomDifferentElement<>(RainbowText.rainbow);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(size() == 0) {
-            add( new Fireworks(
-                new Point2D.Double(getRandom().nextInt(getDimension().width), getDimension().getHeight()),
+        if(getEntities().size() == 0) {
+            getEntities().add( new Fireworks(
+                getRandom().nextInt(getDimension().width),
+                getDimension().getHeight(),
                 this,
                 fireworkColor.get()
             ));
@@ -90,55 +84,40 @@ public class Menu extends GameLevel {
     @Override
     public void mousePressed(MouseEvent e) {
         // Waves One Button
-        if (mouseOver(e.getX(), e.getY(), 602, 300, 281, 250)) {
-            clear();
-            getPlayers().add( new Player(
-                new Point2D.Double(getDimension().getWidth()/2, getDimension().getHeight()/2), this
-            ));
+        if (new Rectangle(602, 300, 281, 250).contains(e.getPoint())) {
+            getEntities().clear();
+            getPlayers().add(new Player(getDimension().getWidth()/2, getDimension().getHeight()/2, this));
             getState().push(new Waves(this));
         }
         // Waves Two Button
-        if (mouseOver(e.getX(), e.getY(), 1052, 300, 281, 250)) {
-            clear();
-            getPlayers().add( new Player(
-                new Point.Double(getDimension().getWidth()/3, getDimension().getHeight()/2), this
-            ));
-            getPlayers().add( new Player(
-                new Point.Double(getDimension().getWidth()*2/3, getDimension().getHeight()/2), this
-            ));
+        else if (new Rectangle(1052, 300, 281, 250).contains(e.getPoint())) {
+            getEntities().clear();
+            getPlayers().add(new Player(getDimension().getWidth()/3, getDimension().getHeight()/2, this));
+            getPlayers().add(new Player(getDimension().getWidth()*2/3, getDimension().getHeight()/2, this));
             getState().push(new Waves(this));
         }
         // Help Button
-        else if (mouseOver(e.getX(), e.getY(), 230, 360, 260, 200)) {
+        else if (new Rectangle(230, 360, 260, 200).contains(e.getPoint())) {
             getState().push(new Help(this));
         }
         // Quit Button
-        else if (mouseOver(e.getX(), e.getY(), 1390, 360, 260, 200)) {
+        else if (new Rectangle(1390, 360, 260, 200).contains(e.getPoint())) {
             System.exit(1);
         }
         // Space Theme Button
-        else if (mouseOver(e.getX(), e.getY(), 400, 730, 350, 120)) {
+        else if (new Rectangle(400, 730, 350, 120).contains(e.getPoint())) {
             setTheme(space);
         }
         // Underwater Theme Button
-        else if (mouseOver(e.getX(), e.getY(), 850, 730, 650, 120)) {
+        else if (new Rectangle(850, 730, 650, 120).contains(e.getPoint())) {
             setTheme(water);
         }
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
+        else {
+            for(int i=getEntities().size()-1; i>=0; i-=1) {
+                if(getEntities().get(i).getBounds().contains(e.getPoint())) {
+                    getEntities().get(i).collide(null);
+                }
+            }
+        }
     }
 }

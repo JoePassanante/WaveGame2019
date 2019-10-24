@@ -10,7 +10,7 @@ public class PickupSkip extends Pickup {
 
     @Override
     public void affect(Player player) {
-        player.getLevel().removeIf(go -> !(go instanceof Player));
+        player.getLevel().getEntities().removeIf(go -> !(go instanceof Player));
         super.affect(player);
     }
 }

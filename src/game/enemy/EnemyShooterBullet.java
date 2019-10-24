@@ -1,7 +1,7 @@
 package game.enemy;
 
+import game.GameEntity;
 import game.GameLevel;
-import game.GameObject;
 import game.Player;
 import game.Trail;
 
@@ -9,12 +9,14 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 
 /**
+ * Should be replaced with a general purpose bullet trail class.
  *
  * @author Brandon Loehle 5/30/16
+ * @author Aaron Paterson 10/20/19
  *
  */
 
-public class EnemyShooterBullet extends GameObject.Disappearing {
+public class EnemyShooterBullet extends GameEntity.Disappearing {
     @Override
     public void collide(Player p) {
         p.damage(1);
@@ -27,14 +29,11 @@ public class EnemyShooterBullet extends GameObject.Disappearing {
 	}
 
 	public void tick() {
-        getLevel().add(new Trail(new Point.Double(getX(), getY()), Color.yellow, (int)getWidth()/4, (int)getHeight()/4, 255, getLevel()));
-
+        getLevel().getEntities().add(new Trail(this, Color.yellow, 255));
         super.tick();
 	}
 
 	public void render(Graphics g) {
-		g.setColor(Color.red);
-		Rectangle bounds = getBounds();
-		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+        super.render(g, Color.red);
 	}
 }

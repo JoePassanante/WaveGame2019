@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Stack;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Stack;
  * @author Aaron Paterson 9/9/19
  */
 
-public class GameClient extends GameState implements Runnable {
+public class GameClient extends GameLevel implements Runnable {
     public static boolean devMode = false; // enable cheats and debug info
 
     private GameWindow window;
@@ -24,12 +25,21 @@ public class GameClient extends GameState implements Runnable {
     private long tick, tock, delta;
 
     private GameClient() {
-        super(new Stack<>());
+        super(
+            new ArrayList<>(),
+            new Stack<>(),
+            new Random(),
+            new Dimension(1920,1080),
+            new Theme("common", null),
+            new ArrayList<>(),
+            -1,
+            0
+        );
 
-        Theme common = new Theme("common", null); // TODO: thread theme loading again
-        common.initialize();
-
-        getState().push(new Menu(getState(), new Random(), new Dimension(1920, 1080), common));
+        System.out.println("Loading themes...");
+        getTheme().initialize(); // TODO: thread theme loading again
+        System.out.println("Loaded " + getTheme().size() + " files for common theme.");
+        getState().push(new Menu(this));
 
         window = new GameWindow();
 
@@ -38,7 +48,7 @@ public class GameClient extends GameState implements Runnable {
 
         window.requestFocus();
 
-        frame = 1_000_000_000 / 60; // time per tick, here it is one billion nanoseconds per sixty ticks
+        frame = 1_000_000_000/60; // time per tick, here it is one billion nanoseconds per sixty ticks
         tick = 0;
         tock = System.nanoTime();
         delta = frame;

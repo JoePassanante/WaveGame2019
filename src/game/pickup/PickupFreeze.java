@@ -17,9 +17,9 @@ public class PickupFreeze extends Pickup {
 
     @Override
     public void affect(Player player) {
-        player.getLevel().stream().filter(go -> !(go instanceof Player)).forEach(go -> {
-            go.setX(go.getX() - go.getVelX());
-            go.setY(go.getY() - go.getVelY());
+        player.getLevel().getEntities().stream().filter(go -> !(go instanceof Player)).forEach(go -> {
+            go.setPosX(go.getPosX() - go.getVelX());
+            go.setPosY(go.getPosY() - go.getVelY());
         });
         super.affect(player);
     }

@@ -70,7 +70,7 @@ public class GameWindow extends JFrame {
         }
     }
 
-    public void draw(Animatable anm) {
+    public void draw(Performer so) {
         if (getWidth() > 0 && getHeight() > 0) {
             BufferStrategy bs = getBufferStrategy(); // Render each Animatable then draw them all at once
             if (bs == null) {
@@ -92,7 +92,7 @@ public class GameWindow extends JFrame {
                 g.translate(-getPreferredSize().getWidth()/2,-getPreferredSize().getHeight()/2);
 
                 screenSpace = g.getTransform();
-                anm.render(g);
+                so.render(g);
 
                 g.setTransform(old);
                 g.dispose();

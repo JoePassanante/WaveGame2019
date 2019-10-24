@@ -1,7 +1,7 @@
 package game.enemy;
 
+import game.GameEntity;
 import game.GameLevel;
-import game.GameObject;
 import game.Player;
 
 import java.awt.*;
@@ -14,7 +14,7 @@ import java.awt.geom.Point2D;
  *
  */
 
-public class EnemyBoss extends GameObject.Bouncing {
+public class EnemyBoss extends GameEntity.Bouncing {
 	private int timer = 80;
 	private int timer2 = 50;
 	private int spawn;
@@ -42,7 +42,7 @@ public class EnemyBoss extends GameObject.Bouncing {
 		if (timer <= 0) {
             setVelY(0);
             getLevel().getPlayers().forEach(p -> {
-                if(p.getY() < 200) {
+                if(p.getPosY() < 200) {
                     collide(p);
                 }
             });
@@ -60,7 +60,7 @@ public class EnemyBoss extends GameObject.Bouncing {
             }
 			spawn = getLevel().getRandom().nextInt(5);
 			if (spawn == 0) {
-                getLevel().add(new EnemyBossBullet(new Point.Double(getX() + 48, getY() + 80), getLevel()));
+                getLevel().getEntities().add(new EnemyBossBullet(new Point.Double(getPosX() + 48, getPosY() + 80), getLevel()));
 //				setHealth(getHealth()-3);
 			}
 		}
@@ -101,7 +101,7 @@ public class EnemyBoss extends GameObject.Bouncing {
 	// allows for grey line to be drawn, as well as first bullet shot
 	public void drawFirstBullet() {
 		if (timer2 == 1) {
-            getLevel().add(new EnemyBossBullet(new Point2D.Double(getX() + 48, getY() + 96), getLevel()));
+            getLevel().getEntities().add(new EnemyBossBullet(new Point2D.Double(getPosX() + 48, getPosY() + 96), getLevel()));
         }
 	}
 }

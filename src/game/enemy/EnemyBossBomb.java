@@ -1,21 +1,21 @@
 package game.enemy;
 
+import game.GameEntity;
 import game.GameLevel;
-import game.GameObject;
 import game.Player;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 
-public class EnemyBossBomb extends GameObject {
-	private int explodeHeight;
+public class EnemyBossBomb extends GameEntity {
+	private double explodeHeight;
 	private int shots;
 
-	public EnemyBossBomb(Point.Double point, GameLevel level, int shots) {
-		super(point, 32, 32, level);
-		this.explodeHeight = (int) (level.getRandom().random()*level.getDimension().getHeight());
+	public EnemyBossBomb(Point.Double point, GameLevel level, int s) {
+		super(point.x, point.y, 32, 32, level);
+		explodeHeight = level.getDimension().getHeight()*level.getRandom().random();
 		setVelY(5);
-		this.shots = shots;
+		shots = s;
 	}
 
     @Override
@@ -25,15 +25,14 @@ public class EnemyBossBomb extends GameObject {
 
     public void tick() {
 		super.tick();
-
-		if (getY()>explodeHeight) {
-            getLevel().remove(this);
+		if (getPosY() > explodeHeight) {
+            getLevel().getEntities().remove(this);
 			for (int i = 0; i < shots; i++) {
-                getLevel().add( new EnemyBossBombBullet(
-                    new Point2D.Double(getX(), getY()),
+                getLevel().getEntities().add( new EnemyBossBombBullet(
+                    new Point2D.Double(getPosX(), getPosY()),
                     getLevel(),
-                    (int)(16*Math.cos(Math.toRadians(360.0*i/shots))),
-                    (int)(16*Math.sin(Math.toRadians(360.0*i/shots)))
+                    16*Math.cos(Math.toRadians(360.0*i/shots)),
+                    16*Math.sin(Math.toRadians(360.0*i/shots))
                 ));
 			}
 		}
@@ -41,7 +40,6 @@ public class EnemyBossBomb extends GameObject {
 	}
 	
 	public void render(Graphics g) {
-		g.setColor(Color.PINK);
-		g.fillRect(getBounds().x, getBounds().y, getBounds().width, getBounds().height);
+	    super.render(g, Color.pink);
 	}
 }

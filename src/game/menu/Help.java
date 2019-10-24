@@ -3,9 +3,10 @@ package game.menu;
 import game.GameLevel;
 import game.pickup.*;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 public class Help extends GameLevel {
     public Help(GameLevel g) {
@@ -13,21 +14,27 @@ public class Help extends GameLevel {
     }
 
     @Override
-    public void tick() {
-
-    }
-
-    @Override
     public void render(Graphics g) {
-        // Display the background
-        g.drawImage(getTheme().get(this), 0, 0, getDimension().width, getDimension().height, null);
+        super.render(g); // Display the background
 
-        Image powerCoin = getTheme().get(PickupScore.class);
-        Image powerSlow = getTheme().get(PickupFreeze.class);
-        Image powerHealth = getTheme().get(PickupHealth.class);
-        Image powerLife = getTheme().get(PickupLife.class);
-        Image powerSpeed = getTheme().get(PickupSize.class);
-        Image shield1 = getTheme().get("shield1");
+        Image
+            powerCoin = null,
+            powerSlow = null,
+            powerHealth = null,
+            powerLife = null,
+            powerSpeed = null,
+            shield1 = null;
+
+        try {
+            powerCoin = ImageIO.read(getTheme().get(PickupScore.class).getSight());
+            powerSlow = ImageIO.read(getTheme().get(PickupFreeze.class).getSight());
+            powerHealth = ImageIO.read(getTheme().get(PickupHealth.class).getSight());
+            powerLife = ImageIO.read(getTheme().get(PickupLife.class).getSight());
+            powerSpeed = ImageIO.read(getTheme().get(PickupSize.class).getSight());
+            shield1 = ImageIO.read(getTheme().get("shield1").getSight());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         g.setColor(Color.white);
 
@@ -66,23 +73,8 @@ public class Help extends GameLevel {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (mouseOver(e.getX(), e.getY(), 850, 300, 200, 64)) {
+        if (new Rectangle(850, 300, 200, 64).contains(e.getPoint())) {
             getState().pop();
         }
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
     }
 }

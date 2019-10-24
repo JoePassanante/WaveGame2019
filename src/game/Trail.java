@@ -2,11 +2,15 @@ package game;
 
 import java.awt.*;
 
-public class Trail extends GameObject.Disappearing {
+public class Trail extends GameEntity.Disappearing {
 	private Color color;
 
-	public Trail(Point.Double loc, Color color, int width, int height, double life, GameLevel level) {
-		super(loc, width, height, level);
+	public Trail(GameEntity e, Color c, double l) {
+	    this(e.getPosX(), e.getPosY(), e.getWidth(), e.getHeight(), c, l, e.getLevel());
+    }
+
+	public Trail(double x, double y, double width, double height, Color color, double life, GameLevel level) {
+		super(new Point.Double(x, y), width, height, level);
 		this.color = color;
 		this.setWidth(width);
 		this.setHeight(height);

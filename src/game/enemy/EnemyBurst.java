@@ -1,57 +1,53 @@
 package game.enemy;
 
+import game.GameEntity;
 import game.GameLevel;
-import game.GameObject;
 import game.Player;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 
-public class EnemyBurst extends GameObject.Disappearing {
-	private Point start;
+public class EnemyBurst extends GameEntity.Disappearing {
 	private EnemyBurstWarning warning;
 
 	public EnemyBurst(GameLevel level) {
 		super(level.spawnPoint(),150, 150, level);
 
 		double r = getLevel().getRandom().random();
-        double x=0, y=0, w=0, h=0;
+        double x, y, w, h;
 		if(r < .25) {
-            setX(-getWidth());
+            setPosX(-getWidth());
             setVelX(30);
-            x = 0;
-            y = 0;
             w = 25;
             h = level.getDimension().getHeight();
+            x = w/2;
+            y = h/2;
         }
         else if(r < .50) {
-            setX(level.getDimension().width + getWidth());
+            setPosX(level.getDimension().width + getWidth());
             setVelX(-30);
-            x = level.getDimension().getWidth() - 25;
-            y = 0;
             w = 25;
             h = level.getDimension().getHeight();
+            x = level.getDimension().getWidth() - w/2;
+            y = 0;
         }
         else if(r < .75) {
-            setY(-getHeight());
+            setPosY(-getHeight());
             setVelY(30);
-            x = 0;
-            y = 0;
             w = level.getDimension().getWidth();
             h = 25;
+            x = w/2;
+            y = h/2;
         }
         else {
-            setY(level.getDimension().height + getHeight());
+            setPosY(level.getDimension().height + getHeight());
             setVelY(-30);
-            x = 0;
-            y = level.getDimension().getHeight() - 25;
             w = level.getDimension().getWidth();
             h = 25;
+            x = w/2;
+            y = level.getDimension().getHeight() - h/2;
         }
 
         warning = new EnemyBurstWarning(new Point2D.Double(x,y),w,h,level);
-
-        start = getBounds().getLocation();
 	}
 
 	private boolean warned = false, spawned = false;
@@ -62,9 +58,9 @@ public class EnemyBurst extends GameObject.Disappearing {
     }
 
     public void tick() {
-        if(!getLevel().contains(warning)) {
+        if(!getLevel().getEntities().contains(warning)) {
             if(!warned) {
-                getLevel().add(warning);
+                getLevel().getEntities().add(warning);
                 warned = true;
             }
             else {
@@ -72,9 +68,9 @@ public class EnemyBurst extends GameObject.Disappearing {
             }
         }
 
-        if(!getLevel().contains(this)) {
+        if(!getLevel().getEntities().contains(this)) {
             if(!spawned) {
-                getLevel().add(this);
+                getLevel().getEntities().add(this);
             }
         }
 

@@ -12,6 +12,6 @@ public class PickupClear extends PickupSkip {
     @Override
     public void affect(Player player) {
         super.affect(player);
-        player.getLevel().add(new EnemyBurst(getLevel()));
+        player.getLevel().getEntities().add(new EnemyBurst(getLevel()));
     }
 }

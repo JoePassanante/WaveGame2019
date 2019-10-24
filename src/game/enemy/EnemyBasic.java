@@ -1,7 +1,7 @@
 package game.enemy;
 
+import game.GameEntity;
 import game.GameLevel;
-import game.GameObject;
 import game.Player;
 
 /**
@@ -10,7 +10,7 @@ import game.Player;
  *
  */
 
-public class EnemyBasic extends GameObject.Bouncing {
+public class EnemyBasic extends GameEntity.Bouncing {
 	public EnemyBasic(GameLevel level) {
 		super(level.spawnPoint(), 125, 60, level);
 		setVelX(10 * (level.getRandom().random() < .5 ? -1 : 1));

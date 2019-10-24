@@ -3,7 +3,6 @@ package game;
 import game.pickup.*;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 /**
@@ -14,19 +13,28 @@ import java.util.ArrayList;
  * @author Aaron Paterson 10/1/19
  */
 
-public class Player extends GameObject.Stopping {
+public class Player extends GameEntity.Stopping {
 	private double maxHealth;
 	private double armor; // value between zero and one that represents damage resistance
-	private ArrayList<Pickup> inactive; // TODO: replace all arraylists and stacks with safe concurrent push/pop stack
+	private ArrayList<Pickup> inactive; // TODO: replace all array lists and stacks with concurrent push/pop deques
 	private ArrayList<Pickup> active;
+
 	public void setMaxHealth(double m) {
 	    maxHealth = m;
     }
-    public double getMaxHealth() {
-	    return maxHealth;
-    }
     public void setArmor(double d) {//set players damage
         armor  = d;
+    }
+    public void damage(double d) {
+        playerColor = Color.RED;
+        setHealth(getHealth() - d*(1 - armor));
+    }
+    public void setSize(double size) {
+        setWidth(size);
+        setHeight(size);
+    }
+    public double getMaxHealth() {
+        return maxHealth;
     }
     public double getArmor() {//get damage done
         return armor;
@@ -37,19 +45,11 @@ public class Player extends GameObject.Stopping {
     public ArrayList<Pickup> getActive() {
 	    return active;
     }
-    public void damage(double d) {
-        playerColor = Color.RED;
-	    setHealth(getHealth() - d*(1 - armor));
-    }
-    public void setSize(double size) {
-        setWidth(size);
-        setHeight(size);
-    }
 
     private Color playerColor;
 
-	public Player(Point2D.Double p, GameLevel level) {
-		super(p, 32, 32, level);
+	public Player(double x, double y, GameLevel level) {
+		super(new Point.Double(x, y), 32, 32, level);
 		setMaxHealth(100);
 		setHealth(maxHealth);
 		armor = 0;
@@ -60,7 +60,8 @@ public class Player extends GameObject.Stopping {
 
     @Override
     public void collide(Player p) {
-        // TODO: fun collision ripple animation
+        getLevel().getEntities().add(new Trail(this, playerColor, 255));
+        // TODO: fun collision ripple animation and trade health
     }
 
     private double theta = 0;
@@ -70,18 +71,17 @@ public class Player extends GameObject.Stopping {
 	    playerColor = Color.white;
         for(int i = inactive.size()-1; i >= 0; i -= 1) {
             theta += .01 + 2*Math.PI/inactive.size();
-            inactive.get(i).setX(getX() + 50*Math.cos(theta));
-            inactive.get(i).setY(getY() + 50*Math.sin(theta));
+            inactive.get(i).setPosX(getPosX() + 50*Math.cos(theta));
+            inactive.get(i).setPosY(getPosY() + 50*Math.sin(theta));
         }
 	    for(int i = active.size()-1; i >= 0; i -= 1) {
 	        active.get(i).affect(this);
         }
-	    for(int i = getLevel().size()-1; i >= 0; i -= 1) {
-	        if(this != getLevel().get(i) && getBounds().intersects(getLevel().get(i).getBounds())) {
-                getLevel().get(i).collide(this);
+	    for(int i = getLevel().getEntities().size()-1; i >= 0; i -= 1) {
+	        if(getBounds().intersects(getLevel().getEntities().get(i).getBounds())) {
+                getLevel().getEntities().get(i).collide(this);
             }
         }
-        getLevel().add(new Trail(new Point2D.Double(getX(), getY()), playerColor, (int)getWidth(), (int)getHeight(), 255, getLevel()));
 	}
 
 	@Override

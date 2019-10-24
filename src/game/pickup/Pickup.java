@@ -1,10 +1,10 @@
 package game.pickup;
 
+import game.GameEntity;
 import game.GameLevel;
-import game.GameObject;
 import game.Player;
 
-public class Pickup extends GameObject.Bouncing {
+public class Pickup extends GameEntity.Bouncing {
     public Pickup(GameLevel level) {
         this(level,0);
     }
@@ -16,14 +16,14 @@ public class Pickup extends GameObject.Bouncing {
 
     @Override
     public void collide(Player player) {
-        getLevel().remove(this);
+        getLevel().getEntities().remove(this);
         player.getInactive().add(0, this);
     }
 
     @Override
     public void tick() {
         if(getHealth() < 0) {
-            getLevel().remove(this);
+            getLevel().getEntities().remove(this);
         }
     }
 

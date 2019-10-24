@@ -1,7 +1,7 @@
 package game.enemy;
 
+import game.GameEntity;
 import game.GameLevel;
-import game.GameObject;
 import game.Player;
 import game.Trail;
 
@@ -15,8 +15,8 @@ import java.awt.*;
  *
  */
 
-public class EnemyBossBombBullet extends GameObject.Disappearing {
-	public EnemyBossBombBullet(Point.Double point, GameLevel level, int velX, int velY) {
+public class EnemyBossBombBullet extends GameEntity.Disappearing {
+	public EnemyBossBombBullet(Point.Double point, GameLevel level, double velX, double velY) {
 		super(point, 16, 16, level);
 		setVelX(velX);
 		setVelY(velY);
@@ -28,9 +28,9 @@ public class EnemyBossBombBullet extends GameObject.Disappearing {
     }
 
     public void tick() {
-        getLevel().add(new Trail(new Point.Double(getX(), getY()), Color.PINK,(int)getWidth(),(int)getHeight(), 255, this.getLevel()));
+        getLevel().getEntities().add( new Trail(this, Color.pink, 255));
 	}
-	
+
     @Override
 	public void render(Graphics g) {
 		g.setColor(Color.green);

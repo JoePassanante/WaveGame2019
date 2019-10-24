@@ -1,13 +1,12 @@
 package game.waves;
 
+import game.GameEntity;
 import game.GameLevel;
-import game.GameObject;
 import game.GameWindow;
 import game.Player;
+import util.Random;
 
 import java.awt.*;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.AffineTransform;
 
 /**
  * This is the text you see before each set of 10 levels
@@ -17,17 +16,28 @@ import java.awt.geom.AffineTransform;
  *
  */
 
-public class RainbowText extends GameObject {
+public class RainbowText extends GameEntity {
 	private String text;
-	private int timer;
-	private Color[] color = { Color.WHITE, Color.RED, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.ORANGE,
-			Color.PINK, Color.YELLOW };
-	private int index;
+	public static final Color[] rainbow = {
+            Color.BLUE,
+            Color.CYAN,
+            Color.GREEN,
+            Color.MAGENTA,
+            Color.ORANGE,
+            Color.PINK,
+            Color.RED,
+            Color.YELLOW
+	};
 
-	public RainbowText(Point.Double point, String t, GameLevel level) {
-		super(point, 0, 0, level);
+	private Random.RandomDifferentElement<Color> generator;
+	private Color color;
+
+	public RainbowText(double x, double y, String t, GameLevel level) {
+		super(x, y, 0, 0, level);
 		text = t;
-		timer = 15;
+		setHealth(150);
+		generator = getLevel().getRandom().new RandomDifferentElement<>(rainbow);
+		color = generator.get();
 	}
 
     @Override
@@ -37,28 +47,19 @@ public class RainbowText extends GameObject {
 
     @Override
 	public void tick() {
-	    timer -= 1;
+	    setHealth(getHealth() - 1);
         // Controls color switch
-        if (timer == 0) {
-            index = getLevel().getRandom().nextInt(9); // get a new random color
-            timer = 15;
+        if (getHealth() % 15 == 0) {
+            color = generator.get(); // set the new random color
         }
+        super.tick();
 	}
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(color[index]);// set the new random color
-        GameWindow.drawStringCentered(g, new Font("Amoebic", Font.BOLD, 125), text, (int)getX(), (int)getY());
-	}
-
-    public double getTextWidth(Font font, String text) {
-		AffineTransform affinetransform = new AffineTransform();
-		FontRenderContext frc = new FontRenderContext(affinetransform, true, true);
-		return font.getStringBounds(text, frc).getWidth();
-	}
-
-	@Override
-	public Rectangle getBounds() {
-		return new Rectangle((int)getX(), (int)getY(),0,0);
+		g.setColor(color);
+        GameWindow.drawStringCentered(
+            g, new Font("Amoebic", Font.BOLD, 125), text, (int)getPosX(), (int)getPosY()
+        );
 	}
 }

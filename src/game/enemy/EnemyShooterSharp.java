@@ -1,10 +1,10 @@
 package game.enemy;
 
+import game.GameEntity;
 import game.GameLevel;
-import game.GameObject;
 import game.Player;
 
-import java.awt.Point;
+import java.awt.*;
 import java.awt.geom.Point2D;
 
 /**
@@ -14,7 +14,7 @@ import java.awt.geom.Point2D;
  *
  */
 
-public class EnemyShooterSharp extends GameObject.Bouncing {
+public class EnemyShooterSharp extends GameEntity.Bouncing {
 	private int timer;
 
 	public EnemyShooterSharp(GameLevel level) {
@@ -44,25 +44,19 @@ public class EnemyShooterSharp extends GameObject.Bouncing {
 	}
 
 	public void shoot() {
-        getLevel().getPlayers().stream().filter(getLevel()::contains)
-            .min((l,r) -> (int)(
-                Math.hypot(getX()-l.getX(),getY()-l.getY()) -
-                Math.hypot(getX()-r.getX(),getY()-r.getY()))
-            ).ifPresent(player -> {
-            double
-                diffX = player.getX() - getX(),
-                diffY = player.getY() - getY(),
-                diff = Math.hypot(diffX, diffY),
-                aimX = diffX + player.getVelX() * 30,
-                aimY = diffY + player.getVelY() * 30,
-                aim = Math.hypot(aimX, aimY),
-                shootX = Math.max(diffX / diff, aimX / aim) * 10,
-                shootY = Math.max(diffY / diff, aimY / aim) * 10;
+	    Point.Double player = getLevel().targetPoint();
+        double
+            diffX = player.getX() - getPosX(),
+            diffY = player.getY() - getPosY(),
+            diff = Math.hypot(diffX, diffY);
 
-            //supposed to shoot where they're going, not 100% accurate in terms of time yet though
+        //supposed to shoot where they're going, not 100% accurate in terms of time yet though
 
-            getLevel().add(new EnemyShooterBullet(new Point2D.Double(getX() + 50, getY() - 10), shootX, shootY, getLevel()));
-            getLevel().add(new EnemyShooterBullet(new Point2D.Double(getX() - 50, getY() - 10), shootX, shootY, getLevel()));
-        });
+        getLevel().getEntities().add(new EnemyShooterBullet(new Point2D.Double(
+        getPosX() + 50, getPosY() - 10), 10*diffX/diff, 10*diffY/diff, getLevel()
+        ));
+        getLevel().getEntities().add(new EnemyShooterBullet(new Point2D.Double(
+        getPosX() - 50, getPosY() - 10), 10*diffX/diff, 10*diffY/diff, getLevel()
+        ));
     }
 }

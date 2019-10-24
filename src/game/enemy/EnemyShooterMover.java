@@ -1,9 +1,10 @@
 package game.enemy;
 
+import game.GameEntity;
 import game.GameLevel;
-import game.GameObject;
 import game.Player;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 
 /**
@@ -12,7 +13,7 @@ import java.awt.geom.Point2D;
  *
  */
 
-public class EnemyShooterMover extends GameObject.Bouncing {
+public class EnemyShooterMover extends GameEntity.Bouncing {
 	private int timer;
 	private int bulletSpeed;
 
@@ -42,25 +43,19 @@ public class EnemyShooterMover extends GameObject.Bouncing {
 	}
 
 	public void shoot() {
-        getLevel().getPlayers().stream().filter(getLevel()::contains)
-            .min((l,r) -> (int)(
-                Math.hypot(getX()-l.getX(),getY()-l.getY()) -
-                Math.hypot(getX()-r.getX(),getY()-r.getY()))
-            )
-            .ifPresent(player -> {
-                double
-                    diffX = getX() - player.getX(),
-                    diffY = getY() - player.getY(),
-                    distance = Math.hypot(diffX, diffY),
-                    bulletVelX = diffX * bulletSpeed / distance,
-                    bulletVelY = diffY * bulletSpeed / distance;
+        Point.Double player = getLevel().targetPoint();
+        double
+            diffX = getPosX() - player.getX(),
+            diffY = getPosY() - player.getY(),
+            distance = Math.hypot(diffX, diffY),
+            bulletVelX = diffX * bulletSpeed / distance,
+            bulletVelY = diffY * bulletSpeed / distance;
 
-                    getLevel().add( new EnemyShooterBullet(
-                        new Point2D.Double(getX(), getY()-10),
-                        bulletVelX,
-                        bulletVelY,
-                        getLevel()
-                    ));
-            });
+            getLevel().getEntities().add( new EnemyShooterBullet(
+                new Point2D.Double(getPosX(), getPosY()-10),
+                bulletVelX,
+                bulletVelY,
+                getLevel()
+            ));
 	}
 }
