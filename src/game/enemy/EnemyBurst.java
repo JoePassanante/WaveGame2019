@@ -28,7 +28,7 @@ public class EnemyBurst extends GameEntity.Disappearing {
             w = 25;
             h = level.getDimension().getHeight();
             x = level.getDimension().getWidth() - w/2;
-            y = 0;
+            y = h/2;
         }
         else if(r < .75) {
             setPosY(-getHeight());
