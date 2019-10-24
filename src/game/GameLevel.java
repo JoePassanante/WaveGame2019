@@ -62,7 +62,7 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
             gl.getTheme(),
             gl.getPlayers(),
             gl.getNumber() + 1,
-            gl.getScore() + gl.getNumber()*100
+            gl.getScore() + 100
         );
         entities.forEach(e -> e.setLevel(this));
         players.forEach(p -> p.setLevel(this));

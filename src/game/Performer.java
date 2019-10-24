@@ -27,6 +27,9 @@ public class Performer {
         if(def != null) {
             if (sight == null) {
                 sight = def.sight;
+                image = def.image;
+            }
+            if(image == null) {
                 frame();
             }
             if (sound == null) {
@@ -39,6 +42,9 @@ public class Performer {
         if(ref != null) {
             if (ref.sight != null) {
                 sight = ref.sight;
+                image = ref.image;
+            }
+            if(image == null) {
                 frame();
             }
             if (ref.sound != null) {

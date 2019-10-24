@@ -46,8 +46,8 @@ public class Waves extends GameLevel {
                 EnemySweep::new
             );
             randomBoss = rng.new RandomDifferentElement<>(
-                EnemyBoss::new
-                //EnemyRocketBoss::new
+                EnemyBoss::new,
+                EnemyRocketBoss::new
                 //BossEye::new
             );
             randomPickup = rng.new RandomDifferentElement<>(
@@ -128,6 +128,7 @@ public class Waves extends GameLevel {
             1
         ) {
             GameEntity ge = randomEnemy.get().apply(this);
+//            GameEntity ge = new EnemyRocketBoss(this); // or test specific enemies like this
             System.out.println("Spawning: " + ge.getClass().getName());
             getEntities().add(ge);
         }

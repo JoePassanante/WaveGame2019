@@ -61,6 +61,7 @@ public class Player extends GameEntity.Stopping {
     @Override
     public void collide(Player p) {
         getLevel().getEntities().add(new Trail(this, playerColor, 255));
+        playerColor = Color.white;
         // TODO: fun collision ripple animation and trade health
     }
 
@@ -68,7 +69,6 @@ public class Player extends GameEntity.Stopping {
     @Override
 	public void tick() { // Heartbeat of the Player class
 	    super.tick();
-	    playerColor = Color.white;
         for(int i = inactive.size()-1; i >= 0; i -= 1) {
             theta += .01 + 2*Math.PI/inactive.size();
             inactive.get(i).setPosX(getPosX() + 50*Math.cos(theta));

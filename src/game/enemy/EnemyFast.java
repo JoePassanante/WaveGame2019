@@ -31,7 +31,7 @@ public class EnemyFast extends GameEntity.Bouncing {
 	    Graphics2D g = (Graphics2D)gfx;
 	    AffineTransform old = g.getTransform();
 	    if(0 < getVelY()) {
-	        g.transform(AffineTransform.getRotateInstance(Math.PI, getWidth()/2, getHeight()/2));
+	        g.setTransform(AffineTransform.getRotateInstance(Math.PI, getPosX(), getPosY()));
         }
 	    super.render(g);
 	    g.setTransform(old);

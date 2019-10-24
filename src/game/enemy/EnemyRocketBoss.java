@@ -3,39 +3,32 @@ package game.enemy;
 import game.*;
 import game.Player;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
-public class EnemyRocketBoss extends GameEntity {
+public class EnemyRocketBoss extends GameEntity.Stopping {
     private Path2D hitbox;
 	private double angle;
 	private double dash;
-
-    private static class EnemyRocketBossOn extends EnemyRocketBoss {
-        public EnemyRocketBossOn(GameLevel level) {
-            super(level);
-        }
-    }
-
-    EnemyRocketBossOn on;
+	private Performer on;
 
     public EnemyRocketBoss(GameLevel level) {
-		super(level.getDimension().getWidth()/2, level.getDimension().getHeight()/2, 80, 296, level);
+		super(new Point2D.Double(level.getDimension().getWidth()/2, level.getDimension().getHeight()/2), 80, 296, level);
 		setHealth(1000);
-		hitbox = new Path2D.Double(super.getBounds());
-		on = new EnemyRocketBossOn(level);
+		hitbox = new Path2D.Double(getBounds());
+		on = getLevel().getTheme().get(getClass().getSimpleName() + "On");
 	}
 
     @Override
     public void collide(Player player) {
-        player.damage(2);
-        dash = 0;
+        if(hitbox.intersects(player.getBounds())) {
+            player.damage(2);
+            if(dash > 0) {
+                dash = 0;
+            }
+        }
     }
 
     @Override
@@ -44,37 +37,36 @@ public class EnemyRocketBoss extends GameEntity {
 
         Point2D.Double target = getLevel().targetPoint();
 
-        dash -= 1;
         if (dash > 0) {
-            double speed = getHealth() / 100;
+            double speed = 100 - .1*getHealth();
             setVelX(speed * Math.cos(angle));
             setVelY(speed * Math.sin(angle));
         }
+        else if (dash == 0) {
+            getLevel().getEntities().add(new EnemyBurst(getLevel()));
+            if (getLevel().getNumber() > 10) {
+                getLevel().getEntities().add( new EnemyRocketBossMissile(
+                        new Point2D.Double(getPosX(), getPosY()),
+                        getLevel(),
+                        10,
+                        target
+                ));
+            }
+            setHealth(getHealth() - 100);
+            refer(getLevel().getTheme().get(this));
+        }
         else if (dash > -60) {
-            angle = Math.atan2(target.getY()-getPosY(),target.getX()-getPosX());
+            setVelX(0);
+            setVelY(0);
+            double arc = Math.atan2(target.getY()-getPosY(),target.getX()-getPosX());
+            angle += .05*(Math.atan2(Math.sin(arc-angle), Math.cos(arc-angle)));
         }
         else {
             dash = 60;
+            refer(on);
         }
 
-        if (getHealth() % 100 == 0 && getLevel().getNumber() > 10) {
-            getLevel().getEntities().add( new EnemyRocketBossMissile(
-                new Point2D.Double(getPosX(), getPosY()),
-                getLevel(),
-                10,
-                target
-            ));
-        }
-
-        if (getHealth() % 150 == 0) {
-            getLevel().getEntities().add(new EnemyBurst(getLevel()));
-        }
-        setHealth(getHealth() - 1);
-
-        if (getHealth() <= 0) {
-            System.out.println("Removing Boss");
-            getLevel().getEntities().remove(this);
-        }
+        dash -= 1;
     }
 
 	@Override
@@ -88,24 +80,22 @@ public class EnemyRocketBoss extends GameEntity {
 		g.drawRect((int)getLevel().getDimension().getWidth() / 2 - 500, (int)getLevel().getDimension().getHeight() - 150, 1000, 50);
 
 		Graphics2D g2d = (Graphics2D)g;
-		//DEV TOOLS
-		/*
-		g2d.drawLine((int)this.x, (int)this.y, (int)this.dash_x, (int)this.dash_y); //DEV TOOL
-		Ellipse2D e = new Ellipse2D.Double(this.dash_x,this.dash_y,10,10);
-		g2d.draw(e);
-		 */
-		
-		//Draw Rocket
+
 		AffineTransform old = g2d.getTransform();
 
-		AffineTransform at = AffineTransform.getRotateInstance(angle, getPosX(), getPosY());
-		g2d.setTransform(at);
-		super.render(g, new Rectangle(0,0,(int)getWidth(),(int)getHeight()));
+		g2d.setTransform(AffineTransform.getRotateInstance(angle + Math.PI/2, getPosX(), getPosY()));
+		Rectangle box = getBounds();
+		if(dash <= 0) {
+		    box = new Rectangle(box.x, box.y, box.width, 220);
+        }
+        hitbox = new Path2D.Double(box, g2d.getTransform());
 
-        hitbox = new Path2D.Double(super.getBounds(), at);
-        g2d.setColor(Color.YELLOW);
-        g2d.draw(hitbox);
+        //Draw Rocket
+		super.render(g2d);
 
         g2d.setTransform(old);
+
+        //g2d.setColor(Color.YELLOW);
+        //g2d.draw(hitbox);
     }
 }
