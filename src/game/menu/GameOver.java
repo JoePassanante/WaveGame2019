@@ -1,4 +1,4 @@
-package game.waves;
+package game.menu;
 
 import game.GameLevel;
 import game.GameWindow;
@@ -19,8 +19,8 @@ import java.io.*;
 public class GameOver extends GameLevel {
 	private Random.RandomDifferentElement<Color> retryColor = getRandom().new RandomDifferentElement<>(Color.black, Color.white);
 	private String trueHighScore;
-	public GameOver(Waves waves) {
-        super(waves);
+	public GameOver(GameLevel level) {
+        super(level);
         new Thread( () -> {
             try { // Saves Highscore
                 File set = new File("src/HighScores.txt");

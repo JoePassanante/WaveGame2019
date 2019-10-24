@@ -86,12 +86,14 @@ public class Menu extends GameLevel {
         // Waves One Button
         if (new Rectangle(602, 300, 281, 250).contains(e.getPoint())) {
             getEntities().clear();
+            getState().push(new GameOver(this));
             getPlayers().add(new Player(getDimension().getWidth()/2, getDimension().getHeight()/2, this));
             getState().push(new Waves(this));
         }
         // Waves Two Button
         else if (new Rectangle(1052, 300, 281, 250).contains(e.getPoint())) {
             getEntities().clear();
+            getState().push(new GameOver(this));
             getPlayers().add(new Player(getDimension().getWidth()/3, getDimension().getHeight()/2, this));
             getPlayers().add(new Player(getDimension().getWidth()*2/3, getDimension().getHeight()/2, this));
             getState().push(new Waves(this));

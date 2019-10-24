@@ -18,8 +18,6 @@ public class Boss extends GameLevel {
             "Level " + getNumber() + ": Boss Level!!!",
             this
         );
-        getEntities().addAll(getPlayers());
-        getEntities().add(enemy);
     }
 
     @Override
@@ -27,12 +25,18 @@ public class Boss extends GameLevel {
         super.tick();
 
         if(currentTick == 0) {
+            getEntities().add(enemy);
             getEntities().add(text);
+        }
+        else if(Collections.disjoint(getEntities(), getPlayers())) {
+            getEntities().clear();
+            getState().pop();
         }
         else if(currentTick == 200) {
             getEntities().remove(text);
         }
-        else if(!getEntities().contains(enemy) || Collections.disjoint(getEntities(), getPlayers())) {
+        else if(!getEntities().contains(enemy)) {
+            getEntities().retainAll(getPlayers());
             getState().pop();
         }
 

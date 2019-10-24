@@ -1,8 +1,10 @@
 package game.waves;
 
 import game.*;
+import game.pickup.Pickup;
 
 import java.awt.*;
+import java.util.Collections;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -14,29 +16,37 @@ import java.util.function.Supplier;
 
 public class Upgrades extends GameLevel {
     private Supplier<Function<GameLevel, GameEntity>> pickup;
+    private int currentTick;
 
     public Upgrades(GameLevel g, Supplier<Function<GameLevel, GameEntity>> p) {
         super(g);
         pickup = p;
     }
 
-    private boolean initialized = false;
     @Override
 	public void tick() {
         super.tick();
-        if(!initialized) {
-            for(int i=0; i<getNumber(); i++) {
+
+        if(Collections.disjoint(getEntities(), getPlayers())) {
+            getState().pop();
+        }
+        else if(currentTick == 0) {
+            getEntities().removeAll(getPlayers()); // TODO: Use a Set for entities.
+            getEntities().addAll(getPlayers());
+
+            for(int i=0; i<getNumber(); i+=1) {
                 GameEntity pu = pickup.get().apply(this);
                 pu.setVelX(getRandom().random()*10);
                 pu.setVelY(getRandom().random()*10);
                 getEntities().add(pu);
             }
-            initialized = true;
         }
-        else if(getEntities().size() < getEntities().stream().filter(Trail.class::isInstance).count() + getNumber()) {
-            getEntities().clear();
+        else if(getEntities().stream().filter(Pickup.class::isInstance).count() + getPlayers().size() < getNumber()) {
+            getEntities().retainAll(getPlayers());
             getState().pop();
         }
+
+        currentTick += 1;
 	}
 
 	public void render(Graphics g) {

@@ -21,8 +21,8 @@ import java.util.stream.IntStream;
  */
 
 public class Waves extends GameLevel {
-    private int maxTick;
     private int currentTick;
+    private int maxTick;
     private RainbowText text;
 
     private static class Spawn {
@@ -100,24 +100,25 @@ public class Waves extends GameLevel {
 
         if(currentTick == 0) {
             getEntities().add(text);
-            getEntities().addAll(getPlayers());
-            if(getNumber() > 1) {
+            if(getNumber() == 1) {
+                getEntities().addAll(getPlayers());
+            }
+            else if(getNumber() > 1) {
                 getEntities().add(spawn.randomPickup.get().apply(this));
             }
         }
-        else if(Collections.disjoint(getEntities(), getPlayers())) {
-            getEntities().clear();
-            getState().pop();
-            getState().push(new GameOver(this));
-        }
-        else if(currentTick >= maxTick) {
-            getEntities().clear();
+        else if(currentTick > maxTick) {
+            getEntities().retainAll(getPlayers());
             getState().pop();
             getState().push(new Waves(this));
             if (getNumber() % 5 == 4) {
                 getState().push(new Upgrades(this, spawn.randomPickup));
                 getState().push(new Boss(this, spawn.randomBoss));
             }
+        }
+        else if(Collections.disjoint(getEntities(), getPlayers())) {
+            getEntities().clear();
+            getState().pop();
         }
         else if(
             getEntities().size() <
