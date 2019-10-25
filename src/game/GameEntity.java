@@ -74,7 +74,10 @@ public class GameEntity extends Performer {
         refer(l.getTheme().get(this));
     }
 
+    @Override
     public void tick() {
+        super.tick();
+
         posX += velX;
         posY += velY;
         if(getHealth() < 0) {
