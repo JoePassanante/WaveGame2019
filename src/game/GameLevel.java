@@ -70,7 +70,7 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
             gl.getTheme(),
             gl.getPlayers(),
             gl.getNumber() + 1,
-            gl.getScore() + 100,
+            gl.getScore(),
             gl.getClipped()
         );
         entities.forEach(e -> e.setLevel(this));
@@ -148,7 +148,10 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
         p.setVelY(10 * y/h);
     }
 
+    @Override
     public void tick() {
+        super.tick();
+
         if(players.size() == 1) {
             boolean[] or = new boolean[4];
             for (int b = 0; b < or.length; b += 1) {

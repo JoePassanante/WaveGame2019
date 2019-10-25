@@ -107,7 +107,8 @@ public class Waves extends GameLevel {
                 getEntities().add(spawn.randomPickup.get().apply(this));
             }
         }
-        else if(currentTick > maxTick) {
+        else if(currentTick >= maxTick) {
+            setScore(getScore() + 100);
             getEntities().retainAll(getPlayers());
             getState().pop();
             getState().push(new Waves(this));
@@ -119,6 +120,8 @@ public class Waves extends GameLevel {
         else if(Collections.disjoint(getEntities(), getPlayers())) {
             getEntities().clear();
             getState().pop();
+            getState().peek().setScore(getScore());
+            getState().peek().setScore(getScore());
         }
         else if(
             getEntities().size() <
