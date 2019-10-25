@@ -15,7 +15,7 @@ public class Boss extends GameLevel {
         enemy = boss.get().apply(this);
         text = new RainbowText(
             getDimension().getWidth()/2, getDimension().getHeight()/2,
-            "Level " + getNumber() + ": Boss Level!!!",
+            "Level " + getNumber() + ": Boss Battle!!!",
             this
         );
     }

@@ -4,6 +4,7 @@ import game.GameLevel;
 import game.pickup.*;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -69,6 +70,11 @@ public class Help extends GameLevel {
         //Back button
         g.drawRect(910, 300, 150, 64); //ugly rectangle box
         g.drawString("Back", 955, 340); //make it the back button
+    }
+
+    @Override
+    public void render(Clip c, int i) {
+        // let the menu music continue playing
     }
 
     @Override

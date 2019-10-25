@@ -19,6 +19,10 @@ public class Performer {
     private byte[] sight, sound; // TODO: touch, taste, and smell interfaces :^)
     private BufferedImage image;
 
+    public void tick() {
+        // TODO: animation loops, sound loops, etc.
+    }
+
     private void frame() {
         image = LambdaException.<ImageInputStream,BufferedImage,IOException>wrap(ImageIO::read).apply(getSight());
     }

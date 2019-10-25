@@ -4,6 +4,8 @@ import game.GameEntity;
 import game.GameLevel;
 import game.Player;
 
+import javax.sound.sampled.Clip;
+
 public class Pickup extends GameEntity.Bouncing {
     public Pickup(GameLevel level) {
         this(level,0);
@@ -14,10 +16,20 @@ public class Pickup extends GameEntity.Bouncing {
         setHealth(h);
     }
 
+    private boolean clipped;
+    @Override
+    public void render(Clip c, int i) {
+        if(clipped) {
+            super.render(c, i);
+            clipped = false;
+        }
+    }
+
     @Override
     public void collide(Player player) {
         getLevel().getEntities().remove(this);
         player.getInactive().add(0, this);
+        clipped = true;
     }
 
     @Override

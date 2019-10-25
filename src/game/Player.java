@@ -2,6 +2,7 @@ package game;
 
 import game.pickup.*;
 
+import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -16,8 +17,9 @@ import java.util.ArrayList;
 public class Player extends GameEntity.Stopping {
 	private double maxHealth;
 	private double armor; // value between zero and one that represents damage resistance
-	private ArrayList<Pickup> inactive; // TODO: replace all array lists and stacks with concurrent push/pop deques
+	private ArrayList<Pickup> inactive; // TODO: replace all array lists and stacks with concurrent friendly stacks
 	private ArrayList<Pickup> active;
+	private boolean damaged;
 
 	public void setMaxHealth(double m) {
 	    maxHealth = m;
@@ -26,8 +28,9 @@ public class Player extends GameEntity.Stopping {
         armor  = d;
     }
     public void damage(double d) {
-        playerColor = Color.RED;
+        playerColor = Color.red;
         setHealth(getHealth() - d*(1 - armor));
+        damaged = true;
     }
     public void setSize(double size) {
         setWidth(size);
@@ -36,7 +39,7 @@ public class Player extends GameEntity.Stopping {
     public double getMaxHealth() {
         return maxHealth;
     }
-    public double getArmor() {//get damage done
+    public double getArmor() {
         return armor;
     }
     public ArrayList<Pickup> getInactive() {
@@ -85,11 +88,20 @@ public class Player extends GameEntity.Stopping {
 	}
 
 	@Override
-	public void render(Graphics g) {//renders player
+	public void render(Graphics g) {
 		g.setColor(playerColor);
 		Rectangle bounds = getBounds();
 		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 		//g.drawImage(img, (int) this.x, (int) this.y, playerWidth, playerHeight, null);
-        inactive.forEach(go -> go.render(g));
+        inactive.forEach(ge -> ge.render(g));
 	}
+
+	@Override
+    public void render(Clip c, int i) {
+        if(damaged) {
+            super.render(c,1);
+            damaged = false;
+        }
+        inactive.forEach(ge -> ge.render(c,i));
+    }
 }

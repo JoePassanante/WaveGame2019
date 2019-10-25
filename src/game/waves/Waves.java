@@ -128,7 +128,7 @@ public class Waves extends GameLevel {
             1
         ) {
             GameEntity ge = randomEnemy.get().apply(this);
-//            GameEntity ge = new EnemyRocketBoss(this); // or test specific enemies like this
+//          GameEntity ge = new EnemyRocketBoss(this); // or test specific enemies like this
             System.out.println("Spawning: " + ge.getClass().getName());
             getEntities().add(ge);
         }

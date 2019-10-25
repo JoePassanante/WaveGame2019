@@ -1,8 +1,12 @@
 package game;
 
 import game.menu.Menu;
+import util.LambdaException;
 import util.Random;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -21,6 +25,7 @@ public class GameClient extends GameLevel implements Runnable {
     public static boolean devMode = false; // enable cheats and debug info
 
     private GameWindow window;
+    private Clip music;
     private final long frame;
     private long tick, tock, delta;
 
@@ -33,7 +38,8 @@ public class GameClient extends GameLevel implements Runnable {
             new Theme("common", null),
             new ArrayList<>(),
             -1,
-            0
+            0,
+            true
         );
 
         System.out.println("Loading themes...");
@@ -42,6 +48,7 @@ public class GameClient extends GameLevel implements Runnable {
         getState().push(new Menu(this));
 
         window = new GameWindow();
+        music = LambdaException.wraps(AudioSystem::getClip).get();
 
         window.addMouseListener(this);
         window.addKeyListener(this);
@@ -83,6 +90,7 @@ public class GameClient extends GameLevel implements Runnable {
             delta -= frame;
         }
         window.draw(this); // drawing as frequently as possible
+        getState().peek().render(music, 0);
 
         tock = System.nanoTime();
         delta += tock - tick;
@@ -93,7 +101,8 @@ public class GameClient extends GameLevel implements Runnable {
         while(!client.getState().empty()) {
             try {
                 SwingUtilities.invokeAndWait(client);
-            } catch (InterruptedException | InvocationTargetException e) {
+            }
+            catch (InterruptedException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }

@@ -5,7 +5,6 @@ import game.GameWindow;
 import util.Random;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.*;
 
@@ -41,10 +40,6 @@ public class GameOver extends GameLevel {
         }
 	}
 
-	public void tick() {
-
-	}
-
 	public void render(Graphics g) {
         super.render(g);
         g.setColor(Color.white);
@@ -61,20 +56,5 @@ public class GameOver extends GameLevel {
     public void mousePressed(MouseEvent e) {
 	    getPlayers().clear();
 	    getState().pop();
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
     }
 }

@@ -1,5 +1,6 @@
 package game;
 
+import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.geom.Point2D;
 
@@ -78,6 +79,16 @@ public class GameEntity extends Performer {
         posY += velY;
         if(getHealth() < 0) {
             getLevel().getEntities().remove(this);
+        }
+    }
+
+
+    private Clip playing;
+    @Override
+    public void render(Clip c, int i) {
+        if(playing == null || !playing.isActive()) {
+            playing = c;
+            super.render(c,i);
         }
     }
 

@@ -9,7 +9,7 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
 public class EnemyRocketBoss extends GameEntity.Stopping {
-    private Path2D hitbox;
+    private Path2D.Double hitbox;
 	private double angle;
 	private double dash;
 	private Performer on;
@@ -17,8 +17,8 @@ public class EnemyRocketBoss extends GameEntity.Stopping {
     public EnemyRocketBoss(GameLevel level) {
 		super(new Point2D.Double(level.getDimension().getWidth()/2, level.getDimension().getHeight()/2), 80, 296, level);
 		setHealth(1000);
-		hitbox = new Path2D.Double(getBounds());
 		on = getLevel().getTheme().get(getClass().getSimpleName() + "On");
+		hitbox = new Path2D.Double(super.getBounds());
 	}
 
     @Override
@@ -44,12 +44,12 @@ public class EnemyRocketBoss extends GameEntity.Stopping {
         }
         else if (dash == 0) {
             getLevel().getEntities().add(new EnemyBurst(getLevel()));
-            if (getLevel().getNumber() > 10) {
-                getLevel().getEntities().add( new EnemyRocketBossMissile(
+            if (getLevel().getNumber() >= 10) {
+                getLevel().getEntities().add(
+                    new EnemyRocketBossMissile(
                         new Point2D.Double(getPosX(), getPosY()),
                         getLevel(),
-                        10,
-                        target
+                        10
                 ));
             }
             setHealth(getHealth() - 100);
@@ -84,18 +84,20 @@ public class EnemyRocketBoss extends GameEntity.Stopping {
 		AffineTransform old = g2d.getTransform();
 
 		g2d.setTransform(AffineTransform.getRotateInstance(angle + Math.PI/2, getPosX(), getPosY()));
-		Rectangle box = getBounds();
+		Rectangle box = super.getBounds();
 		if(dash <= 0) {
 		    box = new Rectangle(box.x, box.y, box.width, 220);
         }
         hitbox = new Path2D.Double(box, g2d.getTransform());
-
-        //Draw Rocket
-		super.render(g2d);
-
+		super.render(g2d, super.getBounds()); // Draw Rocket
         g2d.setTransform(old);
 
         //g2d.setColor(Color.YELLOW);
         //g2d.draw(hitbox);
+    }
+
+    @Override
+    public Rectangle getBounds() {
+        return hitbox.getBounds();
     }
 }
