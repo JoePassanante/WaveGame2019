@@ -11,7 +11,7 @@ Event Process/How the game runs:
  - Game.java operates the entire programs ticks and rendering
          - Critical that handler is ticks and rendered every cycle. 
 
- - All Enemies and entities in the game are added to handler.java's list of GameObject.... handler.java renders everything
+ - All Enemies and entities in the game are added to handler.java's list of game.GameObject.... handler.java renders everything
    From here. Nice because all rendering for enemies is kept in one area. Remember this class draws objects using Game.javas Graphic
    object.
    
