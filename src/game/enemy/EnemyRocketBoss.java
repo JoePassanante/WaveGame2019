@@ -38,16 +38,17 @@ public class EnemyRocketBoss extends Enemy {
         Point2D.Double target = getLevel().targetPoint();
 
         if (dash > 0) {
-            double speed = 100 - .1*getHealth();
+            double speed = 20 - getHealth() / 100;
             setVelX(speed * Math.cos(angle));
             setVelY(speed * Math.sin(angle));
-            if(!getLevel().getBounds().contains(getBounds())) {
+            if(!hitbox.intersects(getLevel().getBounds())) {
                 dash = 0;
-            };
+            }
+            setHealth(getHealth() - 1);
         }
         else if (dash == 0) {
             getLevel().getEntities().add(new EnemyBurst(getLevel()));
-            if (getLevel().getNumber() >= 10) {
+            if (getLevel().getNumber() > 10) {
                 getLevel().getEntities().add(
                     new EnemyRocketBossMissile(
                         new Point2D.Double(getPosX(), getPosY()),
@@ -55,7 +56,6 @@ public class EnemyRocketBoss extends Enemy {
                         10
                 ));
             }
-            setHealth(getHealth() - 100);
             refer(off);
         }
         else if (dash > -60) {
@@ -95,8 +95,8 @@ public class EnemyRocketBoss extends Enemy {
 		super.render(g2d, super.getBounds()); // Draw Rocket
         g2d.setTransform(old);
 
-        //g2d.setColor(Color.YELLOW);
-        //g2d.draw(hitbox);
+        g2d.setColor(Color.YELLOW);
+        g2d.draw(hitbox);
     }
 
     @Override

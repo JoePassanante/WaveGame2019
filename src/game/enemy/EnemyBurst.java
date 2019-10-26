@@ -48,7 +48,7 @@ public class EnemyBurst extends Enemy.Disappearing {
         warning = new EnemyBurstWarning(new Point2D.Double(x,y),w,h,level);
 	}
 
-    private boolean warned = false;
+    private boolean warned, spawned;
 
     @Override
     public void tick() {
@@ -56,9 +56,15 @@ public class EnemyBurst extends Enemy.Disappearing {
             getLevel().getEntities().add(warning);
             warned = true;
         }
-        if(!getLevel().getEntities().contains(warning)) {
+        else if(!getLevel().getEntities().contains(warning)) {
             super.tick();
+            if(getLevel().getEntities().contains(this)) {
+                spawned = true;
+            }
+            if(!spawned) {
+                getLevel().getEntities().add(this);
+            }
         }
-		//handler.addObject(new Trail(x, y, ID.Trail, Color.orange, this.size, this.size, 0.025, this.handler));
+        //handler.addObject(new Trail(x, y, ID.Trail, Color.orange, this.size, this.size, 0.025, this.handler));
 	}
 }

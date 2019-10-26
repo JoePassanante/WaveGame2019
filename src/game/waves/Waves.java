@@ -136,7 +136,7 @@ public class Waves extends GameLevel {
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
 
-        if(GameClient.devMode) {
+        if(GameClient.devMode || true) {
             if (key == KeyEvent.VK_U) {
                 getState().push(new Upgrades(this, spawn.randomPickup));
             }

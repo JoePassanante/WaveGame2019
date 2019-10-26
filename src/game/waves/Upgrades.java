@@ -36,8 +36,9 @@ public class Upgrades extends GameLevel {
 
             for(int i=0; i<getNumber(); i+=1) {
                 GameEntity pu = pickup.get().apply(this);
-                pu.setVelX(getRandom().random()*10);
-                pu.setVelY(getRandom().random()*10);
+                double angle = getRandom().random()*2*Math.PI;
+                pu.setVelX(Math.cos(angle)*10);
+                pu.setVelY(Math.sin(angle)*10);
                 getEntities().add(pu);
             }
         }
