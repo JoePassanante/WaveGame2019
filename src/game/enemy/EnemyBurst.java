@@ -1,12 +1,10 @@
 package game.enemy;
 
-import game.GameEntity;
 import game.GameLevel;
-import game.Player;
 
 import java.awt.geom.Point2D;
 
-public class EnemyBurst extends GameEntity.Disappearing {
+public class EnemyBurst extends Enemy.Disappearing {
 	private EnemyBurstWarning warning;
 
 	public EnemyBurst(GameLevel level) {
@@ -50,30 +48,23 @@ public class EnemyBurst extends GameEntity.Disappearing {
         warning = new EnemyBurstWarning(new Point2D.Double(x,y),w,h,level);
 	}
 
-	private boolean warned = false, spawned = false;
+    private boolean warned, spawned;
 
     @Override
-    public void collide(Player p) {
-        p.damage(2);
-    }
-
     public void tick() {
-        if(!getLevel().getEntities().contains(warning)) {
-            if(!warned) {
-                getLevel().getEntities().add(warning);
-                warned = true;
-            }
-            else {
-                super.tick();
-            }
+        if(!warned) {
+            getLevel().getEntities().add(warning);
+            warned = true;
         }
-
-        if(!getLevel().getEntities().contains(this)) {
+        else if(!getLevel().getEntities().contains(warning)) {
+            super.tick();
+            if(getLevel().getEntities().contains(this)) {
+                spawned = true;
+            }
             if(!spawned) {
                 getLevel().getEntities().add(this);
             }
         }
-
-		//handler.addObject(new Trail(x, y, ID.Trail, Color.orange, this.size, this.size, 0.025, this.handler));
+        //handler.addObject(new Trail(x, y, ID.Trail, Color.orange, this.size, this.size, 0.025, this.handler));
 	}
 }

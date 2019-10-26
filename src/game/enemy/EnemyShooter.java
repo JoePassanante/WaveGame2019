@@ -1,8 +1,6 @@
 package game.enemy;
 
-import game.GameEntity;
 import game.GameLevel;
-import game.Player;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -13,7 +11,7 @@ import java.awt.geom.Point2D;
  *
  */
 
-public class EnemyShooter extends GameEntity.Bouncing {
+public class EnemyShooter extends Enemy.Bouncing {
 	private int timer;
 	private double bulletSpeed;
 
@@ -26,18 +24,11 @@ public class EnemyShooter extends GameEntity.Bouncing {
 	}
 
     @Override
-    public void collide(Player p) {
-        p.damage(2);
-    }
-
     public void tick() {
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.yellow, this.sizeX, this.sizeY, 0.025, this.handler));
-		
 		timer -= 1;
-		
 		if (timer <= 0) {
 			shoot();
-			
 			timer = 20;
 		}
 

@@ -1,8 +1,8 @@
 package game.menu;
 
-import game.GameEntity;
 import game.GameLevel;
 import game.Player;
+import game.enemy.Enemy;
 
 import java.awt.*;
 
@@ -14,7 +14,7 @@ import java.awt.*;
  * @author Aaron Paterson 9/19/19
  */
 
-public class Fireworks extends GameEntity.Disappearing {
+public class Fireworks extends Enemy.Disappearing {
     private Color color;
     private boolean spark;
 

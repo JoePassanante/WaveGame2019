@@ -34,7 +34,7 @@ public class EnemyBurstWarning extends GameEntity {
         if (timer >= 60) {
             getLevel().getEntities().remove(this);
         }
-        if(timer % 10 == 0) {
+        else if(timer % 10 == 0) {
             color = generator.get();
         }
 	}

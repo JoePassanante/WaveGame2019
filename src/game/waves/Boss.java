@@ -15,7 +15,7 @@ public class Boss extends GameLevel {
         enemy = boss.get().apply(this);
         text = new RainbowText(
             getDimension().getWidth()/2, getDimension().getHeight()/2,
-            "Level " + getNumber() + ": Boss Battle!!!",
+            "Level " + (getNumber()-1) + ": Boss Battle!!!",
             this
         );
     }
@@ -28,14 +28,10 @@ public class Boss extends GameLevel {
             getEntities().add(enemy);
             getEntities().add(text);
         }
-        else if(Collections.disjoint(getEntities(), getPlayers())) {
-            getEntities().clear();
-            getState().pop();
-        }
         else if(currentTick == 200) {
             getEntities().remove(text);
         }
-        else if(!getEntities().contains(enemy)) {
+        else if(!getEntities().contains(enemy) || Collections.disjoint(getEntities(), getPlayers())) {
             getEntities().retainAll(getPlayers());
             getState().pop();
         }

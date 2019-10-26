@@ -4,38 +4,32 @@ import game.GameEntity;
 import game.GameLevel;
 import game.Player;
 
-import javax.sound.sampled.Clip;
+import java.awt.*;
 
-public class Pickup extends GameEntity.Bouncing {
+public class Pickup extends GameEntity {
     public Pickup(GameLevel level) {
         this(level,0);
     }
 
     public Pickup(GameLevel level, int h) {
-        super(level.spawnPoint(), 30, 30, level);
+        super(level.getDimension().getWidth()/2, level.getDimension().getHeight()/2, 30, 30, level);
         setHealth(h);
-    }
-
-    private boolean clipped;
-    @Override
-    public void render(Clip c, int i) {
-        if(clipped) {
-            super.render(c, i);
-            clipped = false;
-        }
     }
 
     @Override
     public void collide(Player player) {
+        super.collide(player);
         getLevel().getEntities().remove(this);
         player.getInactive().add(0, this);
-        clipped = true;
     }
 
     @Override
     public void tick() {
-        if(getHealth() < 0) {
-            getLevel().getEntities().remove(this);
+        super.tick();
+        Rectangle bounds = getLevel().getBounds();
+        if(!bounds.intersects(getBounds())) {
+            setPosX(Math.floorMod((int) getPosX(), (int) bounds.getWidth()));
+            setPosY(Math.floorMod((int) getPosY(), (int) bounds.getHeight()));
         }
     }
 

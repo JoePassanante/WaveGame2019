@@ -2,7 +2,6 @@ package game;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
-import java.awt.geom.Point2D;
 
 /**
  * @author Brandon Loehle 5/30/16
@@ -62,7 +61,12 @@ public class GameEntity extends Performer {
         return this.health;
     }
 
+    private boolean clipped;
+    public void clip() {
+        clipped = true;
+    }
     public void collide(Player p) { // called when a GameObject touches a Player
+        clipped = true;
     }
 
     public GameEntity(double x, double y, double w, double h, GameLevel l) {
@@ -77,7 +81,6 @@ public class GameEntity extends Performer {
     @Override
     public void tick() {
         super.tick();
-
         posX += velX;
         posY += velY;
         if(getHealth() < 0) {
@@ -85,19 +88,16 @@ public class GameEntity extends Performer {
         }
     }
 
-
     private Clip playing;
     @Override
     public void render(Clip c, int i) {
-        if(playing == null || !playing.isActive()) {
-            playing = c;
-            super.render(c,i);
+        if(clipped) {
+            clipped = false;
+            if(playing == null || !playing.isActive()) {
+                super.render(c, i);
+                playing = c;
+            }
         }
-    }
-
-    @Override
-    public void render(Graphics g) {
-        super.render(g, getBounds());
     }
 
     public void render(Graphics g, Color c) {
@@ -126,33 +126,6 @@ public class GameEntity extends Performer {
             super.tick();
             setPosX(clamp(getPosX(), 0, getLevel().getDimension().getWidth()));
             setPosY(clamp(getPosY(), 0, getLevel().getDimension().getHeight()));
-        }
-    }
-
-    public static abstract class Bouncing extends GameEntity {
-        public Bouncing(Point.Double p, double w, double h, GameLevel l) {
-            super(p.x, p.y, w, h, l);
-        }
-
-        @Override
-        public void tick() {
-            super.tick();
-            setVelX(changeSign(getVelX(), Boolean.compare(getPosX() < 0, getLevel().getDimension().getWidth() < getPosX())));
-            setVelY(changeSign(getVelY(), Boolean.compare(getPosY() < 0, getLevel().getDimension().getHeight() < getPosY())));
-        }
-    }
-
-    public static abstract class Disappearing extends GameEntity {
-        public Disappearing(Point2D.Double p, double w, double h, GameLevel l) {
-            super(p.x, p.y, w, h, l);
-        }
-
-        @Override
-        public void tick() {
-            super.tick();
-            if(!getLevel().getBounds().intersects(getBounds())) {
-                getLevel().getEntities().remove(this);
-            }
         }
     }
 

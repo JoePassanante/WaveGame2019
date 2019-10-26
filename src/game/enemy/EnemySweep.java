@@ -1,8 +1,6 @@
 package game.enemy;
 
-import game.GameEntity;
 import game.GameLevel;
-import game.Player;
 import game.Trail;
 import game.waves.RainbowText;
 import util.Random;
@@ -15,7 +13,7 @@ import java.awt.*;
  *
  */
 
-public class EnemySweep extends GameEntity.Bouncing {
+public class EnemySweep extends Enemy.Bouncing {
     private Random.RandomDifferentElement<Color> generator;
     private Color random;
 
@@ -27,16 +25,11 @@ public class EnemySweep extends GameEntity.Bouncing {
 	}
 
     @Override
-    public void collide(Player p) {
-        p.damage(3);
-    }
-
-    @Override
     public void tick() {
 	    super.tick();
 	    random = generator.get();
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.cyan, 16, 16, 0.025, this.handler));
-        getLevel().getEntities().add(new Trail(this, random, 255));
+        getLevel().getNonentities().add(new Trail(this, random, 255));
 	}
 
 	@Override

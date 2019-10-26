@@ -42,9 +42,7 @@ public class GameClient extends GameLevel implements Runnable {
             true
         );
 
-        System.out.println("Loading themes...");
-        getTheme().initialize(); // TODO: thread theme loading again
-        System.out.println("Loaded " + getTheme().size() + " files for common theme.");
+        getTheme().run();
         getState().push(new Menu(this));
 
         window = new GameWindow();

@@ -1,8 +1,6 @@
 package game.enemy;
 
-import game.GameEntity;
 import game.GameLevel;
-import game.Player;
 import game.Trail;
 
 import java.awt.*;
@@ -15,26 +13,21 @@ import java.awt.*;
  *
  */
 
-public class EnemyBossBombBullet extends GameEntity.Disappearing {
+public class EnemyBossBombBullet extends Enemy.Disappearing {
 	public EnemyBossBombBullet(Point.Double point, GameLevel level, double velX, double velY) {
 		super(point, 16, 16, level);
 		setVelX(velX);
 		setVelY(velY);
 	}
 
-    @Override
-    public void collide(Player p) {
-        p.damage(2);
-    }
-
+	@Override
     public void tick() {
-        getLevel().getEntities().add( new Trail(this, Color.pink, 255));
+	    super.tick();
+        getLevel().getNonentities().add( new Trail(this, Color.pink, 255));
 	}
 
     @Override
 	public void render(Graphics g) {
-		g.setColor(Color.green);
-		Rectangle bounds = getBounds();
-		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+	    super.render(g, Color.green);
 	}
 }

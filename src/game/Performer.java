@@ -28,32 +28,22 @@ public class Performer {
     }
 
     public void defer(Performer def) {
-        if(def != null) {
-            if (sight == null) {
-                sight = def.sight;
-                image = def.image;
-            }
-            if(image == null) {
-                frame();
-            }
-            if (sound == null) {
-                sound = def.sound;
-            }
+        if (sight == null) {
+            sight = def.sight;
+            image = def.image;
+        }
+        if (sound == null) {
+            sound = def.sound;
         }
     }
 
     public void refer(Performer ref) {
-        if(ref != null) {
-            if (ref.sight != null) {
-                sight = ref.sight;
-                image = ref.image;
-            }
-            if(image == null) {
-                frame();
-            }
-            if (ref.sound != null) {
-                sound = ref.sound;
-            }
+        if (ref.sight != null) {
+            sight = ref.sight;
+            image = ref.image;
+        }
+        if (ref.sound != null) {
+            sound = ref.sound;
         }
     }
 

@@ -1,10 +1,12 @@
 package game;
 
 import game.pickup.*;
+import util.Random;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 /**
  * Player object class with collision
@@ -19,18 +21,16 @@ public class Player extends GameEntity.Stopping {
 	private double armor; // value between zero and one that represents damage resistance
 	private ArrayList<Pickup> inactive; // TODO: replace all array lists and stacks with concurrent friendly stacks
 	private ArrayList<Pickup> active;
-	private boolean damaged;
 
 	public void setMaxHealth(double m) {
 	    maxHealth = m;
     }
     public void setArmor(double d) {//set players damage
-        armor  = d;
+        armor = d;
     }
     public void damage(double d) {
         playerColor = Color.red;
-        setHealth(getHealth() - d*(1 - armor));
-        damaged = true;
+        setHealth(getHealth() - d/(armor + 1));
     }
     public void setSize(double size) {
         setWidth(size);
@@ -63,7 +63,7 @@ public class Player extends GameEntity.Stopping {
 
     @Override
     public void collide(Player p) {
-        getLevel().getEntities().add(new Trail(this, playerColor, 255));
+        getLevel().getNonentities().add(new Trail(this, playerColor, 255));
         playerColor = Color.white;
         // TODO: fun collision ripple animation and trade health
     }
@@ -80,28 +80,18 @@ public class Player extends GameEntity.Stopping {
 	    for(int i = active.size()-1; i >= 0; i -= 1) {
 	        active.get(i).affect(this);
         }
-	    for(int i = getLevel().getEntities().size()-1; i >= 0; i -= 1) {
-	        if(getBounds().intersects(getLevel().getEntities().get(i).getBounds())) {
-                getLevel().getEntities().get(i).collide(this);
-            }
-        }
 	}
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(playerColor);
-		Rectangle bounds = getBounds();
-		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 		//g.drawImage(img, (int) this.x, (int) this.y, playerWidth, playerHeight, null);
+        super.render(g, playerColor);
         inactive.forEach(ge -> ge.render(g));
 	}
 
 	@Override
     public void render(Clip c, int i) {
-        if(damaged) {
-            super.render(c,1);
-            damaged = false;
-        }
+        super.render(c, i);
         inactive.forEach(ge -> ge.render(c,i));
     }
 }

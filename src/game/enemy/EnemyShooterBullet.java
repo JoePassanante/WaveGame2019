@@ -1,8 +1,6 @@
 package game.enemy;
 
-import game.GameEntity;
 import game.GameLevel;
-import game.Player;
 import game.Trail;
 
 import java.awt.*;
@@ -16,23 +14,20 @@ import java.awt.geom.Point2D;
  *
  */
 
-public class EnemyShooterBullet extends GameEntity.Disappearing {
-    @Override
-    public void collide(Player p) {
-        p.damage(1);
-    }
-
+public class EnemyShooterBullet extends Enemy.Disappearing {
     public EnemyShooterBullet(Point2D.Double loc, double velX, double velY, GameLevel level) {
 		super(loc, 16, 16, level);
 		setVelX(velX);
 		setVelY(velY);
 	}
 
+	@Override
 	public void tick() {
-        getLevel().getEntities().add(new Trail(this, Color.yellow, 255));
+        getLevel().getNonentities().add(new Trail(this, Color.yellow, 255));
         super.tick();
 	}
 
+	@Override
 	public void render(Graphics g) {
         super.render(g, Color.red);
 	}

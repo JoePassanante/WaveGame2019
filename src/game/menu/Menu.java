@@ -7,6 +7,7 @@ import util.Random;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.stream.Stream;
 
 public class Menu extends GameLevel {
     private Theme space, water;
@@ -18,11 +19,7 @@ public class Menu extends GameLevel {
         space = new Theme("space", getTheme());
         water = new Theme("water", getTheme());
 
-        space.initialize();
-        System.out.println("Loaded " + space.size() + " files for space theme.");
-        water.initialize();
-        System.out.println("Loaded " + getTheme().size() + " files for water theme");
-
+        Stream.of(space, water).parallel().forEach(Runnable::run); // still not fast enough
         setTheme(space);
 
         fireworkColor = getRandom().new RandomDifferentElement<>(RainbowText.rainbow);
