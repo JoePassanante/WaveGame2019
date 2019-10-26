@@ -1,8 +1,6 @@
 package game.enemy;
 
-import game.GameEntity;
 import game.GameLevel;
-import game.Player;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -13,7 +11,7 @@ import java.awt.geom.Point2D;
  *
  */
 
-public class EnemyShooterMover extends GameEntity.Bouncing {
+public class EnemyShooterMover extends Enemy.Bouncing {
 	private int timer;
 	private int bulletSpeed;
 
@@ -28,10 +26,6 @@ public class EnemyShooterMover extends GameEntity.Bouncing {
 	}
 
     @Override
-    public void collide(Player p) {
-        p.damage(2);
-    }
-
     public void tick() {
         super.tick();
 		//handler.addObject(new Trail(x, y, ID.Trail, Color.yellow, this.sizeX, this.sizeY, 0.025, this.handler));
@@ -44,6 +38,7 @@ public class EnemyShooterMover extends GameEntity.Bouncing {
 
 	public void shoot() {
         Point.Double player = getLevel().targetPoint();
+
         double
             diffX = getPosX() - player.getX(),
             diffY = getPosY() - player.getY(),
@@ -51,11 +46,11 @@ public class EnemyShooterMover extends GameEntity.Bouncing {
             bulletVelX = diffX * bulletSpeed / distance,
             bulletVelY = diffY * bulletSpeed / distance;
 
-            getLevel().getEntities().add( new EnemyShooterBullet(
-                new Point2D.Double(getPosX(), getPosY()-10),
-                bulletVelX,
-                bulletVelY,
-                getLevel()
-            ));
+        getLevel().getEntities().add( new EnemyShooterBullet(
+            new Point2D.Double(getPosX(), getPosY()-10),
+            bulletVelX,
+            bulletVelY,
+            getLevel()
+        ));
 	}
 }

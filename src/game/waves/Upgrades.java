@@ -41,7 +41,7 @@ public class Upgrades extends GameLevel {
                 getEntities().add(pu);
             }
         }
-        else if(getEntities().stream().filter(Pickup.class::isInstance).count() + getPlayers().size() < getNumber()) {
+        else if(getEntities().stream().filter(Pickup.class::isInstance).count() + getPlayers().size() <= getNumber()) {
             getEntities().retainAll(getPlayers());
             getState().pop();
         }

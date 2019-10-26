@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
  * @author Aaron Paterson 9/23/18
  */
 
-public class Theme extends HashMap<String, Performer> {
+public class Theme extends HashMap<String, Performer> implements Runnable {
     private Theme fallback;
     private String folder;
 
@@ -28,14 +29,15 @@ public class Theme extends HashMap<String, Performer> {
         fallback = fall;
     }
 
-    public void initialize() { // every time you look at this method it gets uglier. caught exceptions were a mistake.
+    @Override
+    public void run() { // every time you look at this method it gets uglier. checked exceptions were a mistake.
         try(    ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 Stream<File> files = Files
-                    .walk(Paths.get("src/themes/" + folder))
-                    .filter(Files::isRegularFile)
-                    .map(Path::toFile)
+                        .walk(Paths.get("src/themes/" + folder))
+                        .filter(Files::isRegularFile)
+                        .map(Path::toFile)
         ) {
-            for(File f: files.toArray(File[]::new)) {
+            for(File f: files.toArray(File[]::new)) { // avoid handling checked exceptions twice ;-;
                 String name = f.getName();
                 int dot = name.indexOf(".");
                 String before = name.substring(0, dot);
@@ -62,28 +64,14 @@ public class Theme extends HashMap<String, Performer> {
     }
 
     public Performer get(Class cls) {
-        Performer result = get(cls.getSimpleName());
-        if(cls.getSuperclass() != null) {
-            if (result == null) {
-                result = new Performer();
-                result.refer(get(cls.getSuperclass()));
-            } else {
-                result.defer(get(cls.getSuperclass()));
-            }
-        }
+        Performer result = Optional.ofNullable(get(cls.getSimpleName())).orElseGet(Performer::new);
+        Optional.ofNullable(cls.getSuperclass()).map(this::get).ifPresent(result::defer);
         return result;
     }
 
     public Performer get(String str) {
-        Performer result = super.get(str);
-        if(fallback != null) {
-            if (result == null) {
-                result = new Performer();
-                result.refer(fallback.get(str));
-            } else {
-                result.defer(fallback.get(str));
-            }
-        }
+        Performer result = Optional.ofNullable(super.get(str)).orElseGet(Performer::new);
+        Optional.ofNullable(fallback).map(f -> f.get(str)).ifPresent(result::defer);
         return result;
     }
 }

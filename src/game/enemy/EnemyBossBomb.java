@@ -1,13 +1,11 @@
 package game.enemy;
 
-import game.GameEntity;
 import game.GameLevel;
-import game.Player;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 
-public class EnemyBossBomb extends GameEntity {
+public class EnemyBossBomb extends Enemy {
 	private double explodeHeight;
 	private int shots;
 
@@ -18,11 +16,7 @@ public class EnemyBossBomb extends GameEntity {
 		shots = s;
 	}
 
-    @Override
-    public void collide(Player p) {
-        p.damage(2);
-    }
-
+	@Override
     public void tick() {
 		super.tick();
 		if (getPosY() > explodeHeight) {
@@ -38,7 +32,8 @@ public class EnemyBossBomb extends GameEntity {
 		}
 
 	}
-	
+
+	@Override
 	public void render(Graphics g) {
 	    super.render(g, Color.pink);
 	}

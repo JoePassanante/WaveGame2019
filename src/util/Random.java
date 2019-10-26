@@ -10,7 +10,8 @@ import java.util.function.Supplier;
 public class Random extends java.util.Random {
     private long[] state;
 
-    public Random(long seed) {
+    @Override
+    public void setSeed(long seed) {
         state = new long[4];
         for(int s = 0; s < state.length; s += 1) {
             seed += 0x9e3779b97f4a7c15L;
@@ -25,7 +26,7 @@ public class Random extends java.util.Random {
     }
 
     public Random() {
-        this(System.nanoTime());
+        super(System.nanoTime());
     }
 
     @Override

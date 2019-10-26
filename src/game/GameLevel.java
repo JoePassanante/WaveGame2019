@@ -1,5 +1,7 @@
 package game;
 
+import game.enemy.Enemy;
+import game.pickup.Pickup;
 import util.LambdaException;
 import util.Random;
 
@@ -10,11 +12,14 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 public class GameLevel extends Performer implements MouseListener, KeyListener {
     private ArrayList<GameEntity> entities;
+    private ArrayList<GameEntity> nonentities;
     private Stack<GameLevel> state;
     private Random random;
     private Dimension dimension;
@@ -37,6 +42,9 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
     }
     public ArrayList<GameEntity> getEntities() {
         return entities;
+    };
+    public ArrayList<GameEntity> getNonentities() {
+        return nonentities;
     };
     public Stack<GameLevel> getState() {
         return state;
@@ -97,6 +105,7 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
         number = n;
         setScore(c);
         setClipped(l);
+        nonentities = new ArrayList<>();
         wasd = new boolean[4];
         arrows = new boolean[4];
     }
@@ -131,7 +140,7 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
 
     public Point.Double targetPoint() {
         return players.stream().filter(entities::contains)
-            .min((l,r) -> (int) Math.hypot(l.getPosX() - r.getPosX(), l.getPosY() - r.getPosY()))
+            .max((l,r) -> (int)(l.getHealth() - r.getHealth()))
             .map(p -> new Point.Double(p.getPosX(), p.getPosY()))
             .orElse(new Point.Double(getDimension().getWidth()/2,getDimension().getHeight()/2));
     }
@@ -167,6 +176,18 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
         for(int i = entities.size()-1; i >= 0; i -= 1) {
             entities.get(i).tick();
         }
+        for(int i = nonentities.size()-1; i >= 0; i -= 1) {
+            nonentities.get(i).tick();
+        }
+        for(int i = getEntities().size()-1; i >= 0; i -= 1) { // brute force collisions
+            for(int j = getPlayers().size()-1; j >= 0; j -= 1) {
+                if(getEntities().contains(getPlayers().get(j))) {
+                    if (getEntities().get(i).getBounds().intersects(getPlayers().get(j).getBounds())) {
+                        getEntities().get(i).collide(getPlayers().get(j));
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -178,6 +199,40 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
     public void render(Graphics g) {
         super.render(g);
         entities.forEach(ge -> ge.render(g));
+        nonentities.forEach(ge -> ge.render(g));
+
+        g.setColor(Color.white);
+        g.setFont(new Font("Amoebic", Font.BOLD, 30));
+
+        if(GameClient.devMode){
+            g.drawString("Entities: " + entities.size(), getDimension().width-300, getDimension().height-200);
+            g.drawString("Enemies: " + entities.stream().filter(Enemy.class::isInstance).count(), getDimension().width-300, getDimension().height-200);
+            g.drawString("Pickups: " + entities.stream().filter(Pickup.class::isInstance).count(), getDimension().width-300, getDimension().height-150);
+            g.drawString("Trails: " + nonentities.size(), getDimension().width-300, getDimension().height-50);
+//          g.drawString("FPS: " + fps, getGameDimension().width-300, getGameDimension().height-100);
+        }
+//        g.drawString("Level Progress: " + 100*currentTick/maxTick + "%", 15, 175);
+//        g.drawString("Health: " + getPlayers().stream().mapToDouble(GameEntity::getHealth).mapToObj(Double::toString).collect(Collectors.joining(",")), 15, 1050);
+//        g.drawString("Size: " + getPlayers().stream().mapToDouble(GameEntity::getWidth).mapToObj(Double::toString).collect(Collectors.joining(",")), 15, 225);
+
+//        Image shieldImg = getTheme().get("shield" + (int)getPlayers().stream().mapToDouble(Player::getArmor).average().orElse(1.0)*5.0 + 1);
+//        g.drawImage(shieldImg, 440, 1010, 40, 40, null);
+//        g.drawString(getPlayers().stream().mapToDouble(Player::getArmor).mapToObj(Double::toString).collect(Collectors.joining(",")), 500, 1040);
+
+        if(players.size() > 0) {
+            g.drawString("Score: " + getScore(), 15, 25);
+            g.drawString("Level: " + getNumber(), 15, 75);
+
+            // HEALTH BAR
+            g.fillRect(15, 1000, 400, 64);
+            for (int p = getPlayers().size() - 1; p >= 0; p -= 1) {
+                int h = (int) GameEntity.clamp(players.get(p).getHealth() * 255 / 100, 0, 255);
+                g.setColor(new Color(255 - h, h, 0));
+                g.fillRect(15, 1000 + 64 * p / players.size(), (int) players.get(p).getHealth() * 4, 64 / players.size());
+            }
+            g.setColor(Color.gray);
+            g.drawRect(15, 1000, 400, 64);
+        }
     }
 
     @Override
@@ -188,12 +243,9 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
             ((FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(-24f);
             setClipped(false);
         }
-        Clip c = LambdaException.wraps(AudioSystem::getClip).get();
         for(GameEntity ge : entities) {
+            Clip c = LambdaException.wraps(AudioSystem::getClip).get();
             ge.render(c, i);
-            if (c.isActive()) {
-                c = LambdaException.wraps(AudioSystem::getClip).get();
-            }
         }
     }
 

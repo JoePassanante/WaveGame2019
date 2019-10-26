@@ -112,7 +112,7 @@ public class Waves extends GameLevel {
             getEntities().retainAll(getPlayers());
             getState().pop();
             getState().push(new Waves(this));
-            if (getNumber() % 5 == 4) {
+            if (getNumber() % 5 == 0) {
                 getState().push(new Upgrades(this, spawn.randomPickup));
                 getState().push(new Boss(this, spawn.randomBoss));
             }
@@ -123,46 +123,13 @@ public class Waves extends GameLevel {
             getState().peek().setScore(getScore());
             getState().peek().setScore(getScore());
         }
-        else if(
-            getEntities().size() <
-            getPlayers().size() +
-            getEntities().stream().filter(Trail.class::isInstance).count() +
-            getNumber()*currentTick/maxTick +
-            1
-        ) {
+        else if(getEntities().stream().filter(Enemy.class::isInstance).count() < getNumber()*currentTick/maxTick + 1) {
             GameEntity ge = randomEnemy.get().apply(this);
-//          GameEntity ge = new EnemyRocketBoss(this); // or test specific enemies like this
             System.out.println("Spawning: " + ge.getClass().getName());
             getEntities().add(ge);
         }
 
         currentTick += 1;
-    }
-
-    public void render(Graphics g) {
-        super.render(g);
-        g.setColor(Color.white);
-
-        if(GameClient.devMode){
-            g.setFont(new Font("Amoebic", Font.BOLD, 25));
-            g.drawString("Entities: " + getEntities().size(), getDimension().width-300, getDimension().height-200);
-//            g.drawString("Enemies: " + stream().filter(go -> go.getClass().getName().contains("Enemy")).count(), getDimension().width-300, getDimension().height-200);
-//            g.drawString("Pickups: " + stream().filter(go -> go.getClass().getName().contains("Pickup")).count(), getDimension().width-300, getDimension().height-150);
-//            g.drawString("Trails: " + stream().filter(go -> go.getClass().getName().contains("Trail")).count(), getDimension().width-300, getDimension().height-50);
-//          g.drawString("FPS: " + fps, getGameDimension().width-300, getGameDimension().height-100);
-        }
-
-        g.setFont(new Font("Amoebic", Font.BOLD, 30));
-
-        g.drawString("Score: " + getScore(), 15, 25);
-        g.drawString("Level: " + getNumber(), 15, 75);
-        g.drawString("Level Progress: " + 100*currentTick/maxTick + "%", 15, 175);
-        g.drawString("Health: " + getPlayers().stream().mapToDouble(GameEntity::getHealth).mapToObj(Double::toString).collect(Collectors.joining(",")), 15, 1050);
-        g.drawString("Size: " + getPlayers().stream().mapToDouble(GameEntity::getWidth).mapToObj(Double::toString).collect(Collectors.joining(",")), 15, 225);
-
-//        Image shieldImg = getTheme().get("shield" + (int)getPlayers().stream().mapToDouble(Player::getArmor).average().orElse(1.0)*5.0 + 1);
-//        g.drawImage(shieldImg, 440, 1010, 40, 40, null);
-//        g.drawString(getPlayers().stream().mapToDouble(Player::getArmor).mapToObj(Double::toString).collect(Collectors.joining(",")), 500, 1040);
     }
 
     @Override

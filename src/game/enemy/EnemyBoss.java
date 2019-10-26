@@ -1,10 +1,7 @@
 package game.enemy;
 
-import game.GameEntity;
 import game.GameLevel;
-import game.Player;
 
-import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.geom.Point2D;
 
@@ -16,13 +13,12 @@ import java.awt.geom.Point2D;
  *
  */
 
-public class EnemyBoss extends GameEntity.Bouncing {
+public class EnemyBoss extends Enemy.Bouncing {
 	private int timer = 80;
 	private int timer2 = 50;
 	private int spawn;
 	private int difficulty;
 	private int bombTimer = 120;
-	private boolean clipped;
 
 	public EnemyBoss(GameLevel level) {
 		super(new Point2D.Double(1, -100), 96, 96, level);
@@ -32,21 +28,11 @@ public class EnemyBoss extends GameEntity.Bouncing {
 		difficulty = level.getNumber()/10;
 	}
 
-    @Override
-    public void collide(Player p) {
-        p.damage(2);
-        clipped = true;
-    }
-
     public void tick() {
 	    super.tick();
 
 		if (timer <= 0) {
             setVelY(0);
-            getLevel().getPlayers().stream()
-                .filter(getLevel().getEntities()::contains)
-                .filter(p -> p.getPosY() < 200)
-                .forEach(this::collide);
             timer2 -= 1;
         }
 		else {
@@ -81,10 +67,11 @@ public class EnemyBoss extends GameEntity.Bouncing {
 		// this.handler));
 	}
 
+	@Override
 	public void render(Graphics g) {
 		g.setColor(Color.LIGHT_GRAY);
 		g.drawLine(0, 138, (int)getLevel().getDimension().getWidth(), 138);
-        super.render(g);
+        super.render(g, super.getBounds());
 
 		// HEALTH BAR
 		g.setColor(Color.GRAY);
@@ -96,10 +83,7 @@ public class EnemyBoss extends GameEntity.Bouncing {
 	}
 
 	@Override
-	public void render(Clip c, int i) {
-	    if(clipped) {
-	        super.render(c,i);
-	        clipped = false;
-        }
+    public Rectangle getBounds() {
+	    return new Rectangle(0,0, getLevel().getDimension().width, 200);
     }
 }

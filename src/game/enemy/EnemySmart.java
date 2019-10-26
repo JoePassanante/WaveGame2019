@@ -13,16 +13,12 @@ import java.awt.*;
  *
  */
 
-public class EnemySmart extends GameEntity.Stopping {
+public class EnemySmart extends Enemy.Bouncing {
     public EnemySmart(GameLevel level) {
 		super(level.spawnPoint(), 150,75, level);
 	}
 
-    @Override
-    public void collide(Player player) {
-        player.damage(2);
-    }
-
+	@Override
     public void tick() {
         super.tick();
 

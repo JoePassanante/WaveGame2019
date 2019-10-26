@@ -14,17 +14,12 @@ import java.awt.geom.AffineTransform;
  *
  */
 
-public class EnemyFast extends GameEntity.Bouncing {
+public class EnemyFast extends Enemy.Bouncing {
 	public EnemyFast(GameLevel level) {
 		super(level.spawnPoint(), 32, 64, level);
 		setVelX(2*level.getRandom().random() - 1);
 		setVelY(Math.copySign(12, level.getRandom().random()));
 	}
-
-    @Override
-    public void collide(Player p) {
-        p.damage(2);
-    }
 
     @Override
     public void render(Graphics gfx) {

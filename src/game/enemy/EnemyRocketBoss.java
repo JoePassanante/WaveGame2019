@@ -8,23 +8,23 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
-public class EnemyRocketBoss extends GameEntity.Stopping {
+public class EnemyRocketBoss extends Enemy {
     private Path2D.Double hitbox;
-	private double angle;
-	private double dash;
-	private Performer on;
+	private double angle, dash;
+	private Performer off, on;
 
     public EnemyRocketBoss(GameLevel level) {
-		super(new Point2D.Double(level.getDimension().getWidth()/2, level.getDimension().getHeight()/2), 80, 296, level);
+		super(level.getDimension().getWidth()/2, level.getDimension().getHeight()/2, 80, 296, level);
 		setHealth(1000);
-		on = getLevel().getTheme().get(getClass().getSimpleName() + "On");
+        off = getLevel().getTheme().get(getClass().getSimpleName());
+        on = getLevel().getTheme().get(getClass().getSimpleName() + "On");
 		hitbox = new Path2D.Double(super.getBounds());
 	}
 
     @Override
     public void collide(Player player) {
         if(hitbox.intersects(player.getBounds())) {
-            player.damage(2);
+            super.collide(player);
             if(dash > 0) {
                 dash = 0;
             }
@@ -41,6 +41,9 @@ public class EnemyRocketBoss extends GameEntity.Stopping {
             double speed = 100 - .1*getHealth();
             setVelX(speed * Math.cos(angle));
             setVelY(speed * Math.sin(angle));
+            if(!getLevel().getBounds().contains(getBounds())) {
+                dash = 0;
+            };
         }
         else if (dash == 0) {
             getLevel().getEntities().add(new EnemyBurst(getLevel()));
@@ -53,7 +56,7 @@ public class EnemyRocketBoss extends GameEntity.Stopping {
                 ));
             }
             setHealth(getHealth() - 100);
-            refer(getLevel().getTheme().get(this));
+            refer(off);
         }
         else if (dash > -60) {
             setVelX(0);
