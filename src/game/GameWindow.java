@@ -9,7 +9,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
-import java.lang.reflect.Method;
 
 public class GameWindow extends JFrame {
     private AffineTransform screenSpace; // The graphical transformation of this JFrame
@@ -20,23 +19,31 @@ public class GameWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Set fullscreen
-        if (System.getProperty("os.name").contains("Mac OS X")) { //If user is on macOS
+        if (System.getProperty("os.name").contains("Mac OS X")) { // If user is on macOS
             try {
                 Class
                     .forName("com.apple.eawt.FullScreenUtilities")
                     .getMethod("setWindowCanFullScreen", Window.class, boolean.class)
                     .invoke(null, this, true);
-            } catch (Throwable t) {
-                System.err.println("Full screen mode is not supported");
+                Object app = Class
+                    .forName("com.apple.eawt.Application")
+                    .getMethod("getApplication")
+                    .invoke(null);
+                app.getClass()
+                    .getMethod("requestToggleFullScreen", Window.class)
+                    .invoke(app, this);
+            }
+            catch (Throwable t) {
                 t.printStackTrace();
             }
-        } else {
+        }
+        else { // If user is on other OS
             setResizable(GameClient.devMode);
             setUndecorated(!GameClient.devMode);
         }
-
+//        setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setPreferredSize(new Dimension(1920,1080));
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
