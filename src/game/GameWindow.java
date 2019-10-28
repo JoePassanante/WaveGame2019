@@ -20,7 +20,7 @@ public class GameWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Set fullscreen
-        if (System.getProperty("os.name").contains("Mac OS X")) { //If user is on macOS
+        if (System.getProperty("os.name").contains("Mac OS X")) { // If user is on macOS
             try {
                 Class
                     .forName("com.apple.eawt.FullScreenUtilities")
@@ -33,10 +33,10 @@ public class GameWindow extends JFrame {
         } else {
             setResizable(GameClient.devMode);
             setUndecorated(!GameClient.devMode);
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
         }
 
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setPreferredSize(new Dimension(1920,1080));
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
