@@ -11,44 +11,34 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
 
 public class GameWindow extends JFrame {
-    private AffineTransform screenSpace; // The graphical transformation of this JFrame
-
     public GameWindow() {
         super("Wave Game");
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-        setPreferredSize(new Dimension(1920,1080));
+        // fill the screen with the window
+        setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-
-        setLocationRelativeTo(null);
+        // make the window resizable if devMode is on
+        setResizable(GameClient.devMode);
+        setUndecorated(!GameClient.devMode);
+        // center the window
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
-
+        // make the window fullscreen on OSX
         if (System.getProperty("os.name").contains("Mac OS X")) { // If user is on macOS
             try {
-                Class
-                    .forName("com.apple.eawt.FullScreenUtilities")
+                Class.forName("com.apple.eawt.FullScreenUtilities")
                     .getMethod("setWindowCanFullScreen", Window.class, boolean.class)
                     .invoke(null, this, true);
-
-                Class<?> appclass = Class.forName("com.apple.eawt.Application");
-                appclass
-                    .getMethod("requestToggleFullScreen", Window.class)
-                    .invoke(appclass.getMethod("getApplication")
-                    .invoke(null), this);
+                Object app = Class.forName("com.apple.eawt.Application")
+                    .getMethod("getApplication")
+                    .invoke(null);
+                app.getClass().getMethod("requestToggleFullScreen", Window.class).invoke(app, this);
             }
             catch (Throwable t) {
                 t.printStackTrace();
             }
         }
-        else { // If user is on other OS
-            setResizable(GameClient.devMode);
-            setUndecorated(!GameClient.devMode);
-        }
-
-        screenSpace = new AffineTransform();
     }
 
     @Override
@@ -59,6 +49,7 @@ public class GameWindow extends JFrame {
     /**
      * Inverts transformation of this JFrame to process mouse events in game space
      */
+    private AffineTransform screenSpace; // The graphical transformation of this JFrame
     @Override
     protected void processMouseEvent(MouseEvent e) {
         try {
@@ -93,13 +84,13 @@ public class GameWindow extends JFrame {
                 g.clearRect(0, 0, getWidth(), getHeight());
 
                 double scaleFactor = Math.min(
-                    getWidth()/getPreferredSize().getWidth(),
-                    getHeight()/getPreferredSize().getHeight()
+                    getWidth()/so.getBounds().getWidth(),
+                    getHeight()/so.getBounds().getHeight()
                 );
 
                 g.translate(getWidth()/2,getHeight()/2);
                 g.scale(scaleFactor, scaleFactor);
-                g.translate(-getPreferredSize().getWidth()/2,-getPreferredSize().getHeight()/2);
+                g.translate(-so.getBounds().getWidth()/2,-so.getBounds().getHeight()/2);
 
                 screenSpace = g.getTransform();
                 so.render(g);
