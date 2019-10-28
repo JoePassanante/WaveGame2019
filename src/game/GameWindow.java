@@ -9,6 +9,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
+import java.lang.reflect.Method;
 
 public class GameWindow extends JFrame {
     private AffineTransform screenSpace; // The graphical transformation of this JFrame
@@ -19,13 +20,15 @@ public class GameWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Set fullscreen
-        if (System.getProperty("os.name").toLowerCase().contains("mac")) { //If user is on macOS
-            setResizable(true);
+        if (System.getProperty("os.name").contains("Mac OS X")) { //If user is on macOS
             try {
-                com.apple.eawt.FullScreenUtilities.setWindowCanFullScreen(this, true);
-                com.apple.eawt.Application.getApplication().requestToggleFullScreen(this);
-            } catch (Exception e) {
-                System.err.println("Failed to load apple extensions package");
+                Class
+                    .forName("com.apple.eawt.FullScreenUtilities")
+                    .getMethod("setWindowCanFullScreen", Window.class, boolean.class)
+                    .invoke(null, this, true);
+            } catch (Throwable t) {
+                System.err.println("Full screen mode is not supported");
+                t.printStackTrace();
             }
         } else {
             setResizable(GameClient.devMode);
