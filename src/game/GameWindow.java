@@ -34,8 +34,10 @@ public class GameWindow extends JFrame {
                     .invoke(null, this, true);
 
                 Class<?> appclass = Class.forName("com.apple.eawt.Application");
-                Object app = appclass.getMethod("getApplication").invoke(appclass);
-                appclass.getMethod("requestToggleFullScreen", Window.class).invoke(app, this);
+                appclass
+                    .getMethod("requestToggleFullScreen", Window.class)
+                    .invoke(appclass.getMethod("getApplication")
+                    .invoke(null), this);
             }
             catch (Throwable t) {
                 t.printStackTrace();
@@ -45,7 +47,7 @@ public class GameWindow extends JFrame {
             setResizable(GameClient.devMode);
             setUndecorated(!GameClient.devMode);
         }
-        
+
         screenSpace = new AffineTransform();
     }
 
