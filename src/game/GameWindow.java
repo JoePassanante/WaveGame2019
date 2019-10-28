@@ -25,13 +25,10 @@ public class GameWindow extends JFrame {
                     .forName("com.apple.eawt.FullScreenUtilities")
                     .getMethod("setWindowCanFullScreen", Window.class, boolean.class)
                     .invoke(null, this, true);
-                Object app = Class
-                    .forName("com.apple.eawt.Application")
-                    .getMethod("getApplication")
-                    .invoke(null);
-                app.getClass()
-                    .getMethod("requestToggleFullScreen", Window.class)
-                    .invoke(app, this);
+
+                Class<?> appclass = Class.forName("com.apple.eawt.Application");
+                Object app = appclass.getMethod("getApplication").invoke(appclass);
+                appclass.getMethod("requestToggleFullScreen", Window.class).invoke(app, this);
             }
             catch (Throwable t) {
                 t.printStackTrace();
