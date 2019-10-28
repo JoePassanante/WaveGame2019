@@ -44,6 +44,10 @@ public class GameWindow extends JFrame {
 //        setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
         setPreferredSize(new Dimension(1920,1080));
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
+        }
+
+        setPreferredSize(new Dimension(1920,1080));
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
