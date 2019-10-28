@@ -18,7 +18,14 @@ public class GameWindow extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Set fullscreen
+        // setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setPreferredSize(new Dimension(1920,1080));
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        setLocationRelativeTo(null);
+        pack();
+        setVisible(true);
+
         if (System.getProperty("os.name").contains("Mac OS X")) { // If user is on macOS
             try {
                 Class
@@ -38,13 +45,7 @@ public class GameWindow extends JFrame {
             setResizable(GameClient.devMode);
             setUndecorated(!GameClient.devMode);
         }
-//        setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-        setPreferredSize(new Dimension(1920,1080));
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-
+        
         screenSpace = new AffineTransform();
     }
 
