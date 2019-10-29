@@ -95,8 +95,8 @@ public class EnemyRocketBoss extends Enemy {
 		super.render(g2d, super.getBounds()); // Draw Rocket
         g2d.setTransform(old);
 
-        g2d.setColor(Color.YELLOW);
-        g2d.draw(hitbox);
+//        g2d.setColor(Color.YELLOW);
+//        g2d.draw(hitbox);
     }
 
     @Override

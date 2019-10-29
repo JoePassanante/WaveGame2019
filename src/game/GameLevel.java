@@ -145,6 +145,8 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
     public void tick() {
         super.tick();
 
+        setScore(getScore() + 1);
+
         if(!initialized) { // TODO: add proper initialize() method
             entities.forEach(e -> e.setLevel(this));
             players.forEach(p -> p.setLevel(this));

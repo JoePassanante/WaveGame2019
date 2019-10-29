@@ -1,12 +1,12 @@
 package game;
 
 import game.pickup.*;
-import util.Random;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
-import java.util.function.Supplier;
 
 /**
  * Player object class with collision
@@ -63,9 +63,26 @@ public class Player extends GameEntity.Stopping {
 
     @Override
     public void collide(Player p) {
-        getLevel().getNonentities().add(new Trail(this, playerColor, 255));
-        playerColor = Color.white;
-        // TODO: fun collision ripple animation and trade health
+	    if(this == p) {
+            getLevel().getNonentities().add(new Trail(this, playerColor, 255));
+            playerColor = Color.white;
+        }
+        else { // TODO: fun collision ripple animation and trade health
+            if(getHealth() > p.getHealth()) {
+                double heal = Math.min(.5, .5*(getHealth()-p.getHealth()));
+                damage(heal);
+                p.setHealth(p.getHealth() + heal);
+            }
+            else if(getHealth() < p.getHealth()) {
+                playerColor = Color.green;
+            }
+            if(getLevel().getScore() % 10 == 0) {
+                Path2D.Double ripple = new Path2D.Double();
+                ripple.append(getBounds().getPathIterator(null), false);
+                ripple.append(p.getBounds().getPathIterator(null), false);
+                getLevel().getNonentities().add(new Trail.Outline(ripple, playerColor, 255*getHealth(), getLevel()));
+            }
+        }
     }
 
     private double theta = 0;

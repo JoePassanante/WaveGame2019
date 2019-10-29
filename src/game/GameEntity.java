@@ -85,6 +85,7 @@ public class GameEntity extends Performer {
         posY += velY;
         if(getHealth() < 0) {
             getLevel().getEntities().remove(this);
+            getLevel().getNonentities().remove(this);
         }
     }
 
