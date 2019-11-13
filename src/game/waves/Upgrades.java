@@ -1,6 +1,8 @@
 package game.waves;
 
-import game.*;
+import game.GameEntity;
+import game.GameLevel;
+import game.GameWindow;
 import game.pickup.Pickup;
 
 import java.awt.*;

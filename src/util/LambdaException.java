@@ -7,7 +7,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * This class provides a sane way to handle caught exceptions in a method reference, without sticking a try catch in
+ * This class provides a sane way to handle checked exceptions in a method reference, without sticking a try catch in
  * the middle of a map or something. It does this by overloading a function more times than previously thought possible.
  */
 
@@ -42,11 +42,6 @@ public interface LambdaException <T,R,E extends Throwable> {
         void accept(U u) throws F;
     }
 
-    @FunctionalInterface
-    interface LambdaExceptionProducer<S, F extends Throwable> {
-        S get() throws F;
-    }
-
     static <U,F extends Throwable> Consumer<U> wrapc(LambdaExceptionConsumer<U,F> l) {
         return wrapc(l, consume);
     }
@@ -60,6 +55,11 @@ public interface LambdaException <T,R,E extends Throwable> {
                 c.accept(e);
             }
         };
+    }
+
+    @FunctionalInterface
+    interface LambdaExceptionProducer<S, F extends Throwable> {
+        S get() throws F;
     }
 
     static<S,F extends Throwable> Supplier<S> wraps(LambdaExceptionProducer<S,F> l) {

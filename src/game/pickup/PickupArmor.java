@@ -10,7 +10,7 @@ public class PickupArmor extends Pickup.Active {
 
     @Override
     public void affect(Player player) {
-        player.setArmor(player.getArmor()+(1-player.getArmor())/8);
+        player.setArmor(player.getArmor() + (1 - player.getArmor()) / 8);
         super.affect(player);
     }
 }

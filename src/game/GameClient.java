@@ -6,7 +6,6 @@ import util.Random;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -42,14 +41,16 @@ public class GameClient extends GameLevel implements Runnable {
             true
         );
 
+        System.out.println("Loading common...");
         getTheme().run();
         getState().push(new Menu(this));
 
         window = new GameWindow();
         music = LambdaException.wraps(AudioSystem::getClip).get();
 
-        window.addMouseListener(this);
         window.addKeyListener(this);
+        window.addMouseListener(this);
+        window.addMouseMotionListener(this);
 
         window.requestFocus();
 
@@ -76,6 +77,9 @@ public class GameClient extends GameLevel implements Runnable {
     }
     @Override public void mouseReleased(MouseEvent e) {
         getState().peek().mouseReleased(e);
+    }
+    @Override public void mouseMoved(MouseEvent e) {
+        getState().peek().mouseMoved(e);
     }
 
     @Override

@@ -5,19 +5,17 @@ import game.pickup.Pickup;
 import util.LambdaException;
 import util.Random;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Stack;
 
-public class GameLevel extends Performer implements MouseListener, KeyListener {
-    private ArrayList<GameEntity> entities;
-    private ArrayList<GameEntity> nonentities;
+public class GameLevel extends Performer implements KeyListener, MouseListener, MouseMotionListener {
+    private ArrayList<GameEntity> entities, nonentities;
     private Stack<GameLevel> state;
     private Random random;
     private Dimension dimension;
@@ -88,26 +86,7 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
         setScore(c);
         setClipped(l);
         nonentities = new ArrayList<>();
-        wasd = new boolean[4];
-        arrows = new boolean[4];
     }
-
-    // Unused input events
-    @Override public final void keyTyped(KeyEvent e) { }
-    @Override public final void mouseClicked(MouseEvent e) { }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        // TODO: press animation
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // TODO: release animation
-    }
-
-    @Override public final void mouseEntered(MouseEvent e) { }
-    @Override public final void mouseExited(MouseEvent e) { }
 
     public Point.Double spawnPoint() {
         final Point.Double loc = new Point.Double();
@@ -130,15 +109,6 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
             .orElse(spawnPoint());
     }
 
-    private boolean[] wasd, arrows;
-    private void changeDir(boolean[] keys, Player p) {
-        int x = Boolean.compare(keys[3], keys[1]);
-        int y = Boolean.compare(keys[2], keys[0]);
-        double h = Math.max( Math.hypot(x, y), 1);
-
-        p.setVelX(10 * x/h);
-        p.setVelY(10 * y/h);
-    }
 
     private boolean initialized;
     @Override
@@ -148,21 +118,10 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
         setScore(getScore() + 1);
 
         if(!initialized) { // TODO: add proper initialize() method
-            entities.forEach(e -> e.setLevel(this));
             players.forEach(p -> p.setLevel(this));
+            entities.forEach(e -> e.setLevel(this));
+            nonentities.forEach(n -> n.setLevel(this));
             initialized = true;
-        }
-
-        if(players.size() == 1) {
-            boolean[] or = new boolean[4];
-            for (int b = 0; b < or.length; b += 1) {
-                or[b] = wasd[b] || arrows[b];
-            }
-            changeDir(or, players.get(0));
-        }
-        else if(players.size() == 2) {
-            changeDir(wasd, players.get(0));
-            changeDir(arrows, players.get(1));
         }
 
         for(int i = entities.size()-1; i >= 0; i -= 1) {
@@ -190,6 +149,7 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
     @Override
     public void render(Graphics g) {
         super.render(g);
+
         entities.forEach(ge -> ge.render(g));
         nonentities.forEach(ge -> ge.render(g));
 
@@ -201,7 +161,6 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
             g.drawString("Enemies: " + entities.stream().filter(Enemy.class::isInstance).count(), getDimension().width-300, getDimension().height-200);
             g.drawString("Pickups: " + entities.stream().filter(Pickup.class::isInstance).count(), getDimension().width-300, getDimension().height-150);
             g.drawString("Trails: " + nonentities.size(), getDimension().width-300, getDimension().height-50);
-//          g.drawString("FPS: " + fps, getGameDimension().width-300, getGameDimension().height-100);
         }
 //        g.drawString("Level Progress: " + 100*currentTick/maxTick + "%", 15, 175);
 //        g.drawString("Health: " + getPlayers().stream().mapToDouble(GameEntity::getHealth).mapToObj(Double::toString).collect(Collectors.joining(",")), 15, 1050);
@@ -235,39 +194,46 @@ public class GameLevel extends Performer implements MouseListener, KeyListener {
             ((FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(-24f);
             setClipped(false);
         }
+        Clip c = null;
         for(GameEntity ge : entities) {
-            Clip c = LambdaException.wraps(AudioSystem::getClip).get();
+            if(c == null || c.isActive()) {
+                c = LambdaException.wraps(AudioSystem::getClip).get();
+            }
             ge.render(c, i);
         }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode(); // start moving if key is pressed
-
-        wasd[0] |= key == KeyEvent.VK_W;
-        wasd[1] |= key == KeyEvent.VK_A;
-        wasd[2] |= key == KeyEvent.VK_S;
-        wasd[3] |= key == KeyEvent.VK_D;
-
-        arrows[0] |= key == KeyEvent.VK_UP;
-        arrows[1] |= key == KeyEvent.VK_LEFT;
-        arrows[2] |= key == KeyEvent.VK_DOWN;
-        arrows[3] |= key == KeyEvent.VK_RIGHT;
+        players.forEach(p -> p.getController().keyPressed(e));
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        int key = e.getKeyCode(); // stop moving if key is released
-
-        wasd[0] &= key != KeyEvent.VK_W;
-        wasd[1] &= key != KeyEvent.VK_A;
-        wasd[2] &= key != KeyEvent.VK_S;
-        wasd[3] &= key != KeyEvent.VK_D;
-
-        arrows[0] &= key != KeyEvent.VK_UP;
-        arrows[1] &= key != KeyEvent.VK_LEFT;
-        arrows[2] &= key != KeyEvent.VK_DOWN;
-        arrows[3] &= key != KeyEvent.VK_RIGHT;
+        players.forEach(p -> p.getController().keyReleased(e));
     }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // TODO: press animation
+        players.forEach(p -> p.getController().mousePressed(e));
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        // TODO: release animation
+        players.forEach(p -> p.getController().mouseReleased(e));
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        players.forEach(p -> p.getController().mouseMoved(e));
+    }
+
+    // Unused input events
+    @Override public final void keyTyped(KeyEvent e) { }
+    @Override public final void mouseClicked(MouseEvent e) { }
+    @Override public final void mouseEntered(MouseEvent e) { }
+    @Override public final void mouseExited(MouseEvent e) { }
+    @Override public final void mouseDragged(MouseEvent e) { }
 }

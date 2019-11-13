@@ -1,9 +1,12 @@
 package game;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,9 +36,9 @@ public class Theme extends HashMap<String, Performer> implements Runnable {
     public void run() { // every time you look at this method it gets uglier. checked exceptions were a mistake.
         try(    ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 Stream<File> files = Files
-                        .walk(Paths.get("src/themes/" + folder))
-                        .filter(Files::isRegularFile)
-                        .map(Path::toFile)
+                    .walk(Paths.get("src/themes/" + folder))
+                    .filter(Files::isRegularFile)
+                    .map(Path::toFile)
         ) {
             for(File f: files.toArray(File[]::new)) { // avoid handling checked exceptions twice ;-;
                 String name = f.getName();
@@ -44,7 +47,19 @@ public class Theme extends HashMap<String, Performer> implements Runnable {
                 String after = name.substring(dot);
                 putIfAbsent(before, new Performer());
                 BufferedImage bi = ImageIO.read(f);
-                if(bi != null) {
+                if(bi != null) { // slooow
+                    /*
+                    if(after.equals("gif")) {
+                        GIFImageReader gir = new GIFImageReader(new GIFImageReaderSpi());
+                        gir.setInput(f);
+                        ArrayList<BufferedImage> abi = new ArrayList<>();
+                        assert !IntStream.iterate(0, i -> i + 1)
+                            .mapToObj(LambdaException.<Integer, BufferedImage, IOException>wrap(gir::read)::apply) // 0_o
+                            .peek(abi::add)
+                            .allMatch(Objects::nonNull);
+                        System.out.println(abi);
+                    }
+                     */
                     ImageIO.write(bi, after.substring(1), baos);
                     get(before).setSight(baos);
                 }

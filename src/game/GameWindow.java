@@ -102,7 +102,7 @@ public class GameWindow extends JFrame {
         }
     }
 
-    public static void drawStringCentered(Graphics g, Font f, String s, int x, int y) {
+    public static Rectangle drawStringCentered(Graphics g, Font f, String s, int x, int y) {
         Font old = g.getFont();
         g.setFont(f);
         Rectangle bounds = f.getStringBounds(
@@ -110,5 +110,6 @@ public class GameWindow extends JFrame {
         ).getBounds();
         g.drawString(s, x-bounds.width/2, y-bounds.height/2);
         g.setFont(old);
+        return bounds;
     }
 }

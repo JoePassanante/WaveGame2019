@@ -6,9 +6,9 @@ import game.menu.Menu;
 import game.pickup.*;
 import util.Random;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -31,6 +31,8 @@ public class Waves extends GameLevel {
             randomHardEnemy,
             randomBoss,
             randomPickup;
+
+        private Supplier<BiFunction<GameLevel, Integer, BiFunction<game.Performer, Performer, Transition>>> transition;
 
         private Spawn(Random rng) {
             randomEasyEnemy = rng.new RandomDifferentElement<>(
@@ -57,6 +59,12 @@ public class Waves extends GameLevel {
                 PickupScore::new,
                 PickupSize::new
             );
+            transition = rng.new RandomDifferentElement<>( // java wont let us use ::new on inner class constructors ;-;
+                (GameLevel l, Integer m) -> (Performer s, Performer d) -> new Transition.Vertical(l, m, s, d),
+                (GameLevel l, Integer m) -> (Performer s, Performer d) -> new Transition.Horizontal(l, m, s, d),
+                (GameLevel l, Integer m) -> (Performer s, Performer d) -> new Transition.Diagonal(l, m, s, d),
+                (GameLevel l, Integer m) -> (Performer s, Performer d) -> new Transition.Radial(l, m, s, d)
+            );
         }
     }
 
@@ -82,7 +90,7 @@ public class Waves extends GameLevel {
             .boxed()
             .map(i -> i < 3 || getRandom().random() < .5 ? spawn.randomEasyEnemy : spawn.randomHardEnemy)
             .map(Supplier::get)
-            .peek(go -> System.out.println(go.apply(this).getClass().getName()))
+            .peek(go -> System.out.println(go.apply(this).getClass().getSimpleName()))
             .collect(Collectors.toList())
         );
         text = new RainbowText(
@@ -115,6 +123,7 @@ public class Waves extends GameLevel {
             if (getNumber() % 5 == 0) {
                 getState().push(new Upgrades(this, spawn.randomPickup));
                 getState().push(new Boss(this, spawn.randomBoss));
+                getState().push(spawn.transition.get().apply(this, 60).apply(this, getState().peek()));
             }
         }
         else if(Collections.disjoint(getEntities(), getPlayers())) {
@@ -125,7 +134,7 @@ public class Waves extends GameLevel {
         }
         else if(getEntities().stream().filter(Enemy.class::isInstance).count() < getNumber()*currentTick/maxTick + 1) {
             GameEntity ge = randomEnemy.get().apply(this);
-            System.out.println("Spawning: " + ge.getClass().getName());
+            System.out.println("Spawning: " + ge.getClass().getSimpleName());
             getEntities().add(ge);
         }
 

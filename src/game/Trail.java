@@ -1,13 +1,8 @@
 package game;
 
-import javafx.scene.transform.Affine;
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
-import java.awt.geom.PathIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Trail extends GameEntity {
 	private Color color;

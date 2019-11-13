@@ -8,11 +8,11 @@ import java.awt.*;
 
 public class Pickup extends GameEntity {
     public Pickup(GameLevel level) {
-        this(level,0);
+        this(level, 100);
     }
 
     public Pickup(GameLevel level, int h) {
-        super(level.getDimension().getWidth()/2, level.getDimension().getHeight()/2, 30, 30, level);
+        super(level.getDimension().getWidth() / 2, level.getDimension().getHeight() / 2, 30, 30, level);
         setHealth(h);
     }
 
@@ -27,7 +27,7 @@ public class Pickup extends GameEntity {
     public void tick() {
         super.tick();
         Rectangle bounds = getLevel().getBounds();
-        if(!bounds.intersects(getBounds())) {
+        if (!bounds.intersects(getBounds())) {
             setPosX(Math.floorMod((int) getPosX(), (int) bounds.getWidth()));
             setPosY(Math.floorMod((int) getPosY(), (int) bounds.getHeight()));
         }
@@ -35,14 +35,14 @@ public class Pickup extends GameEntity {
 
     public void affect(Player player) {
         setHealth(getHealth() - 1);
-        if(getHealth() < 0) {
+        if (getHealth() < 0) {
             player.getActive().remove(this);
         }
     }
 
     public static class Active extends Pickup {
         public Active(GameLevel level) {
-            super(level);
+            super(level, 0);
         }
 
         public void collide(Player player) {

@@ -1,10 +1,10 @@
 package game;
 
-import game.pickup.*;
+import game.menu.Menu;
+import game.pickup.Pickup;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
@@ -18,11 +18,13 @@ import java.util.ArrayList;
 
 public class Player extends GameEntity.Stopping {
 	private double maxHealth;
-	private double armor; // value between zero and one that represents damage resistance
+	private double armor; // higher value represents higher damage resistance
+    private double speed;
 	private ArrayList<Pickup> inactive; // TODO: replace all array lists and stacks with concurrent friendly stacks
 	private ArrayList<Pickup> active;
+	private Controller controller;
 
-	public void setMaxHealth(double m) {
+    public void setMaxHealth(double m) {
 	    maxHealth = m;
     }
     public void setArmor(double d) {//set players damage
@@ -30,7 +32,7 @@ public class Player extends GameEntity.Stopping {
     }
     public void damage(double d) {
         playerColor = Color.red;
-        setHealth(getHealth() - d/(armor + 1));
+        setHealth(getHealth() - d/(1 + armor));
     }
     public void setSize(double size) {
         setWidth(size);
@@ -48,10 +50,13 @@ public class Player extends GameEntity.Stopping {
     public ArrayList<Pickup> getActive() {
 	    return active;
     }
+    public Controller getController() {
+	    return controller;
+    }
 
     private Color playerColor;
 
-	public Player(double x, double y, GameLevel level) {
+	public Player(double x, double y, Controller c, GameLevel level) {
 		super(new Point.Double(x, y), 32, 32, level);
 		setMaxHealth(100);
 		setHealth(maxHealth);
@@ -59,6 +64,8 @@ public class Player extends GameEntity.Stopping {
         playerColor = Color.white;
         inactive = new ArrayList<>();
         active = new ArrayList<>();
+        controller = c;
+        speed = 10;
 	}
 
     @Override
@@ -89,13 +96,23 @@ public class Player extends GameEntity.Stopping {
     @Override
 	public void tick() { // Heartbeat of the Player class
 	    super.tick();
+	    double
+            x = controller.getX(getPosX()),
+            y = controller.getY(getPosY()),
+            h = Math.max(1, Math.hypot(x, y));
+        setVelX(speed*x/h);
+        setVelY(speed*y/h);
         for(int i = inactive.size()-1; i >= 0; i -= 1) {
             theta += .01 + 2*Math.PI/inactive.size();
             inactive.get(i).setPosX(getPosX() + 50*Math.cos(theta));
             inactive.get(i).setPosY(getPosY() + 50*Math.sin(theta));
         }
 	    for(int i = active.size()-1; i >= 0; i -= 1) {
-	        active.get(i).affect(this);
+	        active.get(i).tick();
+            active.get(i).affect(this);
+        }
+	    if(controller.getUse() && !inactive.isEmpty()) {
+ 	        active.add(0, inactive.remove(0)); // TODO: stacks on stacks
         }
 	}
 
