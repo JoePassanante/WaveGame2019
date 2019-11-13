@@ -1,10 +1,10 @@
 package game;
 
+import javax.sound.sampled.Clip;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
-import java.util.Stack;
-import java.util.function.*;
+import java.util.function.IntBinaryOperator;
+import java.util.function.IntFunction;
 
 public class Transition extends GameLevel {
     private int currentTick, maxTick;
@@ -39,6 +39,11 @@ public class Transition extends GameLevel {
         g2d.setComposite(old);
     }
 
+    @Override
+    public void render(Clip c, int i) {
+        // let the menu music continue playing
+    }
+
     public static class Fade extends Transition {
         public Fade(GameLevel lev, int max, Performer src, Performer dst) {
             super(lev, max, src, dst, t -> AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f*t/max));
@@ -60,13 +65,11 @@ public class Transition extends GameLevel {
     public static class Modulo extends Transition {
         public Modulo(GameLevel lev, int max, Performer src, Performer dst, IntBinaryOperator ibo) {
             super(lev, max, src, dst, t -> (TransitionComposite) (srcCM, dstCM, h) -> (srcR, dstR, dstWR) -> {
-                for(int y=0; y<dstWR.getHeight(); y+=1) {
-                    for(int x=0; x<dstWR.getWidth(); x+=1) {
+                for(int y = 0; y < dstWR.getHeight(); y += 1) {
+                    for(int x = 0; x < dstWR.getWidth(); x += 1) {
                         dstWR.setPixel( x, y, (
-                            ibo.applyAsInt(x,y) % Math.max(1,(max-t)) < t
-                                ? srcR
-                                : dstR
-                            ).getPixel(x,y,new int[4])
+                                ibo.applyAsInt(x,y) % Math.max(1,(max-t)) < t ? srcR : dstR
+                            ).getPixel( x, y, new int[Math.max(srcR.getNumBands(), dstR.getNumBands())] )
                         );
                     }
                 }

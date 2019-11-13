@@ -1,6 +1,5 @@
 package game;
 
-import game.menu.Menu;
 import game.pickup.Pickup;
 
 import javax.sound.sampled.Clip;
@@ -20,8 +19,7 @@ public class Player extends GameEntity.Stopping {
 	private double maxHealth;
 	private double armor; // higher value represents higher damage resistance
     private double speed;
-	private ArrayList<Pickup> inactive; // TODO: replace all array lists and stacks with concurrent friendly stacks
-	private ArrayList<Pickup> active;
+	private ArrayList<Pickup> inactive, active;
 	private Controller controller;
 
     public void setMaxHealth(double m) {
@@ -112,7 +110,7 @@ public class Player extends GameEntity.Stopping {
             active.get(i).affect(this);
         }
 	    if(controller.getUse() && !inactive.isEmpty()) {
- 	        active.add(0, inactive.remove(0)); // TODO: stacks on stacks
+ 	        active.add(0, inactive.remove(0));
         }
 	}
 

@@ -1,10 +1,6 @@
 package game.enemy;
 
 import game.GameLevel;
-import game.waves.RainbowText;
-import util.Random;
-
-import java.awt.*;
 
 /**
  * @author Brandon Loehle 5/30/16

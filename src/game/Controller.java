@@ -124,7 +124,7 @@ public class Controller implements KeyListener, MouseListener, MouseMotionListen
 
         @Override
         public boolean getUse() {
-            return Arrays.stream(components).map(c -> c.use).reduce(Boolean::logicalOr).orElse(false);
+            return Arrays.stream(components).map(Controller::getUse).reduce(Boolean::logicalOr).orElse(false);
         }
 
         @Override
