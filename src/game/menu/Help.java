@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
-public class Help extends GameLevel {
+public class Help extends GameLevel.Unending {
     public Help(GameLevel g) {
         super(g);
     }
@@ -80,7 +80,7 @@ public class Help extends GameLevel {
     @Override
     public void mousePressed(MouseEvent e) {
         if (new Rectangle(850, 300, 200, 64).contains(e.getPoint())) {
-            getState().pop();
+            end();
         }
     }
 }

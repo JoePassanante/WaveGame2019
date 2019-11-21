@@ -1,31 +1,21 @@
 package game;
 
-import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.image.ColorModel;
+import java.util.function.BiFunction;
 import java.util.function.IntBinaryOperator;
-import java.util.function.IntFunction;
 
 public class Transition extends GameLevel {
-    private int currentTick, maxTick;
     private Performer source, destination;
-    private IntFunction<Composite> composite;
 
-    public Transition(GameLevel lev, int max, Performer src, Performer dst, IntFunction<Composite> comp) {
-        super(lev);
-        maxTick = max;
-        source = src;
-        destination = dst;
-        composite = comp;
+    public Composite getComposite() {
+        return AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f*getCurrentTick()/getMaxTick());
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        currentTick += 1;
-        if(currentTick > maxTick) {
-            getState().pop();
-        }
+    public Transition(GameLevel lev, Performer src, Performer dst) {
+        super(lev);
+        source = src;
+        destination = dst;
     }
 
     @Override
@@ -34,20 +24,9 @@ public class Transition extends GameLevel {
         Graphics2D g2d = (Graphics2D)g;
         source.render(g2d);
         Composite old = g2d.getComposite();
-        g2d.setComposite(composite.apply(currentTick));
+        g2d.setComposite(getComposite());
         destination.render(g2d);
         g2d.setComposite(old);
-    }
-
-    @Override
-    public void render(Clip c, int i) {
-        // let the menu music continue playing
-    }
-
-    public static class Fade extends Transition {
-        public Fade(GameLevel lev, int max, Performer src, Performer dst) {
-            super(lev, max, src, dst, t -> AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f*t/max));
-        }
     }
 
     @FunctionalInterface
@@ -62,48 +41,80 @@ public class Transition extends GameLevel {
         default void dispose() { }
     }
 
-    public static class Modulo extends Transition {
-        public Modulo(GameLevel lev, int max, Performer src, Performer dst, IntBinaryOperator ibo) {
-            super(lev, max, src, dst, t -> (TransitionComposite) (srcCM, dstCM, h) -> (srcR, dstR, dstWR) -> {
-                for(int y = 0; y < dstWR.getHeight(); y += 1) {
-                    for(int x = 0; x < dstWR.getWidth(); x += 1) {
-                        dstWR.setPixel( x, y, (
-                                ibo.applyAsInt(x,y) % Math.max(1,(max-t)) < t ? srcR : dstR
-                            ).getPixel( x, y, new int[Math.max(srcR.getNumBands(), dstR.getNumBands())] )
-                        );
+    public static class Slide extends Transition {
+        private int xl, yl, xt, yt;
+        public Slide(GameLevel lev, Performer src, Performer dst, int xt, int yt) {
+            super(lev, src, dst);
+            this.xt = xt;
+            this.yt = yt;
+            this.xl = Math.abs(xt)*getMaxTick();
+            this.yl = Math.abs(yt)*getMaxTick();
+        }
+
+        @Override
+        public Composite getComposite() {
+            return (TransitionComposite) (srcCM, dstCM, h) -> (srcR, dstR, dstWR) -> { // slooow ;-;
+                int[] read = new int[Math.max(srcR.getNumBands(), dstR.getNumBands())];
+                for (int y = 0; y < dstWR.getHeight(); y += 1) {
+                    for (int x = 0; x < dstWR.getWidth(); x += 1) {
+                        dstWR.setPixel(x, y, (xl < x && yl < y ? srcR : dstR).getPixel(x, y, read));
                     }
                 }
-            });
+            };
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+            xl += xt;
+            yl += yt;
+        }
+
+        public static BiFunction<Performer,Performer,Transition> vertical(GameLevel lev) {
+            return (s,d) -> new Slide(lev, s, d, 0, -24);
+        }
+        public static BiFunction<Performer,Performer,Transition> horizontal(GameLevel lev) {
+            return (s,d) -> new Slide(lev, s, d, -24, 0);
         }
     }
 
-    public static class Vertical extends Modulo {
-        public Vertical(GameLevel lev, int max, Performer src, Performer dst) {
-            super(lev, max, src, dst, (x,y) -> x);
-        }
-    }
+    public static class Modulo extends Transition {
+        private IntBinaryOperator operator;
 
-    public static class Horizontal extends Modulo {
-        public Horizontal(GameLevel lev, int max, Performer src, Performer dst) {
-            super(lev, max, src, dst, (x,y) -> y);
+        public Modulo(GameLevel lev, Performer src, Performer dst, IntBinaryOperator o) {
+            super(lev, src, dst);
+            operator = o;
         }
-    }
 
-    public static class Diagonal extends Modulo {
-        public Diagonal(GameLevel lev, int max, Performer src, Performer dst) {
-            super(lev, max, src, dst, Integer::sum);
+        @Override
+        public Composite getComposite() {
+            return (TransitionComposite) (srcCM, dstCM, h) -> (srcR, dstR, dstWR) -> { // slooow ;-;
+                int[] read = new int[Math.max(srcR.getNumBands(), dstR.getNumBands())];
+                for (int y = 0; y < dstWR.getHeight(); y += 1) {
+                    for (int x = 0; x < dstWR.getWidth(); x += 1) {
+                        dstWR.setPixel(x, y, (
+                            operator.applyAsInt(x, y) % Math.max(1, (getMaxTick() - getCurrentTick()))
+                                < getCurrentTick() ? srcR : dstR
+                        ).getPixel(x, y, read) );
+                    }
+                }
+            };
         }
-    }
 
-    public static class Radial extends Modulo {
-        public Radial(GameLevel lev, int max, Performer src, Performer dst) {
-            super(lev, max, src, dst, (x,y) -> (int)Math.sqrt(x*x + y*y));
+        public static BiFunction<Performer,Performer,Transition> vertical(GameLevel lev) {
+            return (s,d) -> new Modulo(lev, s, d, (x,y) -> x);
         }
-    }
-
-    public static class Droplets extends Modulo {
-        public Droplets(GameLevel lev, int max, Performer src, Performer dst) {
-            super(lev, max, src, dst, (x,y) -> (x*x + y*y));
+        public static BiFunction<Performer,Performer,Transition> horizontal(GameLevel lev) {
+            return (s,d) ->  new Modulo(lev, s, d, (x,y) -> y);
+        }
+        public static BiFunction<Performer,Performer,Transition> diagonal(GameLevel lev) {
+            return (s,d) ->  new Modulo(lev, s, d, Integer::sum);
+        }
+        public static BiFunction<Performer,Performer,Transition> radial(GameLevel lev) {
+            return (s,d) ->  new Modulo(lev, s, d, (x,y) -> (int)Math.sqrt(x*x + y*y));
+        }
+        public static BiFunction<Performer,Performer,Transition> droplets(GameLevel lev) {
+            return (s,d) ->  new Modulo(lev, s, d, (x,y) -> (x*x + y*y));
         }
     }
 }

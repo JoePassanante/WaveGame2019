@@ -47,7 +47,7 @@ public class EnemyBoss extends Enemy.Bouncing {
     @Override
     public void render(Graphics g) {
         g.setColor(Color.LIGHT_GRAY);
-        g.drawLine(0, 138, (int) getLevel().getDimension().getWidth(), 138);
+        g.drawLine(0, 150, (int) getLevel().getDimension().getWidth(), 150);
         super.render(g, super.getBounds());
 
         // HEALTH BAR
@@ -61,6 +61,6 @@ public class EnemyBoss extends Enemy.Bouncing {
 
     @Override
     public Rectangle getBounds() {
-        return new Rectangle(0, 0, getLevel().getDimension().width, 200);
+        return new Rectangle(0, 0, getLevel().getDimension().width, 150);
     }
 }

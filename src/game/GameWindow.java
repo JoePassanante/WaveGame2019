@@ -46,12 +46,11 @@ public class GameWindow extends JFrame {
         super.processKeyEvent(e);
     }
 
-    /**
-     * Inverts transformation of this JFrame to process mouse events in game space
-     */
+
     private AffineTransform screenSpace; // The graphical transformation of this JFrame
+
     @Override
-    protected void processMouseEvent(MouseEvent e) {
+    protected void processMouseEvent(MouseEvent e) { // Inverts transformation of this JFrame to process mouse events in game space
         try {
             Point2D p = new Point();
             screenSpace.inverseTransform(e.getPoint(), p);

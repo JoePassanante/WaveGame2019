@@ -20,6 +20,8 @@ public class Pickup extends GameEntity {
     public void collide(Player player) {
         super.collide(player);
         getLevel().getEntities().remove(this);
+        setVelX(0);
+        setVelY(0);
         player.getInactive().add(0, this);
     }
 
@@ -27,7 +29,7 @@ public class Pickup extends GameEntity {
     public void tick() {
         super.tick();
         Rectangle bounds = getLevel().getBounds();
-        if (!bounds.intersects(getBounds())) {
+        if (getVelX() + getVelY() > 1 && !bounds.intersects(getBounds())) {
             setPosX(Math.floorMod((int) getPosX(), (int) bounds.getWidth()));
             setPosY(Math.floorMod((int) getPosY(), (int) bounds.getHeight()));
         }
@@ -47,7 +49,7 @@ public class Pickup extends GameEntity {
 
         public void collide(Player player) {
             super.collide(player);
-            player.getActive().add(0, player.getInactive().get(0));
+            player.getActive().add(0, player.getInactive().remove(0));
         }
     }
 }

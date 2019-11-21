@@ -15,14 +15,14 @@ public class PickupLife extends Pickup.Active {
 
     @Override
     public void affect(Player player) {
-        if (player.getHealth() <= 0) {
+        setHealth(player.getHealth());
+        super.affect(player);
+        if (getHealth() < 0) {
             // TODO: fill health bar incrementally, maybe extend PickupRegen?
             player.setHealth(player.getMaxHealth());
             if (!player.getLevel().getEntities().contains(player)) {
                 player.getLevel().getEntities().add(player);
             }
-            setHealth(getHealth() - 1);
         }
-        super.affect(player);
     }
 }

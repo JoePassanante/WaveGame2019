@@ -10,8 +10,8 @@ public class PickupSpeed extends Pickup.Active {
 
     @Override
     public void affect(Player player) {
-        player.setVelX(1.2 * player.getVelX());
-        player.setVelY(1.2 * player.getVelY());
-        // super.affect(player); // pickup is permanent
+        setHealth(player.getHealth());
+        player.setVelX(1.25 * player.getVelX());
+        player.setVelY(1.25 * player.getVelY());
     }
 }

@@ -10,7 +10,7 @@ import game.Player;
 
 public class PickupHealth extends Pickup {
     public PickupHealth(GameLevel l) {
-        super(l);
+        super(l, 0);
     }
 
     @Override

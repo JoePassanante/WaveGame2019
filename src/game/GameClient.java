@@ -37,6 +37,7 @@ public class GameClient extends GameLevel implements Runnable {
             new Theme("common", null),
             new ArrayList<>(),
             -1,
+            -1,
             0,
             true
         );
@@ -54,7 +55,7 @@ public class GameClient extends GameLevel implements Runnable {
 
         window.requestFocus();
 
-        frame = 1_000_000_000/60; // time per tick, here it is one billion nanoseconds per sixty ticks
+        frame = 1_000_000_000 / 60; // time per tick, here it is one billion nanoseconds per sixty ticks
         tick = 0;
         tock = System.nanoTime();
         delta = frame;

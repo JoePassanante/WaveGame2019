@@ -1,6 +1,7 @@
 package game.menu;
 
 import game.*;
+import game.Transition;
 import game.waves.RainbowText;
 import game.waves.Waves;
 import util.Random;
@@ -8,12 +9,14 @@ import util.Random;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
-public class Menu extends GameLevel {
+public class Menu extends GameLevel.Unending {
     private Theme space, water, dvd;
     private Controller wasd, ijkl, arrows, mouse;
     private Random.RandomDifferentElement<Color> fireworkColor;
+    private ArrayList<MenuButton> buttons;
 
     public Menu(GameLevel g) {
         super(g);
@@ -33,12 +36,15 @@ public class Menu extends GameLevel {
         mouse = new Controller.Mouse();
 
         fireworkColor = getRandom().new RandomDifferentElement<>(RainbowText.rainbow);
+
+        buttons = new ArrayList<>();
+        buttons.add(new MenuButton(0, 0, 0, 0, this));
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (getEntities().size() == 0) {
+        if (getEntities().isEmpty()) {
             getEntities().add(new Fireworks(
                 getRandom().nextInt(getDimension().width),
                 getDimension().getHeight(),
@@ -46,11 +52,16 @@ public class Menu extends GameLevel {
                 fireworkColor.get()
             ));
         }
+        for(int b = buttons.size()-1; b >= 0; b -= 1) {
+            buttons.get(b).tick();
+        }
     }
 
     @Override
     public void render(Graphics g) {
         super.render(g);
+
+        buttons.forEach(b -> b.render(g));
         g.setColor(Color.white);
 
         g.setFont(new Font("Amoebic", 1, 130));
@@ -78,7 +89,12 @@ public class Menu extends GameLevel {
         g.drawString("Underwater", 870, 825);
         g.drawString("Coming soon...", 1111, 1025);
 
-        g.setFont(new Font("Amoebic", 1, 34));
+        //Button for avatar changing
+        g.setFont(new Font("Amoebic", Font.BOLD, 55));
+        g.drawRect(850, 900, 650, 100);
+        g.drawString("Player Customization", 870, 975);
+
+        g.setFont(new Font("Amoebic", Font.BOLD, 34));
         // Credits to team that worked on game last editor
         g.drawString("Credits: Team", 0, 1000);
         int shake = getRandom().nextInt(3);
@@ -94,16 +110,18 @@ public class Menu extends GameLevel {
         // Waves One Button
         if (new Rectangle(602, 300, 281, 250).contains(e.getPoint())) {
             getEntities().clear();
+            setMaxTick(600);
             setClipped(true);
             getState().push(new GameOver(this));
             getPlayers().add(new Player(getDimension().getWidth() / 2, getDimension().getHeight() / 2, new Controller.Multi(wasd, arrows), this));
             getState().push(new Waves(this));
-            getState().push(new Transition.Droplets(this, 60, this, getState().peek()));
-//            getState().push(menuTransition.get().apply(this, 60).apply(this, getState().peek()));
+            setMaxTick(60);
+            getState().push(Transition.Modulo.droplets(this).apply(this, getState().peek()));
         }
         // Waves Two Button
         else if (new Rectangle(1052, 300, 281, 250).contains(e.getPoint())) {
             getEntities().clear();
+            setMaxTick(600);
             setClipped(true);
             getState().push(new GameOver(this));
             getPlayers().add(new Player(540, 640, wasd,this));
@@ -113,9 +131,10 @@ public class Menu extends GameLevel {
         // Help Button
         else if (new Rectangle(230, 360, 260, 200).contains(e.getPoint())) {
             Help help = new Help(this);
-            getState().push(new Transition.Fade(this, 15, help, this));
+            setMaxTick(15);
+            getState().push(new Transition(this, help, this));
             getState().push(help);
-            getState().push(new Transition.Fade(this, 15, this, help));
+            getState().push(new Transition(this, this, help));
         }
         // Quit Button
         else if (new Rectangle(1390, 360, 260, 200).contains(e.getPoint())) {
@@ -130,7 +149,12 @@ public class Menu extends GameLevel {
             setTheme(water);
         } else if (new Rectangle(1111, 1025, 1000, 120).contains(e.getPoint())) {
             setTheme(dvd);
-        } else { // TODO: all buttons should use this loop
+        }
+        else if (new Rectangle(850, 900, 650, 100).contains(e.getPoint())) {
+            getState().push(new Avatar(this));
+            getState().push(Transition.Slide.horizontal(this).apply(this, getState().peek()));
+        }
+        else { // TODO: all buttons should use this loop
             for (int i = getEntities().size() - 1; i >= 0; i -= 1) {
                 if (getEntities().get(i).getBounds().contains(e.getPoint())) {
                     getEntities().get(i).collide(null);

@@ -11,7 +11,7 @@ import game.enemy.Enemy;
 
 public class PickupFreeze extends Pickup {
     public PickupFreeze(GameLevel l) {
-        super(l, 500);
+        super(l);
     }
 
     @Override

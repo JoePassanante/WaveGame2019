@@ -13,9 +13,11 @@ public class PickupSize extends Pickup.Active {
         super(l);
     }
 
+    private double shrink = 1;
+
     @Override
     public void affect(Player player) {
-        player.setSize(.75 * Math.sqrt(player.getWidth() * player.getHeight()));
-        super.affect(player);
+        shrink /= 5;
+        player.setSize(Math.min(player.getWidth(), player.getHeight() * (1 - shrink)));
     }
 }

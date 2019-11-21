@@ -1,5 +1,6 @@
 package game.menu;
 
+import game.GameEntity;
 import game.GameLevel;
 import game.GameWindow;
 import game.Performer;
@@ -9,7 +10,8 @@ import java.awt.*;
 public class MenuButton extends Performer {
     private Rectangle bounds;
 
-    public MenuButton(GameLevel level, double x, double y, double w, double h) {
+    public MenuButton(double x, double y, double w, double h, GameLevel level) {
+        //super(x, y, w, h, level);
         refer(level.getTheme().get(this));
         bounds = new Rectangle.Double(x,y,w,h).getBounds();
     }
@@ -25,7 +27,7 @@ public class MenuButton extends Performer {
         private Font font;
 
         public TextButton(GameLevel level, double x, double y, double w, double h, String t, Font f) {
-            super(level, x, y, w, h);
+            super(x, y, w, h, level);
             text = t;
             font = f;
         }

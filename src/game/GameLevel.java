@@ -21,10 +21,15 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
     private Dimension dimension;
     private Theme theme;
     private ArrayList<Player> players;
-    private int number;
-    private int score;
+    private int currentTick, maxTick, number, score;
     private boolean clipped;
 
+    public void setCurrentTick(int tick) {
+        currentTick = tick;
+    }
+    public void setMaxTick(int tick) {
+        maxTick = tick;
+    }
     public void setScore(int s) {
         score = s;
     }
@@ -36,6 +41,7 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
     public void setClipped(boolean c) {
         clipped = c;
     }
+
     public ArrayList<GameEntity> getEntities() {
         return entities;
     };
@@ -57,6 +63,9 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
     public ArrayList<Player> getPlayers() {
         return players;
     }
+    public int getMaxTick() {
+        return maxTick;
+    }
     public int getNumber() {
         return number;
     }
@@ -64,28 +73,32 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
         return score;
     }
     public boolean getClipped() { return clipped; }
+    public int getCurrentTick() {
+        return currentTick;
+    }
 
     public GameLevel(GameLevel gl) {
         this(
             gl.getEntities(), gl.getState(), gl.getRandom(), gl.getDimension(), gl.getTheme(), gl.getPlayers(),
-            gl.getNumber() + 1, gl.getScore(), gl.getClipped()
+            gl.getNumber() + 1, gl.getMaxTick() + 10, gl.getScore() + 100, gl.getClipped()
         );
     }
 
     public GameLevel(
         ArrayList<GameEntity> e, Stack<GameLevel> s, Random r, Dimension d, Theme t, ArrayList<Player> p,
-        int n, int c, boolean l
+        int n, int m, int c, boolean l
     ) {
         entities = e;
+        nonentities = new ArrayList<>();
         state = s;
         random = r;
         dimension = d;
         setTheme(t);
         players = p;
         number = n;
+        maxTick = m;
         setScore(c);
         setClipped(l);
-        nonentities = new ArrayList<>();
     }
 
     public Point.Double spawnPoint() {
@@ -109,21 +122,25 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
             .orElse(spawnPoint());
     }
 
+    public void start() {
+        players.forEach(p -> p.setLevel(this));
+        entities.forEach(e -> e.setLevel(this));
+        nonentities.forEach(n -> n.setLevel(this));
+    }
 
-    private boolean initialized;
+    public void end() {
+        getState().pop();
+    }
+
     @Override
     public void tick() {
         super.tick();
 
         setScore(getScore() + 1);
 
-        if(!initialized) { // TODO: add proper initialize() method
-            players.forEach(p -> p.setLevel(this));
-            entities.forEach(e -> e.setLevel(this));
-            nonentities.forEach(n -> n.setLevel(this));
-            initialized = true;
+        if(currentTick <= 0) {
+            start();
         }
-
         for(int i = entities.size()-1; i >= 0; i -= 1) {
             entities.get(i).tick();
         }
@@ -139,6 +156,11 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
                 }
             }
         }
+        if(currentTick >= maxTick) {
+            end();
+        }
+
+        currentTick += 1;
     }
 
     @Override
@@ -236,4 +258,16 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
     @Override public final void mouseEntered(MouseEvent e) { }
     @Override public final void mouseExited(MouseEvent e) { }
     @Override public final void mouseDragged(MouseEvent e) { }
+
+    public static class Unending extends GameLevel {
+        public Unending(GameLevel gl) {
+            super(gl);
+        }
+
+        @Override
+        public void tick() {
+            setMaxTick(getCurrentTick() + 1);
+            super.tick();
+        }
+    }
 }

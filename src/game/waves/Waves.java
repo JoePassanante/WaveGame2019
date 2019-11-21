@@ -4,6 +4,7 @@ import game.*;
 import game.enemy.*;
 import game.menu.Menu;
 import game.pickup.*;
+import game.Transition;
 import util.Random;
 
 import java.awt.event.KeyEvent;
@@ -21,8 +22,6 @@ import java.util.stream.IntStream;
  */
 
 public class Waves extends GameLevel {
-    private int currentTick;
-    private int maxTick;
     private RainbowText text;
 
     private static class Spawn {
@@ -32,7 +31,8 @@ public class Waves extends GameLevel {
             randomBoss,
             randomPickup;
 
-        private Supplier<BiFunction<GameLevel, Integer, BiFunction<game.Performer, Performer, Transition>>> transition;
+        private Supplier<Function<GameLevel, BiFunction<game.Performer, Performer, Transition>>>
+            transition;
 
         private Spawn(Random rng) {
             randomEasyEnemy = rng.new RandomDifferentElement<>(
@@ -53,17 +53,22 @@ public class Waves extends GameLevel {
                 //BossEye::new
             );
             randomPickup = rng.new RandomDifferentElement<>(
+                PickupArmor::new,
+                PickupClear::new,
                 PickupFreeze::new,
                 PickupHealth::new,
                 PickupLife::new,
+                PickupRegen::new,
                 PickupScore::new,
-                PickupSize::new
+                PickupSize::new,
+                PickupSkip::new,
+                PickupSpeed::new
             );
             transition = rng.new RandomDifferentElement<>( // java wont let us use ::new on inner class constructors ;-;
-                (GameLevel l, Integer m) -> (Performer s, Performer d) -> new Transition.Vertical(l, m, s, d),
-                (GameLevel l, Integer m) -> (Performer s, Performer d) -> new Transition.Horizontal(l, m, s, d),
-                (GameLevel l, Integer m) -> (Performer s, Performer d) -> new Transition.Diagonal(l, m, s, d),
-                (GameLevel l, Integer m) -> (Performer s, Performer d) -> new Transition.Radial(l, m, s, d)
+                Transition.Modulo::vertical,
+                Transition.Modulo::horizontal,
+                Transition.Modulo::diagonal,
+                Transition.Modulo::radial
             );
         }
     }
@@ -72,18 +77,16 @@ public class Waves extends GameLevel {
     private Supplier<Function<GameLevel, GameEntity>> randomEnemy;
 
     public Waves(Menu m) {
-        this(m, new Spawn(m.getRandom()), 600);
+        this(m, new Spawn(m.getRandom()));
     }
 
     private Waves(Waves w) {
-        this(w, w.spawn, w.maxTick);
+        this(w, w.spawn);
     }
 
-    private Waves(GameLevel level, Spawn s, int m) {
+    private Waves(GameLevel level, Spawn s) {
         super(level);
         spawn = s;
-        maxTick = m;
-        currentTick = 0;
         System.out.println("New level with:");
         randomEnemy = getRandom().new RandomDifferentElement<>( IntStream // spawn a different enemy every time
             .rangeClosed(0, getNumber()/5 + 1)
@@ -100,61 +103,64 @@ public class Waves extends GameLevel {
         );
     }
 
+    @Override
+    public void start() {
+        super.start();
+        if(getNumber() == 1) {
+            getEntities().addAll(getPlayers());
+        }
+        else if(getNumber() > 1) {
+            getEntities().retainAll(getPlayers());
+            getEntities().add(spawn.randomPickup.get().apply(this));
+        }
+        getEntities().add(text);
+    }
+
+    @Override
+    public void end() {
+        super.end();
+        getState().push(new Waves(this));
+        if (getNumber() % 5 == 0) {
+            getState().push(new Upgrades(this, spawn.randomPickup));
+            getState().push(new Boss(this, spawn.randomBoss));
+            setMaxTick(60);
+            getState().push(spawn.transition.get().apply(this).apply(this, getState().peek()));
+        }
+    }
+
     /**
-     * Tick spawns new enemies depending on the spawn limit.
+     * Tick spawns new enemies and ends the game if all the players die.
      */
     public void tick() {
         super.tick();
-
-        if(currentTick == 0) {
-            getEntities().add(text);
-            if(getNumber() == 1) {
-                getEntities().addAll(getPlayers());
-            }
-            else if(getNumber() > 1) {
-                getEntities().add(spawn.randomPickup.get().apply(this));
-            }
-        }
-        else if(currentTick >= maxTick) {
-            setScore(getScore() + 100);
-            getEntities().retainAll(getPlayers());
-            getState().pop();
-            getState().push(new Waves(this));
-            if (getNumber() % 5 == 0) {
-                getState().push(new Upgrades(this, spawn.randomPickup));
-                getState().push(new Boss(this, spawn.randomBoss));
-                getState().push(spawn.transition.get().apply(this, 60).apply(this, getState().peek()));
-            }
-        }
-        else if(Collections.disjoint(getEntities(), getPlayers())) {
-            getEntities().clear();
+        if(Collections.disjoint(getEntities(), getPlayers())) {
             getState().pop();
             getState().peek().setScore(getScore());
-            getState().peek().setScore(getScore());
         }
-        else if(getEntities().stream().filter(Enemy.class::isInstance).count() < getNumber()*currentTick/maxTick + 1) {
+        else if(getEntities().stream().filter(Enemy.class::isInstance).count() < 1 + getNumber()*getCurrentTick()/getMaxTick()) {
             GameEntity ge = randomEnemy.get().apply(this);
             System.out.println("Spawning: " + ge.getClass().getSimpleName());
             getEntities().add(ge);
         }
-
-        currentTick += 1;
     }
 
-    @Override
+     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
 
-        if(GameClient.devMode) {
+        if(GameClient.devMode || true) {
             if (key == KeyEvent.VK_U) {
                 getState().push(new Upgrades(this, spawn.randomPickup));
             }
             else if (key == KeyEvent.VK_ENTER || key == KeyEvent.VK_E) {
-                currentTick = maxTick;
+                setCurrentTick(getMaxTick());
             }
-//          else if(key == KeyEvent.VK_P) {
-            // game.setPaused(false);
-//           }
+            else if(key == KeyEvent.VK_P) {
+                GameLevel pause = new Pause(this);
+//                getState().push(new Transition(pause, pause, this));
+                getState().push(pause);
+//                getState().push(new Transition(pause, this, pause));
+            }
         }
         if (key == KeyEvent.VK_ESCAPE) {
             getEntities().clear();

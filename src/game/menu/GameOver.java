@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Brandon Loehle 5/30/16
  */
 
-public class GameOver extends GameLevel {
+public class GameOver extends GameLevel.Unending {
     private Random.RandomDifferentElement<Color> retryColor = getRandom().new RandomDifferentElement<>(Color.black, Color.white);
     private Color color;
     private AtomicInteger highscore;
@@ -26,30 +26,33 @@ public class GameOver extends GameLevel {
         highscore = new AtomicInteger();
     }
 
-    private int currentTick;
+    @Override
+    public void start() {
+        getEntities().clear();
+        getNonentities().clear();
+        new Thread(() -> { // Retrieves and saves the high score
+            try (BufferedReader in = new BufferedReader(new FileReader("src/HighScores.txt"))) {
+                highscore.set(Optional.ofNullable(in.readLine()).map(Integer::parseInt).orElse(0));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try (BufferedWriter out = new BufferedWriter(new FileWriter("src/HighScores.txt"))) {
+                if (getScore() >= highscore.get()) {
+                    out.write(Integer.toString(getScore()));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
 
     @Override
     public void tick() {
-        if (currentTick == 0) {
-            new Thread(() -> { // Retrieves and saves high score
-                try (BufferedReader in = new BufferedReader(new FileReader("src/HighScores.txt"))) {
-                    highscore.set(Optional.ofNullable(in.readLine()).map(Integer::parseInt).orElse(0));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try (BufferedWriter out = new BufferedWriter(new FileWriter("src/HighScores.txt"))) {
-                    if (getScore() >= highscore.get()) {
-                        out.write(Integer.toString(getScore()));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }).start();
-        } else if (currentTick % 30 == 0) {
+        super.tick();
+        setScore(getScore() - 1);
+        if (getCurrentTick() % 30 == 0) {
             color = retryColor.get();
         }
-
-        currentTick += 1;
     }
 
     @Override
@@ -72,6 +75,6 @@ public class GameOver extends GameLevel {
     @Override
     public void mousePressed(MouseEvent e) {
         getPlayers().clear();
-        getState().pop();
+        end();
     }
 }

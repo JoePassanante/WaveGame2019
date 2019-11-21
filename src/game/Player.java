@@ -72,7 +72,7 @@ public class Player extends GameEntity.Stopping {
             getLevel().getNonentities().add(new Trail(this, playerColor, 255));
             playerColor = Color.white;
         }
-        else { // TODO: fun collision ripple animation and trade health
+        else {
             if(getHealth() > p.getHealth()) {
                 double heal = Math.min(.5, .5*(getHealth()-p.getHealth()));
                 damage(heal);
@@ -107,6 +107,10 @@ public class Player extends GameEntity.Stopping {
         }
 	    for(int i = active.size()-1; i >= 0; i -= 1) {
 	        active.get(i).tick();
+            active.get(i).setPosX(.8*active.get(i).getPosX() + .2*getPosX());
+            active.get(i).setPosY(.8*active.get(i).getPosY() + .2*(
+                getPosY() - 1.5*(getBounds().getHeight() + i*active.get(i).getBounds().getHeight())
+            ));
             active.get(i).affect(this);
         }
 	    if(controller.getUse() && !inactive.isEmpty()) {
@@ -119,11 +123,13 @@ public class Player extends GameEntity.Stopping {
 		//g.drawImage(img, (int) this.x, (int) this.y, playerWidth, playerHeight, null);
         super.render(g, playerColor);
         inactive.forEach(ge -> ge.render(g));
+        active.forEach(ge -> ge.render(g));
 	}
 
 	@Override
     public void render(Clip c, int i) {
         super.render(c, i);
         inactive.forEach(ge -> ge.render(c,i));
+        active.forEach(ge -> ge.render(c,i));
     }
 }
