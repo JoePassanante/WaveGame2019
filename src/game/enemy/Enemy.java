@@ -39,7 +39,7 @@ public class Enemy extends GameEntity {
         @Override
         public void tick() {
             super.tick();
-            if(!getLevel().getBounds().intersects(getBounds())) {
+            if (!getLevel().getBounds().intersects(getBounds())) {
                 getLevel().getEntities().remove(this);
             }
         }

@@ -6,7 +6,6 @@ import util.Random;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -37,30 +36,37 @@ public class GameClient extends GameLevel implements Runnable {
             new Dimension(1920,1080),
             new Theme("common", null),
             new ArrayList<>(),
+            -2,
             -1,
             0,
             true
         );
 
+        System.out.println("Loading common...");
         getTheme().run();
         getState().push(new Menu(this));
 
         window = new GameWindow();
         music = LambdaException.wraps(AudioSystem::getClip).get();
 
-        window.addMouseListener(this);
         window.addKeyListener(this);
+        window.addMouseListener(this);
+        window.addMouseMotionListener(this);
 
         window.requestFocus();
 
-        frame = 1_000_000_000/60; // time per tick, here it is one billion nanoseconds per sixty ticks
+        frame = 1_000_000_000 / 60; // time per tick, here it is one billion nanoseconds per sixty ticks
         tick = 0;
         tock = System.nanoTime();
         delta = frame;
     }
 
+    // proxy methods passed off to the top of the state stack
     @Override public void tick() {
         getState().peek().tick();
+    }
+    @Override public void render(Clip c, int i) {
+        getState().peek().render(c, i);
     }
     @Override public void render(Graphics g) {
         getState().peek().render(g);
@@ -77,6 +83,9 @@ public class GameClient extends GameLevel implements Runnable {
     @Override public void mouseReleased(MouseEvent e) {
         getState().peek().mouseReleased(e);
     }
+    @Override public void mouseMoved(MouseEvent e) {
+        getState().peek().mouseMoved(e);
+    }
 
     @Override
 	public void run() {
@@ -88,7 +97,7 @@ public class GameClient extends GameLevel implements Runnable {
             delta -= frame;
         }
         window.draw(this); // drawing as frequently as possible
-        getState().peek().render(music, 0);
+        render(music, 0);
 
         tock = System.nanoTime();
         delta += tock - tick;

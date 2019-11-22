@@ -2,34 +2,123 @@ package game.menu;
 
 import game.*;
 import game.waves.RainbowText;
-import game.waves.Waves;
 import util.Random;
 
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class Menu extends GameLevel {
-    private Theme space, water;
+public class Menu extends GameLevel.Unending {
+    private Theme space, water, dvd;
     private Random.RandomDifferentElement<Color> fireworkColor;
+    private MenuButton.MuteButton mute;
+
+    public Menu(Menu m) {
+        super(m);
+        space = m.space;
+        water = m.water;
+        dvd = m.dvd;
+        fireworkColor = m.fireworkColor;
+        mute = m.mute;
+    }
 
     public Menu(GameLevel g) {
         super(g);
 
         space = new Theme("space", getTheme());
         water = new Theme("water", getTheme());
-
-        Stream.of(space, water).parallel().forEach(Runnable::run); // still not fast enough
+        dvd = new Theme("dvd", space);
+        System.out.println("Loading themes...");
+        Stream.of(space, water, dvd).parallel().forEach(Runnable::run); // still not fast enough >:L
         setTheme(space);
 
         fireworkColor = getRandom().new RandomDifferentElement<>(RainbowText.rainbow);
+        mute = new Button.MuteButton(20, 900, 100, 100, this);
+    }
+
+    private void resetTheme(Theme t) {
+        getState().forEach(s -> s.setTheme(t));
+        getState().peek().setClipped(true);
+    }
+
+    private static class Button extends MenuButton.TextButton {
+        public Button(double x, double y, GameLevel level, Consumer<Player> c, String t, Font f) {
+            super(x, y, level, c, t, f);
+        }
+
+        @Override
+        public void collide(Player p) {
+            if(p == null) {
+                super.collide(p);
+            }
+        }
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(getEntities().size() == 0) {
-            getEntities().add( new Fireworks(
+
+        if(getClass() == Menu.class) { // effectively static
+            Font f = new Font("Amoebic", Font.BOLD, 130);
+            final Button
+            back = new Button(100, 250, this, p -> {
+                getState().clear();
+                getState().push(this);
+            }, "<", f),
+            next = new Button(300, 250, this, p -> {
+                getState().peek().end();
+            }, ">", f),
+            help = new Button(1620, 250, this, p -> {
+                if(getState().peek().getClass() != Help.class) {
+                    getState().peek().setMaxTick(15);
+                    Help h = new Help(this);
+                    getState().push(new Transition(this, h, this));
+                    getState().push(h);
+                    getState().push(new Transition(this, this, h));
+                }
+                else {
+                    getState().peek().end();
+                }
+            }, "?", f),
+            exit = new Button(1820, 250, this, p -> {
+                System.exit(0);
+            }, "X", f);
+
+            getEntities().clear();
+
+            getEntities().add(back);
+            getEntities().add(next);
+            getEntities().add(help);
+            getEntities().add(exit);
+
+            getEntities().add(mute);
+
+            f = new Font("Amoebic", Font.BOLD, 70);
+            getEntities().add(new Button(1300, 1060, this, p -> resetTheme(space), "Space", f));
+            getEntities().add(new Button(1565, 1060, this, p -> resetTheme(water), "Water", f));
+            getEntities().add(new Button(1800, 1060, this, p -> resetTheme(dvd), "DVD", f));
+
+            setClipped(false);
+            final GameLevel
+            input = new GameInput(this),
+            avatar = new GameAvatar(this),
+            mode = new GameMode(this),
+            over = new GameOver(this);
+            setMaxTick(40);
+            getState().push(over);
+            getState().push(mode);
+            getState().push(Transition.Slide.horizontal(this).apply(avatar, mode));
+            getState().push(avatar);
+            getState().push(Transition.Slide.horizontal(this).apply(input, avatar));
+            getState().push(input);
+            getState().peek().setClipped(true);
+        }
+
+        if(getEntities().stream().noneMatch(Fireworks.class::isInstance)) {
+            getEntities().add(new Fireworks(
                 getRandom().nextInt(getDimension().width),
                 getDimension().getHeight(),
                 this,
@@ -41,83 +130,33 @@ public class Menu extends GameLevel {
     @Override
     public void render(Graphics g) {
         super.render(g);
+
+        getEntities().forEach(b -> b.render(g));
         g.setColor(Color.white);
 
-        g.setFont(new Font("Amoebic", 1, 130));
-        // Waves button, the start game button
-        g.drawRect(602, 300, 281, 250); //changes the rectangle size drawn
-        g.drawString("One", 602, 465);//move the text down and center it inside the rectangle
-        // Waves button two, the start game button for two players
-        g.drawRect(1052, 300, 281, 250); //changes the rectangle size drawn
-        g.drawString("Two", 1052, 465);//move the text down and center it inside the rectangle
-
-        g.setFont(new Font("Amoebic", 1, 100));
         // Main Title
-        g.drawString("Loehle's Sandbox", 500, 100);
-        // Help button
-        g.drawRect(230, 360, 260, 200);
-        g.drawString("Help", 250, 500);
-        // The Quit button
-        g.drawRect(1390, 360, 260, 200);
-        g.drawString("Quit", 1400, 500);
-        // Theme buttons
-        g.drawString("Themes:", 330,710);
-        g.drawRect(400, 730, 350, 120);
-        g.drawString("Space", 430, 815);
-        g.drawRect(850, 730, 650, 120);
-        g.drawString("Underwater", 870, 825);
+        GameWindow.drawStringCentered(g, new Font("Amoebic", Font.BOLD, 130), "Wavegame", 960, 275);
 
-        g.setFont(new Font("Amoebic", 1, 34));
-        // Credits to team that worked on game last editor
-        g.drawString("Credits: Team", 0, 1000);
+        Font f = new Font("Amoebic", Font.BOLD, 34);
+        GameWindow.drawStringCentered(g, f, "Credits: Team", 120, 1070);
         int shake = getRandom().nextInt(3);
         int blake = getRandom().nextInt(2);
-        g.translate(shake, blake);
-        g.drawString("Shakey", 233, 1000);
-        g.translate(-shake,-blake);
-        g.drawString("Blakey", 360, 1000);
+        GameWindow.drawStringCentered(g, f,"Shakey", 300 + shake, 1070 + blake);
+        GameWindow.drawStringCentered(g, f,"Blakey", 420, 1070);
+    }
+
+    @Override
+    public void render(Clip c, int i) {
+        super.render(c,i);
+        ((FloatControl)c.getControl(FloatControl.Type.MASTER_GAIN)).setValue(mute.getVolume());
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // Waves One Button
-        if (new Rectangle(602, 300, 281, 250).contains(e.getPoint())) {
-            getEntities().clear();
-            setClipped(true);
-            getState().push(new GameOver(this));
-            getPlayers().add(new Player(getDimension().getWidth()/2, getDimension().getHeight()/2, this));
-            getState().push(new Waves(this));
-        }
-        // Waves Two Button
-        else if (new Rectangle(1052, 300, 281, 250).contains(e.getPoint())) {
-            getEntities().clear();
-            setClipped(true);
-            getState().push(new GameOver(this));
-            getPlayers().add(new Player(getDimension().getWidth()/3, getDimension().getHeight()/2, this));
-            getPlayers().add(new Player(getDimension().getWidth()*2/3, getDimension().getHeight()/2, this));
-            getState().push(new Waves(this));
-        }
-        // Help Button
-        else if (new Rectangle(230, 360, 260, 200).contains(e.getPoint())) {
-            getState().push(new Help(this));
-        }
-        // Quit Button
-        else if (new Rectangle(1390, 360, 260, 200).contains(e.getPoint())) {
-            System.exit(1);
-        }
-        // Space Theme Button
-        else if (new Rectangle(400, 730, 350, 120).contains(e.getPoint())) {
-            setTheme(space);
-        }
-        // Underwater Theme Button
-        else if (new Rectangle(850, 730, 650, 120).contains(e.getPoint())) {
-            setTheme(water);
-        }
-        else {
-            for(int i=getEntities().size()-1; i>=0; i-=1) {
-                if(getEntities().get(i).getBounds().contains(e.getPoint())) {
-                    getEntities().get(i).collide(null);
-                }
+        super.mousePressed(e);
+        for (int i = getEntities().size() - 1; i >= 0; i -= 1) {
+            if (getEntities().get(i).getBounds().contains(e.getPoint())) {
+                getEntities().get(i).collide(null);
             }
         }
     }

@@ -39,6 +39,8 @@ public class GameWindow extends JFrame {
                 t.printStackTrace();
             }
         }
+
+        screenSpace = new AffineTransform();
     }
 
     @Override
@@ -46,12 +48,11 @@ public class GameWindow extends JFrame {
         super.processKeyEvent(e);
     }
 
-    /**
-     * Inverts transformation of this JFrame to process mouse events in game space
-     */
+
     private AffineTransform screenSpace; // The graphical transformation of this JFrame
+
     @Override
-    protected void processMouseEvent(MouseEvent e) {
+    protected void processMouseEvent(MouseEvent e) { // Inverts transformation of this JFrame to process mouse events in game space
         try {
             Point2D p = new Point();
             screenSpace.inverseTransform(e.getPoint(), p);
@@ -102,13 +103,24 @@ public class GameWindow extends JFrame {
         }
     }
 
-    public static void drawStringCentered(Graphics g, Font f, String s, int x, int y) {
+    public static Rectangle drawStringCentered(Graphics g, Font f, String s, int x, int y) {
+        return drawStringCentered(g,f,s,x,y,Color.black,Color.white);
+    }
+
+    public static Rectangle drawStringCentered(Graphics g, Font f, String s, int x, int y, Color d, Color l) {
         Font old = g.getFont();
         g.setFont(f);
         Rectangle bounds = f.getStringBounds(
             s, new FontRenderContext(((Graphics2D)g).getTransform(), true, true)
         ).getBounds();
+        g.setColor(d);
+        g.drawString(s, x-bounds.width/2-2, y-bounds.height/2);
+        g.drawString(s, x-bounds.width/2+2, y-bounds.height/2);
+        g.drawString(s, x-bounds.width/2, y-bounds.height/2-2);
+        g.drawString(s, x-bounds.width/2, y-bounds.height/2+2);
+        g.setColor(l);
         g.drawString(s, x-bounds.width/2, y-bounds.height/2);
         g.setFont(old);
+        return bounds;
     }
 }

@@ -7,8 +7,7 @@ import java.util.Collections;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Boss extends GameLevel {
-    private int currentTick;
+public class Boss extends GameLevel.Unending {
     private GameEntity enemy, text;
     public Boss(GameLevel g, Supplier<Function<GameLevel, GameEntity>> boss) {
         super(g);
@@ -21,21 +20,21 @@ public class Boss extends GameLevel {
     }
 
     @Override
+    public void start() {
+        super.start();
+        getEntities().retainAll(getPlayers());
+        getEntities().add(enemy);
+        getEntities().add(text);
+    }
+
+    @Override
     public void tick() {
         super.tick();
-
-        if(currentTick == 0) {
-            getEntities().add(enemy);
-            getEntities().add(text);
-        }
-        else if(currentTick == 200) {
+        if(getCurrentTick() == 200) {
             getEntities().remove(text);
         }
         else if(!getEntities().contains(enemy) || Collections.disjoint(getEntities(), getPlayers())) {
-            getEntities().retainAll(getPlayers());
-            getState().pop();
+            end();
         }
-
-        currentTick += 1;
     }
 }

@@ -23,10 +23,6 @@ public class Performer {
         // TODO: animation loops, sound loops, etc.
     }
 
-    private void frame() {
-        image = LambdaException.<ImageInputStream,BufferedImage,IOException>wrap(ImageIO::read).apply(getSight());
-    }
-
     public void defer(Performer def) {
         if (sight == null) {
             sight = def.sight;
@@ -49,7 +45,7 @@ public class Performer {
 
     public void setSight(ByteArrayOutputStream baos) {
         sight = baos.toByteArray();
-        frame();
+        image = LambdaException.<ImageInputStream,BufferedImage,IOException>wrap(ImageIO::read).apply(getSight());
     }
 
     public void setSound(ByteArrayOutputStream baos) {
@@ -73,7 +69,7 @@ public class Performer {
     }
 
     public Rectangle getBounds() {
-        return new Rectangle();
+        return new Rectangle(image.getWidth(), image.getHeight());
     }
 
     public void render(Graphics g) {
@@ -85,7 +81,7 @@ public class Performer {
             g.drawImage(image, r.x, r.y, r.width, r.height, null);
         }
         else {
-            g.fillRect(r.x, r.y, r.width, r.height);
+            g.drawRect(r.x, r.y, r.width, r.height);
         }
     }
 

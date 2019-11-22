@@ -11,24 +11,23 @@ import java.awt.geom.Point2D;
  *
  * @author Brandon Loehle 5/30/16
  * @author Aaron Paterson 10/20/19
- *
  */
 
 public class EnemyShooterBullet extends Enemy.Disappearing {
     public EnemyShooterBullet(Point2D.Double loc, double velX, double velY, GameLevel level) {
-		super(loc, 16, 16, level);
-		setVelX(velX);
-		setVelY(velY);
-	}
+        super(loc, 16, 16, level);
+        setVelX(velX);
+        setVelY(velY);
+    }
 
-	@Override
-	public void tick() {
-        getLevel().getNonentities().add(new Trail(this, Color.yellow, 255));
+    @Override
+    public void tick() {
+        getLevel().getNonentities().add(new Trail(this, Color.yellow, 127));
         super.tick();
-	}
+    }
 
-	@Override
-	public void render(Graphics g) {
+    @Override
+    public void render(Graphics g) {
         super.render(g, Color.red);
-	}
+    }
 }

@@ -57,9 +57,6 @@ public class RainbowText extends GameEntity {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(color);
-        GameWindow.drawStringCentered(
-            g, new Font("Amoebic", Font.BOLD, 125), text, (int)getPosX(), (int)getPosY()
-        );
+        GameWindow.drawStringCentered(g, new Font("Amoebic", Font.BOLD, 125), text, (int)getPosX(), (int)getPosY(), color, color);
 	}
 }

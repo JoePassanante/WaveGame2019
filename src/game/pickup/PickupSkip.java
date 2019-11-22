@@ -5,12 +5,12 @@ import game.Player;
 
 public class PickupSkip extends Pickup {
     public PickupSkip(GameLevel l) {
-        super(l);
+        super(l, 0);
     }
 
     @Override
     public void affect(Player player) {
-        player.getLevel().getEntities().removeIf(go -> !(go instanceof Player));
+        player.getLevel().end();
         super.affect(player);
     }
 }
