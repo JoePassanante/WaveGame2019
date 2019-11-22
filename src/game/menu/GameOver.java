@@ -60,7 +60,6 @@ public class GameOver extends GameLevel.Unending {
         super.render(g);
         GameWindow.drawStringCentered(g, new Font("Amoebic", Font.BOLD, 50), "Game Over", getDimension().width / 2, getDimension().height / 2 - 400);
         Font f = new Font("Amoebic", Font.BOLD, 60);
-        GameWindow.drawStringCentered(g, f, "Level: " + getNumber(), getDimension().width / 2, getDimension().height / 2 - 200);
         GameWindow.drawStringCentered(g, f, "Your Score: " + getScore(), getDimension().width / 2, getDimension().height / 2);
         if (getScore() >= highscore.get()) {
             GameWindow.drawStringCentered(g, f, "New High Score!", getDimension().width / 2, getDimension().height / 2 + 200);
