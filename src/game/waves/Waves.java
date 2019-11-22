@@ -105,11 +105,8 @@ public class Waves extends GameLevel {
     @Override
     public void start() {
         super.start();
-        if(getNumber() == 1) {
-            getEntities().addAll(getPlayers());
-        }
-        else if(getNumber() > 1) {
-            getEntities().retainAll(getPlayers());
+        getEntities().retainAll(getPlayers());
+        if(getNumber() > 1) {
             getEntities().add(spawn.randomPickup.get().apply(this));
         }
         getEntities().add(text);

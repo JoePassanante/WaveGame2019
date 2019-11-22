@@ -90,9 +90,9 @@ public class Menu extends GameLevel.Unending {
             getEntities().add(exit);
 
             f = new Font("Amoebic", Font.BOLD, 70);
-            getEntities().add(new MenuButton.TextButton(1300, 1060, this, p -> resetTheme(space), "Space", f));
-            getEntities().add(new MenuButton.TextButton(1565, 1060, this, p -> resetTheme(water), "Water", f));
-            getEntities().add(new MenuButton.TextButton(1800, 1060, this, p -> resetTheme(dvd), "DVD", f));
+            getEntities().add(new Button(1300, 1060, this, p -> resetTheme(space), "Space", f));
+            getEntities().add(new Button(1565, 1060, this, p -> resetTheme(water), "Water", f));
+            getEntities().add(new Button(1800, 1060, this, p -> resetTheme(dvd), "DVD", f));
 
             setClipped(false);
             getState().push(new GameOver(this));

@@ -58,7 +58,6 @@ public class GameOver extends GameLevel.Unending {
     @Override
     public void render(Graphics g) {
         super.render(g);
-        g.setColor(Color.white);
         GameWindow.drawStringCentered(g, new Font("Amoebic", Font.BOLD, 50), "Game Over", getDimension().width / 2, getDimension().height / 2 - 400);
         Font f = new Font("Amoebic", Font.BOLD, 60);
         GameWindow.drawStringCentered(g, f, "Level: " + getNumber(), getDimension().width / 2, getDimension().height / 2 - 200);
@@ -68,8 +67,7 @@ public class GameOver extends GameLevel.Unending {
         } else {
             GameWindow.drawStringCentered(g, f, "High Score: " + highscore.get(), getDimension().width / 2, getDimension().height / 2 + 200);
         }
-        g.setColor(color);
-        GameWindow.drawStringCentered(g, f, "Click anywhere to return to the menu.", getDimension().width / 2, getDimension().height / 2 + 400);
+        GameWindow.drawStringCentered(g, f, "Click anywhere to return to the menu.", getDimension().width / 2, getDimension().height / 2 + 400, color, color);
     }
 
     @Override

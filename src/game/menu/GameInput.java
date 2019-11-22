@@ -11,11 +11,11 @@ import java.awt.event.KeyEvent;
 public class GameInput extends Menu {
     private Controller wasd, ijkl, arrows, mouse;
 
-    private static class InputMenuButton extends MenuButton.TextButton {
+    private static class Button extends MenuButton.TextButton {
         private Player player;
-        public InputMenuButton(double x, double y, GameLevel level, String t, Font f, Controller r) {
+        public Button(double x, double y, GameLevel level, String t, Font f, Controller r) {
             super(x, y, level, level.getPlayers()::add, t, f, Color.gray);
-            player = new Player(getPosX(), getPosY(), r, getLevel());
+            player = new Player(getPosX(), getPosY() - 100, r, getLevel());
         }
 
         @Override
@@ -55,18 +55,18 @@ public class GameInput extends Menu {
         super.start();
         getPlayers().clear();
         Font f = new Font("Amoebic", Font.BOLD, 100);
-        getEntities().add(new InputMenuButton(500,  500, this, "|SHIFT|W|A|S|D|", f, wasd));
-        getEntities().add(new InputMenuButton(500,  800, this, "|MOUSE|", f, mouse));
-        getEntities().add(new InputMenuButton(1500, 500, this, "|SPACE|I|J|K|L|", f, ijkl));
-        getEntities().add(new InputMenuButton(1500, 800, this, "|^|<|v|>|SHIFT|", f, arrows));
+        getEntities().add(new Button(500,  500, this, "|MOUSE|", f, mouse));
+        getEntities().add(new Button(500,  800, this, "|SHIFT|W|A|S|D|", f, wasd));
+        getEntities().add(new Button(1500, 500, this, "|SPACE|I|J|K|L|", f, ijkl));
+        getEntities().add(new Button(1500, 800, this, "|^|<|v|>|SHIFT|", f, arrows));
     }
 
     @Override
     public void end() {
         super.end();
+        getEntities().removeIf(Button.class::isInstance);
         if(getPlayers().isEmpty()) {
-            getPlayers().add(new Player(960, 540, new Controller.Multi(wasd, arrows), this));
+            getPlayers().add(new Player(960, 400, new Controller.Multi(wasd, arrows), this));
         }
-        getEntities().removeIf(InputMenuButton.class::isInstance);
     }
 }

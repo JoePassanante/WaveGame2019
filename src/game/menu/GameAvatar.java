@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class GameAvatar extends Menu {
-
     //inherit from the gamelevel class
     public GameAvatar(Menu m) {
         super(m);
@@ -39,6 +38,7 @@ public class GameAvatar extends Menu {
     @Override
     public void start() {
         super.start();
+
         getEntities().addAll(getPlayers());
         Font f = new Font("Amoebic", Font.PLAIN, 100);
         getEntities().add(new Button(300, 625, this, "\uD83D\uDCA6", f, Color.blue));
@@ -57,6 +57,12 @@ public class GameAvatar extends Menu {
         if(new Rectangle(850, 900, 200, 90).contains(e.getPoint())) {
             getState().pop();
         }
+    }
+
+    @Override
+    public void end() {
+        super.end();
+        getEntities().removeIf(Button.class::isInstance);
     }
 }
 
