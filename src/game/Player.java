@@ -52,14 +52,18 @@ public class Player extends GameEntity.Stopping {
 	    return controller;
     }
 
-    private Color playerColor;
+    private Color playerColor, neutralColor;
+
+    public void setNeutralColor(Color c) {
+        neutralColor = c;
+    }
 
 	public Player(double x, double y, Controller c, GameLevel level) {
 		super(new Point.Double(x, y), 32, 32, level);
 		setMaxHealth(100);
 		setHealth(maxHealth);
 		armor = 0;
-        playerColor = Color.white;
+        neutralColor = playerColor = Color.white;
         inactive = new ArrayList<>();
         active = new ArrayList<>();
         controller = c;
@@ -68,11 +72,11 @@ public class Player extends GameEntity.Stopping {
 
     @Override
     public void collide(Player p) {
-	    if(this == p) {
+	    if(p == this) {
             getLevel().getNonentities().add(new Trail(this, playerColor, 255));
-            playerColor = Color.white;
+            playerColor = neutralColor;
         }
-        else {
+        else if(p != null) {
             if(getHealth() > p.getHealth()) {
                 double heal = Math.min(.5, .5*(getHealth()-p.getHealth()));
                 damage(heal);

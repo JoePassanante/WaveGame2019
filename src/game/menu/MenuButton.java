@@ -3,17 +3,26 @@ package game.menu;
 import game.GameEntity;
 import game.GameLevel;
 import game.GameWindow;
-import game.Performer;
+import game.Player;
 
 import java.awt.*;
+import java.util.function.Consumer;
 
-public class MenuButton extends Performer {
+public class MenuButton extends GameEntity {
     private Rectangle bounds;
+    private Consumer<Player> collide;
 
-    public MenuButton(double x, double y, double w, double h, GameLevel level) {
-        //super(x, y, w, h, level);
+    public MenuButton(double x, double y, double w, double h, GameLevel level, Consumer<Player> c) {
+        super(x, y, w, h, level);
         refer(level.getTheme().get(this));
         bounds = new Rectangle.Double(x,y,w,h).getBounds();
+        collide = c;
+    }
+
+    @Override
+    public void collide(Player p) {
+        super.collide(p);
+        collide.accept(p);
     }
 
     @Override
@@ -22,20 +31,37 @@ public class MenuButton extends Performer {
     }
 
     public static class TextButton extends MenuButton {
-        private Rectangle bounds;
         private String text;
         private Font font;
+        private Color color;
+        private Rectangle bounds;
 
-        public TextButton(GameLevel level, double x, double y, double w, double h, String t, Font f) {
-            super(x, y, w, h, level);
+        public void setColor(Color c) {
+            color = c;
+        }
+        @Override
+        public Rectangle getBounds() {
+            return bounds;
+        }
+
+        public TextButton(double x, double y, GameLevel level, Consumer<Player> c, String t, Font f) {
+            this(x,y,level,c,t,f,Color.white);
+        }
+
+        public TextButton(double x, double y, GameLevel level, Consumer<Player> c, String t, Font f, Color r) {
+            super(x, y, 0, 0, level, c);
             text = t;
             font = f;
+            color = r;
+            bounds = new Rectangle();
         }
 
         @Override
         public void render(Graphics g) {
+            g.setColor(color);
+            Rectangle draw = GameWindow.drawStringCentered(g, font, " "+text+" ", (int)getPosX(), (int)getPosY(), Color.black, color);
+            bounds.setRect(getPosX() - draw.getWidth()/2, getPosY() - draw.getHeight()*5/4, draw.getWidth(), draw.getHeight());
             super.render(g);
-            bounds = GameWindow.drawStringCentered(g, font, text, bounds.x, bounds.y);
         }
     }
 }

@@ -39,6 +39,8 @@ public class GameWindow extends JFrame {
                 t.printStackTrace();
             }
         }
+
+        screenSpace = new AffineTransform();
     }
 
     @Override
@@ -102,11 +104,21 @@ public class GameWindow extends JFrame {
     }
 
     public static Rectangle drawStringCentered(Graphics g, Font f, String s, int x, int y) {
+        return drawStringCentered(g,f,s,x,y,Color.black,Color.white);
+    }
+
+    public static Rectangle drawStringCentered(Graphics g, Font f, String s, int x, int y, Color d, Color l) {
         Font old = g.getFont();
         g.setFont(f);
         Rectangle bounds = f.getStringBounds(
             s, new FontRenderContext(((Graphics2D)g).getTransform(), true, true)
         ).getBounds();
+        g.setColor(d);
+        g.drawString(s, x-bounds.width/2-2, y-bounds.height/2);
+        g.drawString(s, x-bounds.width/2+2, y-bounds.height/2);
+        g.drawString(s, x-bounds.width/2, y-bounds.height/2-2);
+        g.drawString(s, x-bounds.width/2, y-bounds.height/2+2);
+        g.setColor(l);
         g.drawString(s, x-bounds.width/2, y-bounds.height/2);
         g.setFont(old);
         return bounds;

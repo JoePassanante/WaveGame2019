@@ -11,7 +11,7 @@ public class PickupRegen extends Pickup.Active {
     @Override
     public void affect(Player player) {
         if (player.getHealth() < player.getMaxHealth()) {
-            player.setHealth(player.getHealth() + .25);
+            player.setHealth(player.getHealth() + .05);
         }
     }
 }

@@ -21,8 +21,8 @@ public class GameOver extends GameLevel.Unending {
     private Color color;
     private AtomicInteger highscore;
 
-    public GameOver(GameLevel level) {
-        super(level);
+    public GameOver(Menu m) {
+        super(m);
         highscore = new AtomicInteger();
     }
 

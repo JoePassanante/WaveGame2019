@@ -14,7 +14,8 @@ public class SigmoidApproximation {
     }
 
     private static int har(int x, int y) {
-        return div(x*y, x+y);
+        int a = Integer.max(x,y), b = Integer.min(x,y);
+        return div(a, a/b + 1);
     }
 
     private static int add(int x, int y, int a) {
@@ -32,7 +33,7 @@ public class SigmoidApproximation {
     }
 
     public static void main(String... args) {
-        final int a = Integer.MAX_VALUE, b = 1 << 16;
-        System.out.println(restore(add(store(2, a, b), store(2 , a, b), a), a, b));
+        final int a = Integer.MAX_VALUE, b = 1 << 28;
+        System.out.println(restore(add(store(7, a, b), store(5 , a, b), a), a, b));
     }
 }

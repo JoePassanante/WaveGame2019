@@ -32,14 +32,15 @@ public class Fireworks extends Enemy.Disappearing {
 
     @Override
     public void collide(Player p) {
-        getLevel().getEntities().remove(this);
-        for (int t = 0; t < 10; t += 1) {
-            for (int s = 0; s < 3; s += 1) {
-                double
+        if(p == null) {
+            getLevel().getEntities().remove(this);
+            for (int t = 0; t < 10; t += 1) {
+                for (int s = 0; s < 3; s += 1) {
+                    double
                         theta = 2 * Math.PI * t / 10 + getLevel().getRandom().random(),
                         speed = theta * getLevel().getRandom().random() + s * 2 + 2;
 
-                getLevel().getEntities().add(new Fireworks(
+                    getLevel().getEntities().add(new Fireworks(
                         getPosX(),
                         getPosY(),
                         s + 25,
@@ -49,7 +50,8 @@ public class Fireworks extends Enemy.Disappearing {
                         speed * Math.sin(theta),
                         color,
                         false
-                ));
+                    ));
+                }
             }
         }
     }

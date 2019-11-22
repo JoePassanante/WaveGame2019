@@ -4,7 +4,6 @@ import game.*;
 import game.enemy.*;
 import game.menu.Menu;
 import game.pickup.*;
-import game.Transition;
 import util.Random;
 
 import java.awt.event.KeyEvent;
@@ -64,7 +63,7 @@ public class Waves extends GameLevel {
                 PickupSkip::new,
                 PickupSpeed::new
             );
-            transition = rng.new RandomDifferentElement<>( // java wont let us use ::new on inner class constructors ;-;
+            transition = rng.new RandomDifferentElement<>(
                 Transition.Modulo::vertical,
                 Transition.Modulo::horizontal,
                 Transition.Modulo::diagonal,

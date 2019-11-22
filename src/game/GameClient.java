@@ -36,7 +36,7 @@ public class GameClient extends GameLevel implements Runnable {
             new Dimension(1920,1080),
             new Theme("common", null),
             new ArrayList<>(),
-            -1,
+            -2,
             -1,
             0,
             true
@@ -61,8 +61,12 @@ public class GameClient extends GameLevel implements Runnable {
         delta = frame;
     }
 
+    // proxy methods passed off to the top of the state stack
     @Override public void tick() {
         getState().peek().tick();
+    }
+    @Override public void render(Clip c, int i) {
+        getState().peek().render(c, i);
     }
     @Override public void render(Graphics g) {
         getState().peek().render(g);
@@ -93,7 +97,7 @@ public class GameClient extends GameLevel implements Runnable {
             delta -= frame;
         }
         window.draw(this); // drawing as frequently as possible
-        getState().peek().render(music, 0);
+        render(music, 0);
 
         tock = System.nanoTime();
         delta += tock - tick;

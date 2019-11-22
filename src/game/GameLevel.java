@@ -36,7 +36,6 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
     public void setTheme(Theme t) {
         theme = t;
         refer(t.get(this));
-        clipped = true;
     }
     public void setClipped(boolean c) {
         clipped = c;
@@ -192,7 +191,7 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
 //        g.drawImage(shieldImg, 440, 1010, 40, 40, null);
 //        g.drawString(getPlayers().stream().mapToDouble(Player::getArmor).mapToObj(Double::toString).collect(Collectors.joining(",")), 500, 1040);
 
-        if(players.size() > 0) {
+        if(getNumber() > 0) {
             g.drawString("Score: " + getScore(), 15, 25);
             g.drawString("Level: " + getNumber(), 15, 75);
 
@@ -211,10 +210,14 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
     @Override
     public void render(Clip clip, int i) { // TODO: we should really be queuing sound frames from a bufffer that updates every tick
         if(clipped) {
-            clip.close();
-            super.render(clip, Clip.LOOP_CONTINUOUSLY);
-            ((FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(-24f);
-            setClipped(false);
+            if(!clip.isActive()) {
+                super.render(clip, Clip.LOOP_CONTINUOUSLY);
+                ((FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(-24f);
+                setClipped(false);
+            }
+            else {
+                clip.close();
+            }
         }
         Clip c = null;
         for(GameEntity ge : entities) {

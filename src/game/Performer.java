@@ -81,7 +81,7 @@ public class Performer {
             g.drawImage(image, r.x, r.y, r.width, r.height, null);
         }
         else {
-            g.fillRect(r.x, r.y, r.width, r.height);
+            g.drawRect(r.x, r.y, r.width, r.height);
         }
     }
 
