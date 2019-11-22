@@ -35,7 +35,6 @@ public class EnemyBoss extends Enemy.Bouncing {
             }
             if (getLevel().getNumber() > 10 && getLevel().getRandom().random() < 1.0 / 60) {
                 getLevel().getEntities().add(new EnemyBossBomb(new Point2D.Double(getPosX() + 48, getPosY() + 96), getLevel(), getLevel().getNumber()));
-                setHealth(getHealth() - 10);
             }
         }
 
