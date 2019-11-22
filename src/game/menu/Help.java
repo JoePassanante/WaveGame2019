@@ -3,7 +3,6 @@ package game.menu;
 import game.pickup.*;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -13,7 +12,6 @@ public class Help extends Menu {
 
     public Help(Menu m) {
         super(m);
-
         try {
             armor = ImageIO.read(getTheme().get(PickupArmor.class).getSight());
             clear = ImageIO.read(getTheme().get(PickupClear.class).getSight());
@@ -52,7 +50,7 @@ public class Help extends Menu {
         g.drawImage(freeze, 1150, 450, 40, 40, null);
         g.drawImage(health, 1150, 510, 40, 40, null);
         g.drawImage(life, 1150, 570, 40, 40, null);
-        g.drawImage(health, 1150, 630, 40, 40, null);
+        g.drawImage(regen, 1150, 630, 40, 40, null);
         g.drawImage(score, 1150, 690, 40, 40, null);
         g.drawImage(size, 1150, 750, 40, 40, null);
         g.drawImage(skip, 1150, 810, 40, 40, null);
@@ -67,12 +65,6 @@ public class Help extends Menu {
         g.drawString("  :  Reduce size", 1200, 790);
         g.drawString("  :  Skip level", 1200, 850);
         g.drawString("  :  Increase speed", 1200, 910);
-    }
-
-    @Override
-    public void render(Clip c, int i) {
-        super.render(c, i);
-        // let the menu music continue playing
     }
 
     @Override

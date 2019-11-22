@@ -64,4 +64,22 @@ public class MenuButton extends GameEntity {
             super.render(g);
         }
     }
+
+    public static class MuteButton extends MenuButton {
+        private boolean silence;
+
+        public float getVolume() {
+            return silence ? -48f : -24f;
+        }
+
+        public MuteButton(double x, double y, double w, double h, GameLevel l) {
+            super(x, y, w, h, l, l.getPlayers()::remove);
+        }
+
+        @Override
+        public void collide(Player p) {
+            silence ^= true;
+            refer(getLevel().getTheme().get((silence ? "Un" : "") + getClass().getSimpleName()));
+        }
+    }
 }

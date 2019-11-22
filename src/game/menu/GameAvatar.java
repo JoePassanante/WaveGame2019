@@ -38,7 +38,6 @@ public class GameAvatar extends Menu {
     @Override
     public void start() {
         super.start();
-
         getEntities().addAll(getPlayers());
         Font f = new Font("Amoebic", Font.PLAIN, 100);
         getEntities().add(new Button(300, 625, this, "\uD83D\uDCA6", f, Color.blue));

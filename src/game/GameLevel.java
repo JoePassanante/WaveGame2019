@@ -169,7 +169,18 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
 
     @Override
     public void render(Graphics g) {
-        super.render(g);
+        render(g,0,0);
+    }
+
+    public void render(Graphics g, int x, int y) {
+        g.translate(x%getBounds().width,y%getBounds().height);
+        for(int i=-1; i<=1; i+=1)
+            for(int j=-1; j<=1; j+=1) {
+                g.translate(i*getBounds().width, j*getBounds().height);
+                super.render(g);
+                g.translate(-i*getBounds().width, -j*getBounds().height);
+            }
+        g.translate(-(x%getBounds().width),-(y%getBounds().height));
 
         entities.forEach(ge -> ge.render(g));
         nonentities.forEach(ge -> ge.render(g));
@@ -183,13 +194,6 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
             g.drawString("Pickups: " + entities.stream().filter(Pickup.class::isInstance).count(), getDimension().width-300, getDimension().height-150);
             g.drawString("Trails: " + nonentities.size(), getDimension().width-300, getDimension().height-50);
         }
-//        g.drawString("Level Progress: " + 100*currentTick/maxTick + "%", 15, 175);
-//        g.drawString("Health: " + getPlayers().stream().mapToDouble(GameEntity::getHealth).mapToObj(Double::toString).collect(Collectors.joining(",")), 15, 1050);
-//        g.drawString("Size: " + getPlayers().stream().mapToDouble(GameEntity::getWidth).mapToObj(Double::toString).collect(Collectors.joining(",")), 15, 225);
-
-//        Image shieldImg = getTheme().get("shield" + (int)getPlayers().stream().mapToDouble(Player::getArmor).average().orElse(1.0)*5.0 + 1);
-//        g.drawImage(shieldImg, 440, 1010, 40, 40, null);
-//        g.drawString(getPlayers().stream().mapToDouble(Player::getArmor).mapToObj(Double::toString).collect(Collectors.joining(",")), 500, 1040);
 
         if(getNumber() > 0) {
             g.drawString("Score: " + getScore(), 15, 25);

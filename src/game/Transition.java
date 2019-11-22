@@ -74,7 +74,7 @@ public class Transition extends GameLevel {
             return (s,d) -> new Slide(lev, s, d, 0, -24);
         }
         public static BiFunction<Performer,Performer,Transition> horizontal(GameLevel lev) {
-            return (s,d) -> new Slide(lev, s, d, -24, 0);
+            return (s,d) -> new Slide(lev, s, d, -lev.getBounds().width/lev.getMaxTick(), 0);
         }
     }
 

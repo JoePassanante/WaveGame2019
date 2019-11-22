@@ -2,6 +2,8 @@ package game.menu;
 
 import game.GameLevel;
 import game.GameWindow;
+import game.Transition;
+import game.walls.Walls;
 import game.waves.Waves;
 
 import java.awt.*;
@@ -13,38 +15,6 @@ public class GameMode extends Menu {
     public GameMode(Menu m) {
         super(m);
     }
-        /*
-        Font f;
-
-        f = new Font("Amoebic", Font.BOLD, 130);
-        // Waves One button
-        buttons.add(new MenuButton.TextButton(602, 300, this, p -> {
-            getEntities().clear();
-            setMaxTick(600);
-            setClipped(true);
-            getState().push(new GameOver(this));
-            getState().push(new Waves(this));
-            setMaxTick(60);
-            getState().push(Transition.Modulo.droplets(this).apply(this, getState().peek()));
-        }, "One", f));
-        // Waves Two button
-        buttons.add(new MenuButton.TextButton(1052, 300, this, p -> {
-            getEntities().clear();
-            setMaxTick(600);
-            setClipped(true);
-            getState().push(new GameOver(this));
-            getState().push(new Waves(this));
-        }, "Two", f));
-         */
-
-    /*
-    // Player Customization button
-    buttons.add(new MenuButton.TextButton(850, 900, this, p -> {
-        setMaxTick(60);
-        getState().push(new Avatar(this));
-        getState().push(Transition.Slide.horizontal(this).apply(this, getState().peek()));
-    }, "Player customization", f));
-     */
 
     @Override
     public void render(Graphics g) {
@@ -68,7 +38,6 @@ public class GameMode extends Menu {
         }
     }
 
-
     @Override
     public void start() {
         super.start();
@@ -76,7 +45,7 @@ public class GameMode extends Menu {
         setMaxTick(600);
         setClipped(true);
         getEntities().add(new Button(960,  500, this, new Waves(this),"Classic", f));
-        getEntities().add(new Button(960,  800, this, new Waves(this),"Tunnel", f));
+        getEntities().add(new Button(960,  800, this, new Walls(this),"Side scroller", f));
         setClipped(false);
     }
 
@@ -85,7 +54,9 @@ public class GameMode extends Menu {
         super.end();
         getEntities().removeIf(Button.class::isInstance);
         if(mode != null) {
+            setMaxTick(60);
             getState().push(mode);
+            getState().push(Transition.Modulo.droplets(this).apply(this, getState().peek()));
         }
     }
 }
