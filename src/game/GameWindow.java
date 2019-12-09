@@ -25,7 +25,7 @@ public class GameWindow extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
         // make the window fullscreen on OSX
-        if (System.getProperty("os.name").contains("Mac OS X")) { // If user is on macOS
+        if (System.getProperty("os.name").contains("Mac OS X")) { // we are running on OSX
             try {
                 Class.forName("com.apple.eawt.FullScreenUtilities")
                     .getMethod("setWindowCanFullScreen", Window.class, boolean.class)
@@ -49,10 +49,10 @@ public class GameWindow extends JFrame {
     }
 
 
-    private AffineTransform screenSpace; // The graphical transformation of this JFrame
+    private AffineTransform screenSpace; // the graphical transformation of this JFrame
 
     @Override
-    protected void processMouseEvent(MouseEvent e) { // Inverts transformation of this JFrame to process mouse events in game space
+    protected void processMouseEvent(MouseEvent e) { // inverts transformation of this JFrame to process mouse events in game space
         try {
             Point2D p = new Point();
             screenSpace.inverseTransform(e.getPoint(), p);
@@ -74,11 +74,11 @@ public class GameWindow extends JFrame {
 
     public void draw(Performer so) {
         if (getWidth() > 0 && getHeight() > 0) {
-            BufferStrategy bs = getBufferStrategy(); // Render each Animatable then draw them all at once
+            BufferStrategy bs = getBufferStrategy(); // render each performer, then draw them all at once
             if (bs == null) {
                 createBufferStrategy(3);
             }
-            else {
+            else { // scale and center the game in the window
                 Graphics2D g = (Graphics2D) bs.getDrawGraphics();
                 AffineTransform old = g.getTransform();
 
@@ -103,7 +103,7 @@ public class GameWindow extends JFrame {
         }
     }
 
-    public static Rectangle drawStringCentered(Graphics g, Font f, String s, int x, int y) {
+    public static Rectangle drawStringCentered(Graphics g, Font f, String s, int x, int y) { // draw text centered at x, y
         return drawStringCentered(g,f,s,x,y,Color.black,Color.white);
     }
 

@@ -11,7 +11,7 @@ import java.awt.geom.Point2D;
  * @author Brandon Loehle 5/30/16
  */
 
-public class EnemyShooterSharp extends Enemy.Bouncing {
+public class EnemyShooterSharp extends Enemy.Bouncing { // an enemy that shoots two bullets at a time
     private int timer;
 
     public EnemyShooterSharp(GameLevel level) {
@@ -23,7 +23,6 @@ public class EnemyShooterSharp extends Enemy.Bouncing {
 
     public void tick() {
         super.tick();
-        //handler.addObject(new Trail(x, y, ID.Trail, Color.yellow, this.sizeX, this.sizeY, 0.025, this.handler));
         timer -= 1;
         if (timer <= 0) {
             shoot();
@@ -38,13 +37,11 @@ public class EnemyShooterSharp extends Enemy.Bouncing {
                 diffY = player.getY() - getPosY(),
                 diff = Math.hypot(diffX, diffY);
 
-        //supposed to shoot where they're going, not 100% accurate in terms of time yet though
-
         getLevel().getEntities().add(new EnemyShooterBullet(new Point2D.Double(
-                getPosX() + 50, getPosY() - 10), 10 * diffX / diff, 10 * diffY / diff, getLevel()
+            getPosX() + 50, getPosY() - 10), 10 * diffX / diff, 10 * diffY / diff, getLevel()
         ));
         getLevel().getEntities().add(new EnemyShooterBullet(new Point2D.Double(
-                getPosX() - 50, getPosY() - 10), 10 * diffX / diff, 10 * diffY / diff, getLevel()
+            getPosX() - 50, getPosY() - 10), 10 * diffX / diff, 10 * diffY / diff, getLevel()
         ));
     }
 }

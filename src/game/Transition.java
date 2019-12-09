@@ -5,10 +5,10 @@ import java.awt.image.ColorModel;
 import java.util.function.BiFunction;
 import java.util.function.IntBinaryOperator;
 
-public class Transition extends GameLevel {
-    private Performer source, destination;
+public class Transition extends GameLevel { // the animations between menus and levels
+    private Performer source, destination; // the levels to animate between
 
-    public Composite getComposite() {
+    public Composite getComposite() { // default fade transition
         return AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f*getCurrentTick()/getMaxTick());
     }
 
@@ -19,7 +19,7 @@ public class Transition extends GameLevel {
     }
 
     @Override
-    public void render(Graphics g) {
+    public void render(Graphics g) { // compose source and destination over time
         super.render(g);
         Graphics2D g2d = (Graphics2D)g;
         source.render(g2d);
@@ -30,19 +30,19 @@ public class Transition extends GameLevel {
     }
 
     @FunctionalInterface
-    private interface TransitionComposite extends Composite {
+    private interface TransitionComposite extends Composite { // allows us to use lambdas by using the next interface instead
         @Override
         TransitionCompositeContext createContext(ColorModel srcColorModel, ColorModel dstColorModel, RenderingHints hints);
     }
 
     @FunctionalInterface
-    private interface TransitionCompositeContext extends CompositeContext {
+    private interface TransitionCompositeContext extends CompositeContext { // allows us to use lambdas by ignoring the dispose method
         @Override
         default void dispose() { }
     }
 
-    public static class Slide extends Transition {
-        private int xl, yl, xt, yt;
+    public static class Slide extends Transition { // slide destination across source
+        private int xl, yl, xt, yt; // move from l in the direction of t
         public Slide(GameLevel lev, Performer src, Performer dst, int xt, int yt) {
             super(lev, src, dst);
             this.xt = xt;
@@ -52,7 +52,7 @@ public class Transition extends GameLevel {
         }
 
         @Override
-        public Composite getComposite() {
+        public Composite getComposite() { // decides which performer to draw at each pixel
             return (TransitionComposite) (srcCM, dstCM, h) -> (srcR, dstR, dstWR) -> { // slooow ;-;
                 int[] read = new int[Math.max(srcR.getNumBands(), dstR.getNumBands())];
                 for (int y = 0; y < dstWR.getHeight(); y += 1) {
@@ -71,14 +71,14 @@ public class Transition extends GameLevel {
         }
 
         public static BiFunction<Performer,Performer,Transition> vertical(GameLevel lev) {
-            return (s,d) -> new Slide(lev, s, d, 0, -24);
-        }
+            return (s,d) -> new Slide(lev, s, d, 0, -lev.getBounds().height/lev.getMaxTick());
+        } // make a new vertical slide transition
         public static BiFunction<Performer,Performer,Transition> horizontal(GameLevel lev) {
             return (s,d) -> new Slide(lev, s, d, -lev.getBounds().width/lev.getMaxTick(), 0);
-        }
+        } // make a new horizontal slide transition
     }
 
-    public static class Modulo extends Transition {
+    public static class Modulo extends Transition { // dissolve source into destination
         private IntBinaryOperator operator;
 
         public Modulo(GameLevel lev, Performer src, Performer dst, IntBinaryOperator o) {
@@ -87,7 +87,7 @@ public class Transition extends GameLevel {
         }
 
         @Override
-        public Composite getComposite() {
+        public Composite getComposite() { // decides which performer to draw at each pixel
             return (TransitionComposite) (srcCM, dstCM, h) -> (srcR, dstR, dstWR) -> { // slooow ;-;
                 int[] read = new int[Math.max(srcR.getNumBands(), dstR.getNumBands())];
                 for (int y = 0; y < dstWR.getHeight(); y += 1) {
@@ -103,18 +103,18 @@ public class Transition extends GameLevel {
 
         public static BiFunction<Performer,Performer,Transition> vertical(GameLevel lev) {
             return (s,d) -> new Modulo(lev, s, d, (x,y) -> x);
-        }
+        } // vertical ribbons
         public static BiFunction<Performer,Performer,Transition> horizontal(GameLevel lev) {
             return (s,d) ->  new Modulo(lev, s, d, (x,y) -> y);
-        }
+        } // horizontal ribbons
         public static BiFunction<Performer,Performer,Transition> diagonal(GameLevel lev) {
             return (s,d) ->  new Modulo(lev, s, d, Integer::sum);
-        }
+        } // diagonal ribbons
         public static BiFunction<Performer,Performer,Transition> radial(GameLevel lev) {
             return (s,d) ->  new Modulo(lev, s, d, (x,y) -> (int)Math.sqrt(x*x + y*y));
-        }
+        } // circular ribbons
         public static BiFunction<Performer,Performer,Transition> droplets(GameLevel lev) {
             return (s,d) ->  new Modulo(lev, s, d, (x,y) -> (x*x + y*y));
-        }
+        } // dissolving ripples
     }
 }

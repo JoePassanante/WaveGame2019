@@ -6,7 +6,7 @@ import game.Player;
 import java.awt.*;
 import java.awt.geom.Point2D;
 
-public class EnemyWall extends Enemy.Disappearing {
+public class EnemyWall extends Enemy.Disappearing { // an enemy for the walls gamemode
     private Color color;
     public EnemyWall(double x, double y, double w, double h, GameLevel l) {
         super(new Point2D.Double(x, y), w, h, l);

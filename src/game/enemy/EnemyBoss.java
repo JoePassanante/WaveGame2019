@@ -11,7 +11,7 @@ import java.awt.geom.Point2D;
  * #author Aaron Paterson 10/24/19
  */
 
-public class EnemyBoss extends Enemy.Bouncing {
+public class EnemyBoss extends Enemy.Bouncing { // a boss enemy that bounces around on the top of the level
     private int currentTick;
 
     public EnemyBoss(GameLevel level) {
@@ -22,13 +22,13 @@ public class EnemyBoss extends Enemy.Bouncing {
     public void tick() {
         super.tick();
 
-        if (currentTick == 0) {
+        if (currentTick == 0) { // slowly approach from the top
             setVelX(0);
             setVelY(2);
-        } else if (currentTick == 80) {
+        } else if (currentTick == 80) { // start bouncing
             setVelY(0);
             setVelX(8);
-        } else if (currentTick > 80) {
+        } else if (currentTick > 80) { // attack by shooting bullets and bombs
             if (getLevel().getRandom().random() < .2) {
                 getLevel().getEntities().add(new EnemyBossBullet(new Point.Double(getPosX() + 48, getPosY() + 80), getLevel()));
                 setHealth(getHealth() - 10);
@@ -38,8 +38,6 @@ public class EnemyBoss extends Enemy.Bouncing {
             }
         }
 
-        // handler.addObject(new Trail(x, y, ID.Trail, Color.red, 96, 96, 0.025,
-        // this.handler));
         currentTick += 1;
     }
 
@@ -49,7 +47,7 @@ public class EnemyBoss extends Enemy.Bouncing {
         g.drawLine(0, 150, (int) getLevel().getDimension().getWidth(), 150);
         super.render(g, super.getBounds());
 
-        // HEALTH BAR
+        // render the health bar
         g.setColor(Color.GRAY);
         g.fillRect((int) getLevel().getDimension().getWidth() / 2 - 500, (int) getLevel().getDimension().getHeight() - 150, 1000, 50);
         g.setColor(Color.RED);

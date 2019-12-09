@@ -13,7 +13,7 @@ import java.awt.geom.Point2D;
  * @author Aaron Paterson 10/20/19
  */
 
-public class EnemyShooterBullet extends Enemy.Disappearing {
+public class EnemyShooterBullet extends Enemy.Disappearing { // should be combined with other bullet classes
     public EnemyShooterBullet(Point2D.Double loc, double velX, double velY, GameLevel level) {
         super(loc, 16, 16, level);
         setVelX(velX);

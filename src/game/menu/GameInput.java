@@ -9,9 +9,9 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class GameInput extends Menu {
-    private Controller wasd, ijkl, arrows, mouse;
+    private Controller wasd, ijkl, arrows, mouse; // controllers to choose from
 
-    private static class Button extends MenuButton.TextButton {
+    private static class Button extends MenuButton.TextButton { // button to add a player with a controller to the game
         private Player player;
         public Button(double x, double y, GameLevel level, String t, Font f, Controller r) {
             super(x, y, level, level.getPlayers()::add, t, f, Color.gray);
@@ -43,7 +43,7 @@ public class GameInput extends Menu {
 
     @Override
     public void render(Graphics g) {
-        super.render(g); //display background
+        super.render(g); // display background
 
         g.setColor(Color.white);
         Font f = new Font("Amoebic", Font.BOLD, 80);
@@ -64,9 +64,9 @@ public class GameInput extends Menu {
     @Override
     public void end() {
         super.end();
-        getEntities().removeIf(Button.class::isInstance);
-        if(getPlayers().isEmpty()) {
-            getPlayers().add(new Player(960, 400, new Controller.Multi(wasd, arrows), this));
+        getEntities().removeIf(Button.class::isInstance); // remove controller buttons
+        if(getPlayers().isEmpty()) { // default controller is a single player with arrows, ijkl, or WASD
+            getPlayers().add(new Player(960, 400, new Controller.Multi(wasd, arrows, ijkl), this));
         }
     }
 }

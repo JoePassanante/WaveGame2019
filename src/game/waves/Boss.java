@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Boss extends GameLevel.Unending {
+public class Boss extends GameLevel.Unending { // boss level
     private GameEntity enemy, text;
     public Boss(GameLevel g, Supplier<Function<GameLevel, GameEntity>> boss) {
         super(g);
@@ -20,7 +20,7 @@ public class Boss extends GameLevel.Unending {
     }
 
     @Override
-    public void start() {
+    public void start() { // clear entities except for players and boss
         super.start();
         getEntities().retainAll(getPlayers());
         getEntities().add(enemy);
@@ -33,7 +33,7 @@ public class Boss extends GameLevel.Unending {
         if(getCurrentTick() == 200) {
             getEntities().remove(text);
         }
-        else if(!getEntities().contains(enemy) || Collections.disjoint(getEntities(), getPlayers())) {
+        else if(!getEntities().contains(enemy) || Collections.disjoint(getEntities(), getPlayers())) { // boss or players is dead
             end();
         }
     }

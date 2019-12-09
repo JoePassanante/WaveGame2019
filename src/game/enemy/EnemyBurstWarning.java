@@ -13,7 +13,7 @@ import java.awt.geom.Point2D;
  * @author Brandon Loehle 5/30/16
  */
 
-public class EnemyBurstWarning extends GameEntity {
+public class EnemyBurstWarning extends GameEntity { // a visual warning that an enemy is approaching
     private int timer;
     private Random.RandomDifferentElement<Color> generator;
     private Color color;

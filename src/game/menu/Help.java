@@ -30,20 +30,21 @@ public class Help extends Menu {
 
     @Override
     public void render(Graphics g) {
-        super.render(g); // Display the background
+        super.render(g); // display the background
         g.setColor(new Color(0x11,0x11,0x11,0x99));
         g.fillRect(0, 0, getBounds().width, getBounds().height);
         g.setColor(Color.white);
-        g.setFont(new Font("impact", Font.PLAIN, 50)); //set the font with its parameters above
-        //Help text
+        g.setFont(new Font("impact", Font.PLAIN, 50)); // set the font with its parameters above
+        // help text
         g.drawString("Help", 900, 70); //this is the help text, yayy
-        //Instructions
+        // instructions
         g.drawString("How to play:", 35, 310);
         g.drawString("  Control players with keyboard or mouse", 35, 390);
         g.drawString("  Avoid enemies as difficulty increases", 35, 450);
         g.drawString("  Boss fights once every five levels", 35, 510);
         g.drawString("  Players can pick up various powerups", 35, 570);
         g.drawString("  Players can find more powerups after every boss", 35, 630);
+        g.drawString("  Press P to pause", 35, 690);
         g.drawString("Power-Ups:", 1100, 310);
         g.drawImage(armor, 1150, 330, 40, 40, null);
         g.drawImage(clear, 1150, 390, 40, 40, null);
@@ -70,5 +71,5 @@ public class Help extends Menu {
     @Override
     public void mousePressed(MouseEvent e) {
         end();
-    }
+    } // exit when mouse is pressed
 }

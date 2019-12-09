@@ -9,7 +9,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
-public class EnemyRocketBoss extends Enemy {
+public class EnemyRocketBoss extends Enemy { // a boss that follows the player and shoots guided missiles
     private Path2D.Double hitbox;
     private double angle, dash;
     private Performer off, on;
@@ -23,8 +23,8 @@ public class EnemyRocketBoss extends Enemy {
     }
 
     @Override
-    public void collide(Player player) {
-        if (hitbox.intersects(player.getBounds())) {
+    public void collide(Player player) { // broad phase collision
+        if (hitbox.intersects(player.getBounds())) { // narrow phase collision
             super.collide(player);
             if (dash > 0) {
                 dash = 0;
@@ -89,16 +89,13 @@ public class EnemyRocketBoss extends Enemy {
         if (dash <= 0) {
             box = new Rectangle(box.x, box.y, box.width, 220);
         }
-        hitbox = new Path2D.Double(box, g2d.getTransform());
-        super.render(g2d, super.getBounds()); // Draw Rocket
+        hitbox = new Path2D.Double(box, g2d.getTransform()); // transform the hitbox
+        super.render(g2d, super.getBounds()); // draw rocket
         g2d.setTransform(old);
-
-//        g2d.setColor(Color.YELLOW);
-//        g2d.draw(hitbox);
     }
 
     @Override
     public Rectangle getBounds() {
         return hitbox.getBounds();
-    }
+    } // rotated rectangle to match the graphical bounds
 }

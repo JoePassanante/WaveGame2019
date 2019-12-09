@@ -4,8 +4,8 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 
-public class Trail extends GameEntity {
-	private Color color;
+public class Trail extends GameEntity { // the transparent boxes left behind by the player and some enemies
+	private Color color; // the color of the trail
 
 	public Trail(GameEntity e, Color c, double l) {
 	    this(e.getPosX(), e.getPosY(), e.getWidth(), e.getHeight(), c, l, e.getLevel());
@@ -18,17 +18,17 @@ public class Trail extends GameEntity {
 	}
 
     @Override
-    public void tick() {//slowly fades each square
+    public void tick() { // slowly fades this square
         setHealth(getHealth()*.8 - .2);
-	    super.tick();
+	    super.tick(); // remove invisible squares
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics g) { // draw this square
 	    super.render(g, new Color(color.getRed(), color.getGreen(), color.getBlue(), (int)getHealth()));
 	}
 
-	public static class Outline extends Trail {
+	public static class Outline extends Trail { // the outlines that appear around touching players
 	    private Path2D.Double outline;
         public Outline(Path2D.Double path, Color c, double life, GameLevel level) {
             super(
@@ -40,7 +40,7 @@ public class Trail extends GameEntity {
         }
 
         @Override
-        public void tick() {
+        public void tick() { // expand and fade the outlines
             setPosX(outline.getBounds().getX());
             setPosY(outline.getBounds().getY());
             setWidth(outline.getBounds().getWidth());

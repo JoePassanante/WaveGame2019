@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Stack;
 
-public class GameLevel extends Performer implements KeyListener, MouseListener, MouseMotionListener {
-    private ArrayList<GameEntity> entities, nonentities;
-    private Stack<GameLevel> state;
-    private Random random;
-    private Dimension dimension;
-    private Theme theme;
-    private ArrayList<Player> players;
-    private int currentTick, maxTick, number, score;
+public class GameLevel extends Performer implements KeyListener, MouseListener, MouseMotionListener { // any current state of the game
+    private ArrayList<GameEntity> entities, nonentities; // entities render and collide with players, nonentities just render
+    private Stack<GameLevel> state; // state transitions are accomplished by popping then pushing here
+    private Random random; // faster and more random than java.util.Random
+    private Dimension dimension; // size of level
+    private Theme theme; // finds assets of performers
+    private ArrayList<Player> players; // contains all living and dead players
+    private int currentTick, maxTick, number, score; // current time, end, level number, and current score of the level
     private boolean clipped;
 
     public void setCurrentTick(int tick) {
@@ -76,7 +76,7 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
         return currentTick;
     }
 
-    public GameLevel(GameLevel gl) {
+    public GameLevel(GameLevel gl) { // copy constructor makes the next level from a previous level, should probably be moved to Waves
         this(
             gl.getEntities(), gl.getState(), gl.getRandom(), gl.getDimension(), gl.getTheme(), gl.getPlayers(),
             gl.getNumber() + 1, gl.getMaxTick() + 10, gl.getScore() + 100, gl.getClipped()
@@ -100,28 +100,28 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
         setClipped(l);
     }
 
-    public Point.Double spawnPoint() {
+    public Point.Double spawnPoint() { // find a good place for enemies to spawn
         final Point.Double loc = new Point.Double();
-        do {
+        do { // random point in the level
             loc.setLocation(
                 getRandom().random()*dimension.getWidth(),
                 getRandom().random()*dimension.getHeight()
             );
         }
-        while( getPlayers().stream().filter(entities::contains).anyMatch( p ->
+        while( getPlayers().stream().filter(entities::contains).anyMatch( p -> // not on top of a living player
             Math.hypot(loc.getX() - p.getPosX(), loc.getY() - p.getPosY()) < Math.hypot(p.getWidth(), p.getHeight())
         ));
         return loc;
     }
 
-    public Point.Double targetPoint() {
+    public Point.Double targetPoint() { // find a good place for enemies to attack
         return players.stream().filter(entities::contains)
             .max(Comparator.comparing(Player::getHealth))
             .map(p -> new Point.Double(p.getPosX(), p.getPosY()))
-            .orElse(spawnPoint());
+            .orElse(spawnPoint()); // player with the highest health
     }
 
-    public void start() {
+    public void start() { // called when the level starts ticking
         players.forEach(p -> p.setLevel(this));
         entities.forEach(e -> e.setLevel(this));
         nonentities.forEach(n -> n.setLevel(this));
@@ -129,13 +129,13 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
 
     public void end() {
         getState().pop();
-    }
+    } // called when the level stops ticking
 
     @Override
-    public void tick() {
+    public void tick() { // update level and entities
         super.tick();
 
-        setScore(getScore() + 1);
+        setScore(getScore() + 1); // increase score every tick (sixty times a second)
 
         if(currentTick <= 0) {
             start();
@@ -148,7 +148,7 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
         }
         for(int i = getEntities().size()-1; i >= 0; i -= 1) { // TODO: more efficient ADT than brute force collisions
             for(int j = getPlayers().size()-1; j >= 0; j -= 1) {
-                if(getEntities().contains(getPlayers().get(j))) {
+                if(getEntities().contains(getPlayers().get(j))) { // only collide living players
                     if (getEntities().get(i).getBounds().intersects(getPlayers().get(j).getBounds())) {
                         getEntities().get(i).collide(getPlayers().get(j));
                     }
@@ -172,7 +172,7 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
         render(g,0,0);
     }
 
-    public void render(Graphics g, int x, int y) {
+    public void render(Graphics g, int x, int y) { // tile the background for moving levels
         g.translate(x%getBounds().width,y%getBounds().height);
         for(int i=-1; i<=1; i+=1)
             for(int j=-1; j<=1; j+=1) {
@@ -213,7 +213,7 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
 
     @Override
     public void render(Clip clip, int i) { // TODO: we should really be queuing sound frames from a bufffer that updates every tick
-        if(clipped) {
+        if(clipped) { // start playing background music
             if(!clip.isActive()) {
                 super.render(clip, Clip.LOOP_CONTINUOUSLY);
                 ((FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(-24f);
@@ -224,14 +224,14 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
             }
         }
         Clip c = null;
-        for(GameEntity ge : entities) {
+        for(GameEntity ge : entities) { // echo entities that make noise
             if(c == null || c.isActive()) {
                 c = LambdaException.wraps(AudioSystem::getClip).get();
             }
             ge.render(c, i);
         }
     }
-
+    // pass swing events to controllers
     @Override
     public void keyPressed(KeyEvent e) {
         players.forEach(p -> p.getController().keyPressed(e));
@@ -259,14 +259,14 @@ public class GameLevel extends Performer implements KeyListener, MouseListener, 
         players.forEach(p -> p.getController().mouseMoved(e));
     }
 
-    // Unused input events
+    // unused input events
     @Override public final void keyTyped(KeyEvent e) { }
     @Override public final void mouseClicked(MouseEvent e) { }
     @Override public final void mouseEntered(MouseEvent e) { }
     @Override public final void mouseExited(MouseEvent e) { }
     @Override public final void mouseDragged(MouseEvent e) { }
 
-    public static class Unending extends GameLevel {
+    public static class Unending extends GameLevel { // level that does not run out of time, like menus and upgrades
         public Unending(GameLevel gl) {
             super(gl);
         }

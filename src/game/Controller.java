@@ -4,8 +4,8 @@ import java.awt.event.*;
 import java.util.Arrays;
 
 public class Controller implements KeyListener, MouseListener, MouseMotionListener {
-    private double x, y;
-    private boolean use;
+    private double x, y; // controls player movement
+    private boolean use; // controls player ability
 
     public double getX(double pos) {
         return x;
@@ -13,32 +13,29 @@ public class Controller implements KeyListener, MouseListener, MouseMotionListen
     public double getY(double pos) {
         return y;
     }
-    public boolean getUse() {
+    public boolean getUse() { // one off, only use player ability once per key press
         boolean u = use;
         use = false;
         return u;
     }
 
+    // adapter methods, we will override these again
     @Override
     public void keyPressed(KeyEvent e) {
 
     }
-
     @Override
     public void keyReleased(KeyEvent e) {
 
     }
-
     @Override
     public void mousePressed(MouseEvent e) {
 
     }
-
     @Override
     public void mouseReleased(MouseEvent e) {
 
     }
-
     @Override
     public void mouseMoved(MouseEvent e) {
 
@@ -51,9 +48,9 @@ public class Controller implements KeyListener, MouseListener, MouseMotionListen
     @Override public final void mouseExited(MouseEvent e) { }
     @Override public final void mouseDragged(MouseEvent e) { }
 
-    public static class Keyboard extends Controller {
-        private boolean[] presses;
-        private int[] keys;
+    public static class Keyboard extends Controller { // control players with the keyboard
+        private boolean[] presses; // which keys are pressed
+        private int[] keys; // which key codes to listen for
 
         public Keyboard(int... k) {
             keys = k;
@@ -81,8 +78,7 @@ public class Controller implements KeyListener, MouseListener, MouseMotionListen
         }
     }
 
-    public static class Mouse extends Controller {
-
+    public static class Mouse extends Controller { // control players with the mouse
         @Override
         public double getX(double pos) {
             return Math.floor((super.getX(pos) - pos)/16)*16;
@@ -99,13 +95,13 @@ public class Controller implements KeyListener, MouseListener, MouseMotionListen
         }
 
         @Override
-        public void mouseMoved(MouseEvent e) {
+        public void mouseMoved(MouseEvent e) { // player follows the cursor
             super.x = e.getX();
             super.y = e.getY();
         }
     }
 
-    public static class Multi extends Controller {
+    public static class Multi extends Controller { // compose multiple controllers to act as one
         private Controller[] components;
 
         public Multi(Controller... c) {

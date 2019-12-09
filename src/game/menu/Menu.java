@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class Menu extends GameLevel.Unending {
+public class Menu extends GameLevel.Unending { // the main menu, has buttons that stay available on the other menus
     private Theme space, water, dvd;
     private Random.RandomDifferentElement<Color> fireworkColor;
     private MenuButton.MuteButton mute;
@@ -39,7 +39,7 @@ public class Menu extends GameLevel.Unending {
         mute = new Button.MuteButton(20, 900, 100, 100, this);
     }
 
-    private void resetTheme(Theme t) {
+    private void resetTheme(Theme t) { // change the current theme
         getState().forEach(s -> s.setTheme(t));
         getState().peek().setClipped(true);
     }
@@ -61,31 +61,31 @@ public class Menu extends GameLevel.Unending {
     public void tick() {
         super.tick();
 
-        if(getClass() == Menu.class) { // effectively static
+        if(getClass() == Menu.class) { // like a static final method, see the constructor of java.util.Random
             Font f = new Font("Amoebic", Font.BOLD, 130);
-            final Button
-            back = new Button(100, 250, this, p -> {
-                getState().clear();
-                getState().push(this);
-            }, "<", f),
-            next = new Button(300, 250, this, p -> {
-                getState().peek().end();
-            }, ">", f),
-            help = new Button(1620, 250, this, p -> {
-                if(getState().peek().getClass() != Help.class) {
-                    getState().peek().setMaxTick(15);
-                    Help h = new Help(this);
-                    getState().push(new Transition(this, h, this));
-                    getState().push(h);
-                    getState().push(new Transition(this, this, h));
-                }
-                else {
+            final Button // buttons to navigate the menu
+                back = new Button(100, 250, this, p -> {
+                    getState().clear();
+                    getState().push(this);
+                }, "<", f),
+                next = new Button(300, 250, this, p -> {
                     getState().peek().end();
-                }
-            }, "?", f),
-            exit = new Button(1820, 250, this, p -> {
-                System.exit(0);
-            }, "X", f);
+                }, ">", f),
+                help = new Button(1620, 250, this, p -> {
+                    if(getState().peek().getClass() != Help.class) {
+                        getState().peek().setMaxTick(15);
+                        Help h = new Help(this);
+                        getState().push(new Transition(this, h, this));
+                        getState().push(h);
+                        getState().push(new Transition(this, this, h));
+                    }
+                    else {
+                        getState().peek().end();
+                    }
+                }, "?", f),
+                exit = new Button(1820, 250, this, p -> {
+                    System.exit(0);
+                }, "X", f);
 
             getEntities().clear();
 
@@ -94,7 +94,7 @@ public class Menu extends GameLevel.Unending {
             getEntities().add(help);
             getEntities().add(exit);
 
-            getEntities().add(mute);
+            getEntities().add(mute); // maybe all the buttons should be instance variables...
 
             f = new Font("Amoebic", Font.BOLD, 70);
             getEntities().add(new Button(1300, 1060, this, p -> resetTheme(space), "Space", f));
@@ -102,11 +102,11 @@ public class Menu extends GameLevel.Unending {
             getEntities().add(new Button(1800, 1060, this, p -> resetTheme(dvd), "DVD", f));
 
             setClipped(false);
-            final GameLevel
-            input = new GameInput(this),
-            avatar = new GameAvatar(this),
-            mode = new GameMode(this),
-            over = new GameOver(this);
+            GameLevel // the components of the menu
+                input = new GameInput(this),
+                avatar = new GameAvatar(this),
+                mode = new GameMode(this),
+                over = new GameOver(this);
             setMaxTick(40);
             getState().push(over);
             getState().push(mode);
@@ -117,7 +117,7 @@ public class Menu extends GameLevel.Unending {
             getState().peek().setClipped(true);
         }
 
-        if(getEntities().stream().noneMatch(Fireworks.class::isInstance)) {
+        if(getEntities().stream().noneMatch(Fireworks.class::isInstance)) { // spawn a new firework after the last one is gone
             getEntities().add(new Fireworks(
                 getRandom().nextInt(getDimension().width),
                 getDimension().getHeight(),
@@ -130,13 +130,9 @@ public class Menu extends GameLevel.Unending {
     @Override
     public void render(Graphics g) {
         super.render(g);
-
         getEntities().forEach(b -> b.render(g));
         g.setColor(Color.white);
-
-        // Main Title
         GameWindow.drawStringCentered(g, new Font("Amoebic", Font.BOLD, 130), "Wavegame", 960, 275);
-
         Font f = new Font("Amoebic", Font.BOLD, 34);
         GameWindow.drawStringCentered(g, f, "Credits: Team", 120, 1070);
         int shake = getRandom().nextInt(3);

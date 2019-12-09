@@ -16,11 +16,11 @@ import java.util.ArrayList;
  */
 
 public class Player extends GameEntity.Stopping {
-	private double maxHealth;
+	private double maxHealth; // health capacity
 	private double armor; // higher value represents higher damage resistance
-    private double speed;
-	private ArrayList<Pickup> inactive, active;
-	private Controller controller;
+    private double speed; // movement speed
+	private ArrayList<Pickup> inactive, active; // circling and stacking pickups
+	private Controller controller; // controller to listen to
 
     public void setMaxHealth(double m) {
 	    maxHealth = m;
@@ -29,7 +29,7 @@ public class Player extends GameEntity.Stopping {
         armor = d;
     }
     public void damage(double d) {
-        playerColor = Color.red;
+        temporary = Color.red;
         setHealth(getHealth() - d/(1 + armor));
     }
     public void setSize(double size) {
@@ -52,10 +52,10 @@ public class Player extends GameEntity.Stopping {
 	    return controller;
     }
 
-    private Color playerColor, neutralColor;
+    private Color temporary, permanent; // current player color and normal player color
 
-    public void setNeutralColor(Color c) {
-        neutralColor = c;
+    public void setColor(Color c) {
+        permanent = c;
     }
 
 	public Player(double x, double y, Controller c, GameLevel level) {
@@ -63,7 +63,7 @@ public class Player extends GameEntity.Stopping {
 		setMaxHealth(100);
 		setHealth(maxHealth);
 		armor = 0;
-        neutralColor = playerColor = Color.white;
+        permanent = temporary = Color.white;
         inactive = new ArrayList<>();
         active = new ArrayList<>();
         controller = c;
@@ -71,45 +71,46 @@ public class Player extends GameEntity.Stopping {
 	}
 
     @Override
-    public void collide(Player p) {
-	    if(p == this) {
-            getLevel().getNonentities().add(new Trail(this, playerColor, 255));
-            playerColor = neutralColor;
+    public void collide(Player p) { // trade health with p
+	    if(p == this) { // reflexive case
+            getLevel().getNonentities().add(new Trail(this, temporary, 255));
+            temporary = permanent;
         }
         else if(p != null) {
-            if(getHealth() > p.getHealth()) {
+            if(getHealth() > p.getHealth()) { // give health to p
                 double heal = Math.min(.5, .5*(getHealth()-p.getHealth()));
                 damage(heal);
                 p.setHealth(p.getHealth() + heal);
             }
-            else if(getHealth() < p.getHealth()) {
-                playerColor = Color.green;
+            else if(getHealth() < p.getHealth()) { // taking health from p
+                temporary = Color.green;
             }
-            if(getLevel().getScore() % 10 == 0) {
+            if(getLevel().getScore() % 10 == 0) { // make a ripple every ten ticks
                 Path2D.Double ripple = new Path2D.Double();
                 ripple.append(getBounds().getPathIterator(null), false);
-                ripple.append(p.getBounds().getPathIterator(null), false);
-                getLevel().getNonentities().add(new Trail.Outline(ripple, playerColor, 255*getHealth(), getLevel()));
+//              ripple.append(p.getBounds().getPathIterator(null), false);
+                getLevel().getNonentities().add(new Trail.Outline(ripple, temporary, 255*getHealth(), getLevel()));
             }
         }
     }
 
-    private double theta = 0;
+    private double theta = 0; // inactive pickups slowly circle player
+
     @Override
-	public void tick() { // Heartbeat of the Player class
+	public void tick() {
 	    super.tick();
-	    double
+	    double // move in the direction the controller is pointing
             x = controller.getX(getPosX()),
             y = controller.getY(getPosY()),
             h = Math.max(1, Math.hypot(x, y));
         setVelX(speed*x/h);
         setVelY(speed*y/h);
-        for(int i = inactive.size()-1; i >= 0; i -= 1) {
+        for(int i = inactive.size()-1; i >= 0; i -= 1) { // make a circle of inactive pickups
             theta += .01 + 2*Math.PI/inactive.size();
             inactive.get(i).setPosX(getPosX() + 50*Math.cos(theta));
             inactive.get(i).setPosY(getPosY() + 50*Math.sin(theta));
         }
-	    for(int i = active.size()-1; i >= 0; i -= 1) {
+	    for(int i = active.size()-1; i >= 0; i -= 1) { // make a stack of active pickups
 	        active.get(i).tick();
             active.get(i).setPosX(.8*active.get(i).getPosX() + .2*getPosX());
             active.get(i).setPosY(.8*active.get(i).getPosY() + .2*(
@@ -123,15 +124,14 @@ public class Player extends GameEntity.Stopping {
 	}
 
 	@Override
-	public void render(Graphics g) {
-		//g.drawImage(img, (int) this.x, (int) this.y, playerWidth, playerHeight, null);
-        super.render(g, playerColor);
+	public void render(Graphics g) { // mirror any pickups that have textures
+        super.render(g, temporary);
         inactive.forEach(ge -> ge.render(g));
         active.forEach(ge -> ge.render(g));
 	}
 
 	@Override
-    public void render(Clip c, int i) {
+    public void render(Clip c, int i) { // echo any pickups that make noise
         super.render(c, i);
         inactive.forEach(ge -> ge.render(c,i));
         active.forEach(ge -> ge.render(c,i));

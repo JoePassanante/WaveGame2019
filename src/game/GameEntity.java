@@ -8,7 +8,7 @@ import java.awt.*;
  * @author Aaron Paterson 10/1/19
  */
 
-public class GameEntity extends Performer {
+public class GameEntity extends Performer { // anything that spawns in a level
     private GameLevel level;
     public GameLevel getLevel() {
         return level;
@@ -65,7 +65,7 @@ public class GameEntity extends Performer {
     public void clip() {
         clipped = true;
     }
-    public void collide(Player p) { // called when a GameObject touches a Player
+    public void collide(Player p) { // called when a GameEntity touches a Player
         clipped = true;
     }
 
@@ -79,7 +79,7 @@ public class GameEntity extends Performer {
     }
 
     @Override
-    public void tick() {
+    public void tick() { // move and die
         super.tick();
         posX += velX;
         posY += velY;
@@ -91,7 +91,7 @@ public class GameEntity extends Performer {
 
     private Clip playing;
     @Override
-    public void render(Clip c, int i) {
+    public void render(Clip c, int i) { // make a noise
         if(clipped) {
             clipped = false;
             if(playing == null || !playing.isActive()) {
@@ -117,7 +117,7 @@ public class GameEntity extends Performer {
         ).getBounds();
     }
 
-    public static abstract class Stopping extends GameEntity {
+    public static abstract class Stopping extends GameEntity { // an entity that hits the side of the screen and stops
         public Stopping(Point.Double p, double w, double h, GameLevel l) {
             super(p.x, p.y, w, h, l);
         }
@@ -130,11 +130,11 @@ public class GameEntity extends Performer {
         }
     }
 
-    public static double clamp(double number, double lower, double upper) {
+    public static double clamp(double number, double lower, double upper) { // utility function, should be moved to util
         return Math.max(lower, Math.min(upper, number));
     }
 
-    public static double changeSign(double magnitude, double sign) {
+    public static double changeSign(double magnitude, double sign) { // another one
         if(sign == 0) {
             return magnitude;
         }

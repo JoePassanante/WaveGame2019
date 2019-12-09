@@ -24,8 +24,8 @@ import java.util.stream.Stream;
  */
 
 public class Theme extends HashMap<String, Performer> implements Runnable {
-    private Theme fallback;
-    private String folder;
+    private Theme fallback; // theme to check if this one is missing something
+    private String folder; // themes subfolder
 
     public Theme(String fold, Theme fall) {
         folder = fold;
@@ -76,17 +76,17 @@ public class Theme extends HashMap<String, Performer> implements Runnable {
 
     public Performer get(Performer p) {
         return get(p.getClass());
-    }
+    } // find a performer matching p
 
-    public Performer get(Class cls) {
-        Performer result = Optional.ofNullable(get(cls.getSimpleName())).orElseGet(Performer::new);
-        Optional.ofNullable(cls.getSuperclass()).map(this::get).ifPresent(result::defer);
+    public <T> Performer get(Class<T> c) { // find files with the same name as cls
+        Performer result = Optional.ofNullable(get(c.getSimpleName())).orElseGet(Performer::new);
+        Optional.ofNullable(c.getSuperclass()).map(this::get).ifPresent(result::defer);
         return result;
     }
 
-    public Performer get(String str) {
-        Performer result = Optional.ofNullable(super.get(str)).orElseGet(Performer::new);
-        Optional.ofNullable(fallback).map(f -> f.get(str)).ifPresent(result::defer);
+    public Performer get(String s) { // find files named s
+        Performer result = Optional.ofNullable(super.get(s)).orElseGet(Performer::new);
+        Optional.ofNullable(fallback).map(f -> f.get(s)).ifPresent(result::defer);
         return result;
     }
 }

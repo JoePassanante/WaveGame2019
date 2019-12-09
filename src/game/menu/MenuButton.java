@@ -8,7 +8,7 @@ import game.Player;
 import java.awt.*;
 import java.util.function.Consumer;
 
-public class MenuButton extends GameEntity {
+public class MenuButton extends GameEntity { // anything you can click on the menu
     private Rectangle bounds;
     private Consumer<Player> collide;
 
@@ -20,7 +20,7 @@ public class MenuButton extends GameEntity {
     }
 
     @Override
-    public void collide(Player p) {
+    public void collide(Player p) { // we can pass listeners as lambdas like in swing, p is usually null
         super.collide(p);
         collide.accept(p);
     }

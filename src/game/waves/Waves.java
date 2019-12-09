@@ -20,17 +20,17 @@ import java.util.stream.IntStream;
  * @author Aaron Paterson 10/17/19
  */
 
-public class Waves extends GameLevel {
-    private RainbowText text;
+public class Waves extends GameLevel { // the original waves game mode
+    private RainbowText text; // starting text
 
-    private static class Spawn {
+    private static class Spawn { // data class of all of the factories that spawn random entities
         private Supplier<Function<GameLevel, GameEntity>>
             randomEasyEnemy,
             randomHardEnemy,
             randomBoss,
             randomPickup;
 
-        private Supplier<Function<GameLevel, BiFunction<game.Performer, Performer, Transition>>>
+        private Supplier<Function<GameLevel, BiFunction<game.Performer, Performer, Transition>>> // curried transition constructors
             transition;
 
         private Spawn(Random rng) {
@@ -87,7 +87,7 @@ public class Waves extends GameLevel {
         super(level);
         spawn = s;
         System.out.println("New level with:");
-        randomEnemy = getRandom().new RandomDifferentElement<>( IntStream // spawn a different enemy every time
+        randomEnemy = getRandom().new RandomDifferentElement<>( IntStream // spawn a few different enemies every level
             .rangeClosed(0, getNumber()/5 + 1)
             .boxed()
             .map(i -> i < 3 || getRandom().random() < .5 ? spawn.randomEasyEnemy : spawn.randomHardEnemy)
@@ -105,22 +105,22 @@ public class Waves extends GameLevel {
     @Override
     public void start() {
         super.start();
-        getEntities().retainAll(getPlayers());
-        if(getNumber() > 1) {
+        getEntities().retainAll(getPlayers()); // remove all entities except players
+        if(getNumber() > 1) { // spawn a random pickup
             getEntities().add(spawn.randomPickup.get().apply(this));
         }
-        getEntities().add(text);
+        getEntities().add(text); // display the level number
     }
 
     @Override
     public void end() {
         super.end();
-        getState().push(new Waves(this));
-        if (getNumber() % 5 == 0) {
+        getState().push(new Waves(this)); // the next level
+        if (getNumber() % 5 == 0) { // encounter a random boss and upgrades every five levels
             getState().push(new Upgrades(this, spawn.randomPickup));
             getState().push(new Boss(this, spawn.randomBoss));
-            setMaxTick(60);
-            getState().push(spawn.transition.get().apply(this).apply(this, getState().peek()));
+            // setMaxTick(60);
+            // getState().push(spawn.transition.get().apply(this).apply(this, getState().peek()));
         }
     }
 
@@ -129,18 +129,18 @@ public class Waves extends GameLevel {
      */
     public void tick() {
         super.tick();
-        if(Collections.disjoint(getEntities(), getPlayers())) {
+        if(Collections.disjoint(getEntities(), getPlayers())) { // all players are dead, end the game
             getState().pop();
             getState().peek().setScore(getScore());
         }
-        else if(getEntities().stream().filter(Enemy.class::isInstance).count() < 1 + getNumber()*getCurrentTick()/getMaxTick()) {
+        else if(getEntities().stream().filter(Enemy.class::isInstance).count() < 1 + getNumber()*getCurrentTick()/getMaxTick()) { // time to spawn an enemy
             GameEntity ge = randomEnemy.get().apply(this);
             System.out.println("Spawning: " + ge.getClass().getSimpleName());
             getEntities().add(ge);
         }
     }
 
-     @Override
+    @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
 
@@ -151,17 +151,17 @@ public class Waves extends GameLevel {
             else if (key == KeyEvent.VK_ENTER || key == KeyEvent.VK_E) {
                 setCurrentTick(getMaxTick());
             }
-            else if(key == KeyEvent.VK_P) {
-                GameLevel pause = new Pause(this);
-//                getState().push(new Transition(pause, pause, this));
-                getState().push(pause);
-//                getState().push(new Transition(pause, this, pause));
-            }
         }
         if (key == KeyEvent.VK_ESCAPE) {
             getEntities().clear();
             getPlayers().clear();
             getState().pop();
+        }
+        else if(key == KeyEvent.VK_P) {
+            GameLevel pause = new Pause(this);
+//          getState().push(new Transition(this, pause, this));
+            getState().push(pause);
+//          getState().push(new Transition(pause, this, pause));
         }
         super.keyPressed(e);
     }

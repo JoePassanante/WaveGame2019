@@ -46,7 +46,7 @@ public class Random extends java.util.Random {
         return (nextLong() >>> 11) * 0x1.0p-53;
     }
 
-    public class RandomDifferentElement<T> implements Supplier<T> {
+    public class RandomDifferentElement<T> implements Supplier<T> { // utility class that generates random different list elements
         private List<T> source;
         private int last;
 

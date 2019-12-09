@@ -6,7 +6,6 @@ import game.GameWindow;
 import game.pickup.Pickup;
 
 import java.awt.*;
-import java.util.Collections;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -26,10 +25,11 @@ public class Upgrades extends GameLevel.Unending {
 
     @Override
     public void start() {
+        getPlayers().stream().filter(p -> !getEntities().contains(p)).forEach(p -> p.setHealth(p.getMaxHealth())); // revive dead players
         getEntities().clear();
-        getEntities().addAll(getPlayers());
+        getEntities().addAll(getPlayers()); // respawn all players
 
-        for(int i=0; i<getNumber(); i+=1) {
+        for(int i=0; i<getNumber(); i+=1) { // throw pickups around in random directions
             GameEntity pu = pickup.get().apply(this);
             double angle = getRandom().random()*2*Math.PI;
             Point.Double p = spawnPoint();
@@ -43,14 +43,16 @@ public class Upgrades extends GameLevel.Unending {
 
     @Override
 	public void tick() {
-        super.tick();
-        if(getEntities().stream().filter(Pickup.class::isInstance).count() + getPlayers().size() <= getNumber() || Collections.disjoint(getEntities(), getPlayers())) {
+        super.tick(); //
+        if( getEntities().stream().filter(Pickup.class::isInstance).count() + // every player had a chance to get a pickup
+            getPlayers().stream().filter(getEntities()::contains).count() <= getNumber()
+        ) {
             getEntities().retainAll(getPlayers());
             end();
         }
 	}
 
-	public void render(Graphics g) {
+	public void render(Graphics g) { // renders level with text
         super.render(g);
         g.setColor(Color.white);
         GameWindow.drawStringCentered(g, new Font("Amoebic", Font.BOLD, 100), "Grab an Upgrade!", getDimension().width/2, 200);

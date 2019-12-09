@@ -7,7 +7,7 @@ import game.Player;
 import java.awt.*;
 import java.awt.geom.Point2D;
 
-public class Enemy extends GameEntity {
+public class Enemy extends GameEntity { // enemy superclass
     public Enemy(double x, double y, double w, double h, GameLevel l) {
         super(x, y, w, h, l);
     }
@@ -18,7 +18,7 @@ public class Enemy extends GameEntity {
         p.damage(1);
     }
 
-    public static abstract class Bouncing extends Enemy {
+    public static abstract class Bouncing extends Enemy { // an enemy that bounces of the edges of the level
         public Bouncing(Point.Double p, double w, double h, GameLevel l) {
             super(p.x, p.y, w, h, l);
         }
@@ -31,7 +31,7 @@ public class Enemy extends GameEntity {
         }
     }
 
-    public static abstract class Disappearing extends Enemy {
+    public static abstract class Disappearing extends Enemy { // an enemy that dies when it crosses the edges of a level
         public Disappearing(Point2D.Double p, double w, double h, GameLevel l) {
             super(p.x, p.y, w, h, l);
         }

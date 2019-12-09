@@ -8,23 +8,22 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class GameAvatar extends Menu {
-    //inherit from the gamelevel class
     public GameAvatar(Menu m) {
         super(m);
     }
 
     @Override
     public void render(Graphics g) {
-        super.render(g); //display background
+        super.render(g); // display background
 
         g.setColor(Color.white);
         Font f = new Font("Amoebic", Font.BOLD, 80);
         GameWindow.drawStringCentered(g, f,"Select your colors!", 960, 125);
     }
 
-    private static class Button extends MenuButton.TextButton {
+    private static class Button extends MenuButton.TextButton { // button to change the color of a player
         public Button(double x, double y, GameLevel level, String t, Font f, Color r) {
-            super(x, y, level, p -> p.setNeutralColor(r), t, f, r);
+            super(x, y, level, p -> p.setColor(r), t, f, r);
         }
 
         @Override
@@ -38,7 +37,7 @@ public class GameAvatar extends Menu {
     @Override
     public void start() {
         super.start();
-        getEntities().addAll(getPlayers());
+        getEntities().addAll(getPlayers()); // display players so they can select their colors
         Font f = new Font("Amoebic", Font.PLAIN, 100);
         getEntities().add(new Button(300, 625, this, "\uD83D\uDCA6", f, Color.blue));
         getEntities().add(new Button(500, 625, this, "\u2744", f, Color.cyan));
@@ -61,7 +60,7 @@ public class GameAvatar extends Menu {
     @Override
     public void end() {
         super.end();
-        getEntities().removeIf(Button.class::isInstance);
+        getEntities().removeIf(Button.class::isInstance); // remove color selections
     }
 }
 

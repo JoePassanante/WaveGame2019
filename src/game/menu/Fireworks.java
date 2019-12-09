@@ -14,9 +14,9 @@ import java.awt.*;
  * @author Aaron Paterson 9/19/19
  */
 
-public class Fireworks extends Enemy.Disappearing {
+public class Fireworks extends Enemy.Disappearing { // just decorative menu junk
     private Color color;
-    private boolean spark;
+    private boolean spark; // spawn more fireworks
 
     public Fireworks(double x, double y, GameLevel l, Color c) {
         this(x, y, 100, 100, l, l.getRandom().random() - .5, -4, c, true);
@@ -31,7 +31,7 @@ public class Fireworks extends Enemy.Disappearing {
     }
 
     @Override
-    public void collide(Player p) {
+    public void collide(Player p) { // explode into smaller faster fireworks
         if(p == null) {
             getLevel().getEntities().remove(this);
             for (int t = 0; t < 10; t += 1) {
@@ -66,7 +66,7 @@ public class Fireworks extends Enemy.Disappearing {
     @Override
     public void tick() {
         super.tick();
-        if (getPosY() <= 200 && spark) { // once it gets this high
+        if (getPosY() <= 200 && spark) { // once we get this high and have not already exploded
             collide(null);
         }
     }

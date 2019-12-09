@@ -8,7 +8,7 @@ import game.waves.RainbowText;
 import java.awt.*;
 import java.util.Collections;
 
-public class Walls extends GameLevel {
+public class Walls extends GameLevel { // simple side scroller game mode
     private RainbowText text;
 
     public Walls(GameLevel gl) {
@@ -37,7 +37,7 @@ public class Walls extends GameLevel {
 
     @Override
     public void render(Graphics g) {
-        super.render(g, (-10-2*getNumber())*getCurrentTick(), 0);
+        super.render(g, -getNumber()*getCurrentTick(), 0);
     }
 
     @Override
@@ -48,7 +48,6 @@ public class Walls extends GameLevel {
             getState().peek().setScore(getScore());
         }
         else if(getEntities().stream().filter(Enemy.class::isInstance).count() < 1 + getNumber()*getCurrentTick()/getMaxTick()) {
-            System.out.println("Spawning wall");
             double space = getBounds().getHeight() / (getNumber() + 1.0);
             double center = getBounds().getHeight()/2;
             center += Math.random()*(getBounds().getHeight()-space)/2;

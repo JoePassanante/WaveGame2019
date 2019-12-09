@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Brandon Loehle 5/30/16
  */
 
-public class GameOver extends GameLevel.Unending {
+public class GameOver extends GameLevel.Unending { // the screen that comes after you lose the game
     private Random.RandomDifferentElement<Color> retryColor = getRandom().new RandomDifferentElement<>(Color.black, Color.white);
     private Color color;
     private AtomicInteger highscore;
@@ -30,13 +30,13 @@ public class GameOver extends GameLevel.Unending {
     public void start() {
         getEntities().clear();
         getNonentities().clear();
-        new Thread(() -> { // Retrieves and saves the high score
-            try (BufferedReader in = new BufferedReader(new FileReader("src/HighScores.txt"))) {
+        new Thread(() -> { // retrieves and saves the high score
+            try (BufferedReader in = new BufferedReader(new FileReader("./HighScores.txt"))) {
                 highscore.set(Optional.ofNullable(in.readLine()).map(Integer::parseInt).orElse(0));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            try (BufferedWriter out = new BufferedWriter(new FileWriter("src/HighScores.txt"))) {
+            try (BufferedWriter out = new BufferedWriter(new FileWriter("./HighScores.txt"))) {
                 if (getScore() >= highscore.get()) {
                     out.write(Integer.toString(getScore()));
                 }
@@ -47,7 +47,7 @@ public class GameOver extends GameLevel.Unending {
     }
 
     @Override
-    public void tick() {
+    public void tick() { // blink the bottom text
         super.tick();
         setScore(getScore() - 1);
         if (getCurrentTick() % 30 == 0) {

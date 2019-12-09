@@ -4,7 +4,7 @@ import game.GameLevel;
 
 import java.awt.geom.Point2D;
 
-public class EnemyBurst extends Enemy.Disappearing {
+public class EnemyBurst extends Enemy.Disappearing { // the meteor enemy that crosses the level in a random direction
     private EnemyBurstWarning warning;
 
     public EnemyBurst(GameLevel level) {
@@ -12,7 +12,7 @@ public class EnemyBurst extends Enemy.Disappearing {
 
         double r = getLevel().getRandom().random();
         double x, y, w, h;
-        if (r < .25) {
+        if (r < .25) { // choose the direction and spawn point randomly
             setPosX(-getWidth());
             setVelX(30);
             w = 25;
@@ -49,10 +49,10 @@ public class EnemyBurst extends Enemy.Disappearing {
 
     @Override
     public void tick() {
-        if (!warned) {
+        if (!warned) { // flash a warning a few times
             getLevel().getEntities().add(warning);
             warned = true;
-        } else if (!getLevel().getEntities().contains(warning)) {
+        } else if (!getLevel().getEntities().contains(warning)) { // cross the screen
             super.tick();
             if (getLevel().getEntities().contains(this)) {
                 spawned = true;

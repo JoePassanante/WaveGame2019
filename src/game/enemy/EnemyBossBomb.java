@@ -5,7 +5,7 @@ import game.GameLevel;
 import java.awt.*;
 import java.awt.geom.Point2D;
 
-public class EnemyBossBomb extends Enemy {
+public class EnemyBossBomb extends Enemy { // a bomb that randomly explodes
     private double explodeHeight;
     private int shots;
 
@@ -23,14 +23,13 @@ public class EnemyBossBomb extends Enemy {
             getLevel().getEntities().remove(this);
             for (int i = 0; i < shots; i++) {
                 getLevel().getEntities().add(new EnemyBossBombBullet(
-                        new Point2D.Double(getPosX(), getPosY()),
-                        getLevel(),
-                        16 * Math.cos(Math.toRadians(360.0 * i / shots)),
-                        16 * Math.sin(Math.toRadians(360.0 * i / shots))
+                    new Point2D.Double(getPosX(), getPosY()),
+                    getLevel(),
+                    16 * Math.cos(Math.toRadians(360.0 * i / shots)),
+                    16 * Math.sin(Math.toRadians(360.0 * i / shots))
                 ));
             }
         }
-
     }
 
     @Override

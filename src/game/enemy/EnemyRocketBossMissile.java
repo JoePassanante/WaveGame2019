@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 
-public class EnemyRocketBossMissile extends Enemy.Disappearing {
+public class EnemyRocketBossMissile extends Enemy.Disappearing { // a smaller faster rocket
     private double speed;
     private double angle;
     private Player target;
@@ -22,13 +22,13 @@ public class EnemyRocketBossMissile extends Enemy.Disappearing {
     }
 
     @Override
-    public void collide(Player player) {
-        if (hitbox.intersects(player.getBounds())) {
+    public void collide(Player player) { // broad phase collision
+        if (hitbox.intersects(player.getBounds())) { // narrow phase collision
             super.collide(player);
         }
     }
 
-    private boolean clipped;
+    private boolean clipped; // make a noise when rocket is shot
 
     @Override
     public void tick() {
@@ -43,7 +43,6 @@ public class EnemyRocketBossMissile extends Enemy.Disappearing {
         setVelX(speed * Math.cos(angle));
         setVelY(speed * Math.sin(angle));
         setHealth(getHealth() - 1);
-        //handler.addObject(new Trail(x, y, ID.Trail, Color.cyan, 16, 16, 0.025, this.handler));
     }
 
     @Override
@@ -56,9 +55,6 @@ public class EnemyRocketBossMissile extends Enemy.Disappearing {
         hitbox = new Path2D.Double(super.getBounds(), at);
         super.render(g2d, super.getBounds());
         g2d.setTransform(old);
-
-//        g2d.setColor(Color.YELLOW);
-//        g2d.draw(hitbox);
     }
 
     @Override

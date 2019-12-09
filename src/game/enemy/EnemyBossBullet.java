@@ -12,7 +12,7 @@ import java.awt.*;
  * @author David Nguyen 12/13/17
  */
 
-public class EnemyBossBullet extends Enemy.Disappearing {
+public class EnemyBossBullet extends Enemy.Disappearing { // a bullet that should probably be stronger and merged with other bullet classes
     public EnemyBossBullet(Point.Double point, GameLevel level) {
         super(point, 16, 16, level);
         setVelX((level.getRandom().random() * 2 - 1) * 15);

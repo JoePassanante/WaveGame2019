@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 
-public class Network {
+public class Network { // incomplete class for networked multiplayer
     static String internal() {
         try {
             return InetAddress.getLocalHost().getHostAddress();

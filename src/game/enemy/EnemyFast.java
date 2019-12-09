@@ -11,7 +11,7 @@ import java.awt.geom.AffineTransform;
  * @author Brandon Loehle 5/30/16
  */
 
-public class EnemyFast extends Enemy.Bouncing {
+public class EnemyFast extends Enemy.Bouncing { // a faster basic enemy
     public EnemyFast(GameLevel level) {
         super(level.spawnPoint(), 32, 96, level);
         setVelX(2 * level.getRandom().random() - 1);

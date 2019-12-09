@@ -11,7 +11,7 @@ import java.awt.*;
  * @author Brandon Loehle 5/30/16
  */
 
-public class EnemySweep extends Enemy.Bouncing {
+public class EnemySweep extends Enemy.Bouncing { // an old enemy that should probably be removed
     private Random.RandomDifferentElement<Color> generator;
     private Color random;
 
@@ -26,7 +26,6 @@ public class EnemySweep extends Enemy.Bouncing {
     public void tick() {
         super.tick();
         random = generator.get();
-        //handler.addObject(new Trail(x, y, ID.Trail, Color.cyan, 16, 16, 0.025, this.handler));
         getLevel().getNonentities().add(new Trail(this, random, 255));
     }
 

@@ -4,14 +4,14 @@ import game.GameLevel;
 import game.Player;
 import game.enemy.EnemyBurst;
 
-public class PickupClear extends PickupSkip {
+public class PickupClear extends Pickup {
     public PickupClear(GameLevel l) {
         super(l);
     }
 
     @Override
     public void affect(Player player) {
-        super.affect(player);
+        player.getLevel().getEntities().retainAll(player.getLevel().getPlayers());
         player.getLevel().getEntities().add(new EnemyBurst(getLevel()));
     }
 }

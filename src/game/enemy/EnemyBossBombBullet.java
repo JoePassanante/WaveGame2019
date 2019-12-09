@@ -12,7 +12,7 @@ import java.awt.*;
  * @author David Nguyen 12/13/17
  */
 
-public class EnemyBossBombBullet extends Enemy.Disappearing {
+public class EnemyBossBombBullet extends Enemy.Disappearing { // a bullet that should probably be stronger and merged with other bullet classes
     public EnemyBossBombBullet(Point.Double point, GameLevel level, double velX, double velY) {
         super(point, 16, 16, level);
         setVelX(velX);

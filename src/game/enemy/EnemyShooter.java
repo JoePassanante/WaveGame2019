@@ -9,7 +9,7 @@ import java.awt.geom.Point2D;
  * @author Brandon Loehle 5/30/16
  */
 
-public class EnemyShooter extends Enemy.Bouncing {
+public class EnemyShooter extends Enemy.Bouncing { // an enemy that shoots at the player
     private int timer;
     private double bulletSpeed;
 
@@ -23,9 +23,8 @@ public class EnemyShooter extends Enemy.Bouncing {
 
     @Override
     public void tick() {
-        //handler.addObject(new Trail(x, y, ID.Trail, Color.yellow, this.sizeX, this.sizeY, 0.025, this.handler));
         timer -= 1;
-        if (timer <= 0) {
+        if (timer <= 0) { // three shots per second
             shoot();
             timer = 20;
         }
@@ -33,7 +32,7 @@ public class EnemyShooter extends Enemy.Bouncing {
         super.tick();
     }
 
-    public void shoot() {
+    public void shoot() { // take a shot
         Point.Double player = getLevel().targetPoint();
         double
                 diffX = player.getX() - getPosX(),

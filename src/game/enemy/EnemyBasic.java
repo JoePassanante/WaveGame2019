@@ -7,19 +7,18 @@ import game.GameLevel;
  * @author Aaron Paterson 11/6/19
  */
 
-public class EnemyBasic extends Enemy.Bouncing {
+public class EnemyBasic extends Enemy.Bouncing { // a basic enemy that changes color when it hits a wall
     public EnemyBasic(GameLevel level) {
         super(level.spawnPoint(), 125, 60, level);
         setVelX(10 * (level.getRandom().random() < .5 ? -1 : 1));
         setVelY(10 * (level.getRandom().random() < .5 ? -1 : 1));
     }
 
-    // for dvd theme
     @Override
     public void tick() {
         super.tick();
 
-        if(!getLevel().getBounds().contains(getBounds()))
+        if(!getLevel().getBounds().contains(getBounds())) // for dvd theme
             refer( getLevel().getTheme().get(getClass().getSimpleName() +
                 getLevel().getRandom().new RandomDifferentElement<>(
                     "Blue", "Cyan", "Green", "Magenta", "Orange", "Pink", "Red", "Yellow").get()));

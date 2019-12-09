@@ -6,7 +6,7 @@ import game.Player;
 
 import java.awt.*;
 
-public class Pickup extends GameEntity {
+public class Pickup extends GameEntity { // pickups that players can hold and use
     public Pickup(GameLevel level) {
         this(level, 100);
     }
@@ -17,7 +17,7 @@ public class Pickup extends GameEntity {
     }
 
     @Override
-    public void collide(Player player) {
+    public void collide(Player player) { // player picks this up
         super.collide(player);
         getLevel().getEntities().remove(this);
         setVelX(0);
@@ -26,7 +26,7 @@ public class Pickup extends GameEntity {
     }
 
     @Override
-    public void tick() {
+    public void tick() { // modulate around edges of screen
         super.tick();
         Rectangle bounds = getLevel().getBounds();
         if (getVelX() + getVelY() > 1 && !bounds.intersects(getBounds())) {
@@ -35,14 +35,14 @@ public class Pickup extends GameEntity {
         }
     }
 
-    public void affect(Player player) {
+    public void affect(Player player) { // use health to affect player
         setHealth(getHealth() - 1);
         if (getHealth() < 0) {
             player.getActive().remove(this);
         }
     }
 
-    public static class Active extends Pickup {
+    public static class Active extends Pickup { // pickups that immediately have an effect
         public Active(GameLevel level) {
             super(level, 0);
         }
