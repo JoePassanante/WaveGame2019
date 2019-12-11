@@ -1,5 +1,5 @@
 # WaveGame2019
-Project for SER225 by team B3: Jamell Battle, Amanda Gil, Michael Medvedev, Aaron Paterson 
+Project for SER225 by team B3: Jamell Battle, Amanda Gil, Michael Medvedev, and Aaron Paterson.
 
 ## Course Description
 This course presents introductory software engineering concepts including group development, large-scale project work, and
