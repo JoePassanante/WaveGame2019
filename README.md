@@ -21,7 +21,7 @@ when your project team has completed their work. You are, in essence, working on
 
 For eclipse:
 
-- Unzip the file Wave_Game.zip
+- Download and unzip the project
 - Open Eclipse. Press File -> Import -> General -> Exisiting Projects into Workspace -> Next
 - Next to "Select root directory", click "Browse..." and then select the folder that was contained in the downloaded zip file.
 - Click "Finish" at the bottom.
