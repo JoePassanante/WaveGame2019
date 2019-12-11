@@ -59,3 +59,9 @@ so the rule of not using any static variables can continue being followed.
 There were several enums and many public static variables when we got the project. All of them have been removed and replaced,
 so try not to add any more. We considered both of these antipatterns as they increase the amount of effort it takes to extend
 the game, rather than decrease. The better solutions are less obvious and rely somewhat on Java 8, but plenty of good examples can be found in the code.
+
+## Bugs
+
+Known Bugs as of 12/9/19:
+- Sometimes in multiplayer levels begin ending very quickly, and player deaths start acting unpredictably.
+- High Scores might not be saving and loading.
