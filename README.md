@@ -52,9 +52,9 @@ be named after the class that displays them, for an example of how more textures
 The Theme class will inherit assets from the superclasses of a Performer if one is mising.
 
 **Copy Constructors:** There are no static variables in the project other than devMode. Single instances of the state
-stack, player and entity lists, random instance, and any other shared references are copied through the
+stack, player and entity lists, Random instance, and any other shared references are copied through the
 GameLevel(GameLevel) constructor. This is so classes can change their behaviour without breaking other classes, and
-the rule of no static variables should continue being followed.
+so the rule of not using any static variables can continue being followed.
 
 There were several enums and many public static variables when we got the project. All of them have been removed and replaced,
 so try not to add any more. We considered both of these antipatterns as they increase the amount of effort it takes to extend
