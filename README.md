@@ -32,6 +32,13 @@ The project uses several design patterns to minimize redundant code and make add
 **Proxy Class:** The GameClient class is a GameLevel that passes events and loop methods to the top of a Stack. The main
 thread flushes swing events between loops, so you can expect them to come in one at a time.
 
+**Game Loop:** The original game loop copied this tutorial: https://www.youtube.com/watch?v=1gir2R7G9ws
+
+The tutorial relies on undefined behaviour in swing, as it runs tick methods in a seperate thread than it renders and
+listens to input events, which can call GameLevel methods with unsynchronized side effects in two different threads. The
+loop has been simplified and modified to tick, render, and listen to inputs in the swing Event Dispatch Thread using
+SwingUtilities.
+
 **State Stack:** The current GameLevel is stored on top of a Stack. Menus and game modes can be displayed by simply passing
 them to getState().push, as opposed to using some global enumeration, which avoids lots of bugs and null checks. For
 examples of how to use the state stack, see GameMode or the Waves and Walls classes.
