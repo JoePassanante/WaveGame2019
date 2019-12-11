@@ -1,5 +1,5 @@
 # WaveGame2019
-Wave Game for SER225
+Project for SER225
 
 ## Course Description
 This course presents introductory software engineeringconcepts including group development, large-scale project work, and
