@@ -1,7 +1,23 @@
 # WaveGame2019
 Wave Game for SER225
 
-## Setup
+## Course Description
+This course presents introductory software engineeringconcepts including group development, large-scale project work, and
+theoretical aspects of object-oriented programming. The course expands on material from previous courses. Professional behavior
+and ethics represent an important component of this course.
+
+## Course Comments
+This is a project-based course where you will develop a software product larger than any you have previously developed in the 
+curriculum. Although it is impossible to get “workplace” experience in an academic setting, you will experience some issues 
+that do occur in the workplace. The project you are working on is on-going. A previous project team has created software that 
+you will continue to develop. Your project team will leave what you have created for the next project team. This is a typical 
+situation. Team members leave and join projects atvarious stages of development,projects may continue to be developed beyond 
+their originallyintended purpose with a new team, and, of course, software must be maintained. It is important to be able to 
+figure out what software does when your project teaminherits it, and it is equally as important to leave maintainablesoftware 
+when your project team has completed their work. You are, in essence, working on an “open source” project. 
+
+
+## Project Setup
 
 For eclipse:
 
