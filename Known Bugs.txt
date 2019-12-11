@@ -1,4 +1,0 @@
-Known Bugs 12/9/19:
-
-- Sometimes in multiplayer levels begin ending very quickly, and player deaths start acting unpredictably.
-- High Scores might not be saving and loading
