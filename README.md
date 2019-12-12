@@ -1,6 +1,8 @@
 # WaveGame2019
 Team B3 "Shakey Blakey"
+
 Members: Jamell Battle, Amanda Gil, Michael Medvedev, Aaron Paterson
+
 Managers: Joe Passanante, Eamon Duffy
 
 ## Course Description
