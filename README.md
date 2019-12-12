@@ -47,7 +47,7 @@ Also check out the [Wiki](https://github.com/JoePassanante/WaveGame2019/wiki) fo
 
 ## Project Structure
 
-The project uses several design patterns to minimize redundant code and make adding new features easier:
+We used several design patterns to minimize redundant code and make adding new features to the project easier:
 
 **Proxy Class:** The GameClient class is a GameLevel that passes events and loop methods to the top of a Stack. The main
 thread flushes swing events between loops, so you can expect them to come in one at a time.
