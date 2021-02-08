@@ -95,6 +95,6 @@ Known Bugs as of 12/9/19:
 
 ## SCRUM Documents
 
-Including User Stories, Test Cases, Reports, Presentations, Action Plans & Backlog:
+Including User Stories, Test Cases, Reports, Presentations, Action Plans, Work Plans, Postmortems & Backlogs:
 
 https://drive.google.com/drive/folders/1tJuZUAsFzqQ79CjaafX0PsM1tvXon2ak?usp=sharing
