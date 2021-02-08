@@ -49,7 +49,7 @@ Also check out the [Wiki](https://github.com/JoePassanante/WaveGame2019/wiki) fo
 
 We used several design patterns to minimize redundant code and make adding new features to the project easier:
 
-**Proxy Class:** The GameClient class is a GameLevel that passes events and loop methods to the top of a Stack. The main
+**Proxy Class:** The [GameClient](https://github.com/mayhd3/WaveGame2019/blob/master/src/game/GameClient.java) class is a [GameLevel](https://github.com/mayhd3/WaveGame2019/blob/master/src/game/GameLevel.java) that passes events and loop methods to the top of a Stack. The main
 thread flushes swing events between loops, so you can expect them to come in one at a time.
 
 **Game Loop:** The original game loop copied this tutorial: https://www.youtube.com/watch?v=1gir2R7G9ws
@@ -61,21 +61,21 @@ SwingUtilities.
 
 **State Stack:** The current GameLevel is stored on top of a Stack. Menus and game modes can be displayed by simply passing
 them to getState().push, as opposed to using some global enumeration, which avoids lots of bugs and null checks. For
-examples of how to use the state stack, see GameMode or the Waves and Walls classes.
+examples of how to use the state stack, see [GameMode](https://github.com/mayhd3/WaveGame2019/blob/master/src/game/menu/GameMode.java) or the [Waves](https://github.com/mayhd3/WaveGame2019/blob/master/src/game/waves/Waves.java) and [Walls](https://github.com/mayhd3/WaveGame2019/blob/master/src/game/walls/Walls.java) classes.
 
 **Random Object Factories:** Almost every class in the game had a different way of creating random objects when we got the
-project. To make the code more predictable and less redundant, we added a RandomDifferentElement class to our own
+project. To make the code more predictable and less redundant, we added a [RandomDifferentElement](https://github.com/mayhd3/WaveGame2019/blob/master/src/util/Random.java#L49) class to our own
 Random implementation, that returns different random elements of a list. To create random new instances of different
 classes, you can use method references to pass the constructors of other classes to its own constructor, for example
-like in Waves.Spawn. This is very different than the implementations of the Factory pattern we are taught in school,
+like in [Waves.Spawn](https://github.com/mayhd3/WaveGame2019/blob/master/src/game/waves/Waves.java#L36). This is very different than the implementations of the Factory pattern we are taught in school,
 because it uses Java 8 features to avoid declaring a new class for every factory method. (Java 8 method references
 basically just do that behind the scenes instead.) This saved many, many lines of code, so try to use the same pattern for
 any randomly created objects.
 
-**Performer:** Anything that can be seen or heard inherits from the Performer class. Reading image or sound files can be
-easily accomplished using the Theme class. New themes and enemy textures can be added to the game without adding any
-code, to see how look at the instances of Theme in Menu, and classes that inherit Enemy. Enemy textures just need to
-be named after the class that displays them, for an example of how more textures can be used, see the RocketBoss class.
+**Performer:** Anything that can be seen or heard inherits from the [Performer](https://github.com/mayhd3/WaveGame2019/blob/master/src/game/Performer.java) class. Reading image or sound files can be
+easily accomplished using the [Theme](https://github.com/mayhd3/WaveGame2019/blob/master/src/game/Theme.java) class. New themes and enemy textures can be added to the game without adding any
+code, to see how look at the instances of Theme in [Menu](https://github.com/mayhd3/WaveGame2019/blob/master/src/game/menu/Menu.java), and classes that inherit Enemy. Enemy textures just need to
+be named after the class that displays them, for an example of how more textures can be used, see the [RocketBoss](https://github.com/mayhd3/WaveGame2019/blob/master/src/game/enemy/EnemyRocketBoss.java) class.
 The Theme class will inherit assets from the superclasses of a Performer if one is mising.
 
 **Copy Constructors:** There are no static variables in the project other than devMode. Single instances of the state
