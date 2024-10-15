@@ -59,7 +59,7 @@ listens to input events, which can call GameLevel methods with unsynchronized si
 loop has been simplified and modified to tick, render, and listen to inputs in the swing Event Dispatch Thread using
 SwingUtilities.
 
-**State Stack:** The current GameLevel is stored on top of a Stack. Menus and game modes can be displayed by simply passing
+**State Stack:** The current GameLevel is stored on top of a Stack. Menus and game modes may be displayed by simply passing
 them to getState().push, as opposed to using some global enumeration, which avoids lots of bugs and null checks. For
 examples of how to use the state stack, see [GameMode](https://github.com/MayCXC/WaveGame2019/blob/master/src/game/menu/GameMode.java) or the [Waves](https://github.com/MayCXC/WaveGame2019/blob/master/src/game/waves/Waves.java) and [Walls](https://github.com/MayCXC/WaveGame2019/blob/master/src/game/walls/Walls.java) classes.
 
